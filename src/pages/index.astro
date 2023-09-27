@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { allJobsDb } from '../xata'
+
+const jobs = await allJobsDb.getAll()
 ---
 
 <BaseLayout title="DevJobs | Home">
