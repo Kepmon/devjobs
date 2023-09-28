@@ -1,0 +1,36 @@
+---
+import { returnTimeDifference } from '../helpers/timeDifference'
+
+const { job } = Astro.props
+---
+
+<div class="card-container">
+  <div
+    style={{ backgroundColor: `${job.logoBackground}` }}
+    class="card-logo"
+  >
+    <img src={job.logo.at(0).url} alt="company logo">
+  </div>
+  <div class="grid content-start gap-2">
+    <div class="flex items-center gap-3 text-gray-500">
+      <p>{returnTimeDifference(job.xata.createdAt)}</p>
+      <p class="text-3xl leading-3">&#x2022;</p>
+      <p>{job.contract}</p>
+    </div>
+    <h2 class="text-md font-[800] dark:text-white">{job.position}</h2>
+    <p class="text-gray-500">{job.company}</p>
+  </div>
+  <p class="self-end text-violet-400 text-xs font-[700]">{job.location}</p>
+</div>
+
+<style>
+  .card-container {
+    @apply relative grid p-8 min-h-[228px] rounded-md;
+    @apply shadow-card dark:bg-gray-800;
+  }
+
+  .card-logo {
+    @apply absolute left-8 -translate-y-1/2 grid place-content-center;
+    @apply w-[50px] aspect-square rounded-2xl;
+  }
+</style>

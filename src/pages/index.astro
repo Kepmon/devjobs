@@ -1,12 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import JobCard from '../components/JobCard.astro'
 import { allJobsDb } from '../xata'
 
 const jobs = await allJobsDb.getAll()
 ---
 
 <BaseLayout title="DevJobs | Home">
-	<main>
-		<h1>Home Page</h1>
+	<main class="grid grid-auto-fit-[350px] gap-y-[65px] gap-x-6">
+
+		{jobs.map((job) => <JobCard job={job} />)}
 	</main>
 </BaseLayout>
