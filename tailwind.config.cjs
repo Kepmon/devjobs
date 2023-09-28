@@ -9,17 +9,23 @@ module.exports = {
 			fontFamily: {
         sans: ["Kumbh Sans", ...defaultTheme.fontFamily.sans],
       },
+			backgroundImage: {
+        'hero-bg': "url('/img/bg-header.svg')"
+      },
 			colors: {
+				blue: {
+					300: 'hsl(235, 82%, 77%)',
+					400: 'hsl(235, 68%, 61%)'
+				},
 				gray: {
-					100: 'hsl(244, 246%, 248%)',
+					100: 'hsl(210, 22%, 96%)',
 					300: 'hsl(212, 23%, 69%)',
 					500: 'hsl(214, 17%, 51%)',
 					800: 'hsl(219, 29%, 14%)',
 					900: 'hsl(219, 29%, 10%)'
 				},
-        violet: {
-					300: 'hsl(235, 82%, 77%)',
-					400: 'hsl(235, 68%, 61%)'
+				violet: {
+					400: 'hsl(285, 68%, 61%)'
 				}
       },
 			fontSize: {

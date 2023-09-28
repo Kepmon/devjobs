@@ -20,13 +20,13 @@ const { job } = Astro.props
     <h2 class="text-md font-[800] dark:text-white">{job.position}</h2>
     <p class="text-gray-500">{job.company}</p>
   </div>
-  <p class="self-end text-violet-400 text-xs font-[700]">{job.location}</p>
+  <p class="self-end text-blue-400 text-xs font-[700]">{job.location}</p>
 </div>
 
 <style>
   .card-container {
     @apply relative grid p-8 min-h-[228px] rounded-md;
-    @apply shadow-card dark:bg-gray-800;
+    @apply shadow-card bg-white dark:bg-gray-800;
   }
 
   .card-logo {
