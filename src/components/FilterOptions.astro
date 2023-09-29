@@ -28,11 +28,23 @@ import AdditionalFilterOptions from "./AdditionalFilterOptions.astro";
   const filterButton = document.querySelector('[data-button="filter"]')
   const dialog = document.querySelector('dialog')
 
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) {
+      dialog.classList.remove('fadeIn')
+      dialog.classList.add('fadeOut')
+      setTimeout(() => {
+        dialog.close()
+      }, 300)
+    }
+  })
+
   filterButton?.addEventListener('click', (e) => {
     e.preventDefault()
 
     if (dialog != null) {
       dialog.showModal()
+      dialog.classList.remove('fadeOut')
+      dialog.classList.add('fadeIn')
     }
   })
 </script>
@@ -41,5 +53,13 @@ import AdditionalFilterOptions from "./AdditionalFilterOptions.astro";
   .main-form {
     @apply flex justify-between items-center gap-2 rounded-md;
     @apply hover:cursor-pointer bg-white dark:bg-gray-800;
+  }
+
+  .fadeIn {
+    @apply animate-fadeIn backdrop:animate-fadeIn;
+  }
+
+  .fadeOut {
+    @apply animate-fadeOut backdrop:animate-fadeOut;
   }
 </style>

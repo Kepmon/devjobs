@@ -40,6 +40,18 @@ module.exports = {
 			boxShadow: {
         card: '0 0 1px hsl(0, 0%, 59%)'
       },
+			animation: {
+        'fadeIn': 'fadeIn .3s linear forwards',
+        'fadeOut': 'fadeOut .3s linear forwards'
+      },
+			keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0 }
+        },
+        fadeOut: {
+          '100%': { opacity: 0 }
+        }
+      },
 			scrollbar: {
 				visibleDark: {
 					size: '12px',
