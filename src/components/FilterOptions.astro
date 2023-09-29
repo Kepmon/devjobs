@@ -1,0 +1,45 @@
+---
+import CustomButton from "./CustomButton.astro";
+import SearchIcon from "./svgs/SearchIcon.astro";
+import AdditionalFilterOptions from "./AdditionalFilterOptions.astro";
+---
+
+<form class="main-form">
+  <div class="input-pair w-max">
+    <SearchIcon fill="hsl(235, 68%, 61%)" classNames="hidden md:block" />
+    <input type="text" name="search" placeholder="Filter by title, companies, expertise..">
+    <button class="md:hidden flex items-center gap-5 ml-auto" aria-label="click here to see more filter options" data-button="filter">
+      <img src="/img/icon-filter.svg" alt="">
+    </button>
+    <CustomButton ariaLabel="Click here to search" smallerPadding="px-2 py-2" moreClasses="md:hidden">
+      <SearchIcon fill="white" classNames="scale-75" />
+    </CustomButton>
+  </div>
+  <AdditionalFilterOptions moreWrapperStyles="hidden md:flex" moreLocationStyles="input-pair" />
+</form>
+
+<dialog class="md:hidden backdrop:bg-black backdrop:opacity-50">
+  <form>
+    <AdditionalFilterOptions moreWrapperStyles="grid gap-6" moreLocationStyles="flex gap-4 px-0 pb-6 border-b border-gray-200 dark:border-gray-700" />
+  </form>
+</dialog>
+
+<script>
+  const filterButton = document.querySelector('[data-button="filter"]')
+  const dialog = document.querySelector('dialog')
+
+  filterButton?.addEventListener('click', (e) => {
+    e.preventDefault()
+
+    if (dialog != null) {
+      dialog.showModal()
+    }
+  })
+</script>
+
+<style>
+  .main-form {
+    @apply flex justify-between items-center gap-2 rounded-md;
+    @apply hover:cursor-pointer bg-white dark:bg-gray-800;
+  }
+</style>

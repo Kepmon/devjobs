@@ -1,0 +1,20 @@
+---
+interface Props {
+  smallerPadding?: string
+  ariaLabel?: string
+  moreClasses?: string
+}
+
+const { smallerPadding, ariaLabel, moreClasses } = Astro.props
+---
+
+<button aria-label={ariaLabel || undefined} class:list={['custom-button', smallerPadding || 'px-10 py-4', moreClasses || '']}>
+ <slot />
+</button>
+
+<style>
+  .custom-button {
+    @apply text-white rounded-md font-[600];
+    @apply bg-blue-400 hover:bg-blue-300 focus-visible:bg-blue-300;
+  }
+</style>

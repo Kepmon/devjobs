@@ -9,7 +9,7 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="Astro description" />
@@ -26,6 +26,16 @@ const { title } = Astro.props;
 	</body>
 </html>
 
+<script>
+	const theme = localStorage.getItem('devjobs-theme')
+
+	if (theme != null) {
+		const htmlElement = document.querySelector('html') as HTMLElement
+
+		htmlElement.classList.add('dark')
+	}
+</script>
+
 <style is:global>
 @font-face {
 	font-family: 'Kumbh Sans';
@@ -33,6 +43,7 @@ const { title } = Astro.props;
 }
 
 body {
+	@apply grid grid-rows-[auto_40px_auto_1fr];
 	@apply text-normal bg-gray-100 dark:bg-gray-900;
 }
 
@@ -41,6 +52,15 @@ img {
 }
 
 .wrapper {
-	@apply mx-auto w-[min(90%,1110px)];
+	@apply row-start-2 row-span-3 col-start-1 mx-auto w-[min(90%,1110px)];
+}
+
+.input-pair {
+    @apply flex gap-4 items-center grow px-6 py-7 h-full md:border-r-2;
+    @apply border-gray-200 dark:border-gray-700;
+  }
+
+input[type="text"] {
+	@apply bg-inherit dark:text-white;
 }
 </style>

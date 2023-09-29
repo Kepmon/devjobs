@@ -38,7 +38,7 @@ module.exports = {
         xxl: 'clamp(2.1775rem, 1.8825rem + 1.6855vw, 3.0519rem)'
       },
 			boxShadow: {
-        card: '0 0 1px hsl(0, 0%, 59%)',
+        card: '0 0 1px hsl(0, 0%, 59%)'
       },
 		},
 	},

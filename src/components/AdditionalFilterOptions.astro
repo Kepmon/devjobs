@@ -1,0 +1,38 @@
+---
+import CustomButton from "./CustomButton.astro";
+
+interface Props {
+  moreWrapperStyles?: string
+  moreLocationStyles?: string
+}
+
+const { moreWrapperStyles, moreLocationStyles } = Astro.props
+
+---
+
+<div class:list={['additional-form-options', moreWrapperStyles || '']}>
+  <div class:list={['px-6 pt-6', moreLocationStyles || '']}>
+    <img src="/img/icon-location.svg" alt="">
+    <input type="text" name="location" placeholder="Filter by location..">
+  </div>
+  <div class="grid gap-6 md:flex items-center px-6 pb-6 md:mr-4 md:pb-0 md:px-0 md:pl-6">
+    <label class="relative flex items-center gap-2 mr-8 w-max font-[700] dark:text-white">
+      <input type="checkbox" class="peer">
+      <span class="hidden absolute top-0 left-[6px] peer-checked:block">&#10003;</span>
+      <span>Full Time Only</span>
+    </label>
+    <CustomButton>Search</CustomButton>
+  </div>
+</div>
+
+<style>
+  input[type="checkbox"] {
+    @apply appearance-none w-6 aspect-square rounded bg-gray-200 dark:bg-gray-700;
+    @apply hover:cursor-pointer hover:bg-blue-300 transition-colors duration-300;
+    @apply checked:bg-blue-400;
+  }
+
+  .additional-form-options {
+    @apply z-10 bg-white dark:bg-gray-800;
+  }
+</style>

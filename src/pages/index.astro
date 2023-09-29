@@ -1,14 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import JobCard from '../components/JobCard.astro'
+import FilterOptions from '../components/FilterOptions.astro'
 import { allJobsDb } from '../xata'
 
 const jobs = await allJobsDb.getAll()
 ---
 
 <BaseLayout title="DevJobs | Home">
-	<main class="grid grid-auto-fit-[350px] gap-y-[65px] gap-x-6">
-
-		{jobs.map((job) => <JobCard job={job} />)}
+	<main class="grid gap-32">
+		<FilterOptions />
+		<div class="grid grid-auto-fit-[350px] gap-y-[65px] gap-x-6">{jobs.map((job) => <JobCard job={job} />)}</div>
 	</main>
 </BaseLayout>
