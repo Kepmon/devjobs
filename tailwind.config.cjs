@@ -6,12 +6,12 @@ module.exports = {
 	darkMode: 'class',
 	theme: {
 		extend: {
-			fontFamily: {
-        sans: ["Kumbh Sans", ...defaultTheme.fontFamily.sans],
-      },
 			backgroundImage: {
-        'hero-bg': "url('/img/bg-header.svg')"
+				'hero-bg': "url('/img/bg-header.svg')"
       },
+			boxShadow: {
+				card: '0 0 1px hsl(0, 0%, 59%)'
+			},
 			colors: {
 				blue: {
 					300: 'hsl(235, 82%, 77%)',
@@ -28,6 +28,9 @@ module.exports = {
 					400: 'hsl(285, 68%, 61%)'
 				}
       },
+			fontFamily: {
+				sans: ["Kumbh Sans", ...defaultTheme.fontFamily.sans],
+			},
 			fontSize: {
 				xxs: 'clamp(0.6075rem, 0.5965rem + 0.0627vw, 0.64rem)',
 				xs: 'clamp(0.75rem, 0.7078rem + 0.241vw, 0.875rem)',
@@ -36,9 +39,6 @@ module.exports = {
         lg: 'clamp(1.26rem, 1.158rem + 0.5831vw, 1.5625rem)',
         xl: 'clamp(1.5119rem, 1.363rem + 0.8506vw, 1.9531rem)',
         xxl: 'clamp(2.1775rem, 1.8825rem + 1.6855vw, 3.0519rem)'
-      },
-			boxShadow: {
-        card: '0 0 1px hsl(0, 0%, 59%)'
       },
 			animation: {
         'fadeIn': 'fadeIn .3s linear forwards',

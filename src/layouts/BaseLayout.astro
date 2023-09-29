@@ -20,7 +20,7 @@ const { title } = Astro.props;
 	</head>
 	<body>
 		<Header />
-		<div class="wrapper">
+		<div class="wrapper wrapper-position">
 			<slot />
 		</div>
 	</body>
@@ -52,16 +52,32 @@ img {
 	@apply block max-w-full;
 }
 
+input[type="text"] {
+	@apply bg-inherit dark:text-white;
+}
+
 .wrapper {
-	@apply row-start-2 row-span-3 col-start-1 mx-auto w-[min(90%,1110px)];
+	@apply mx-auto w-[min(90%,1110px)];
+}
+
+.wrapper-position {
+	@apply row-start-2 row-span-3 col-start-1;
 }
 
 .input-pair {
-    @apply flex gap-4 items-center grow px-6 py-7 h-full md:border-r-2;
-    @apply border-gray-200 dark:border-gray-700;
-  }
+	@apply flex gap-4 items-center grow px-6 py-7 h-full md:border-r-2;
+	@apply border-gray-200 dark:border-gray-700;
+}
 
-input[type="text"] {
-	@apply bg-inherit dark:text-white;
+.focus-within {
+	@apply focus-within:outline outline-4 outline-gray-200 dark:outline-gray-700 -outline-offset-4;
+}
+
+.focus-within input {
+	@apply outline outline-transparent;
+}
+
+.blue-outline {
+	@apply focus-visible:outline outline-[3px] outline-blue-400;
 }
 </style>
