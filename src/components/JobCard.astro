@@ -4,7 +4,7 @@ import { returnTimeDifference } from '../helpers/timeDifference'
 const { job } = Astro.props
 ---
 
-<div class="card-container">
+<article class="card-container">
   <div
     style={{ backgroundColor: `${job.logoBackground}` }}
     class="card-logo"
@@ -21,7 +21,7 @@ const { job } = Astro.props
     <p class="text-gray-500">{job.company}</p>
   </div>
   <p class="self-end text-blue-400 text-xs font-[700]">{job.location}</p>
-</div>
+</article>
 
 <style>
   .card-container {

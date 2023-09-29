@@ -40,9 +40,24 @@ module.exports = {
 			boxShadow: {
         card: '0 0 1px hsl(0, 0%, 59%)'
       },
+			scrollbar: {
+				visibleDark: {
+					size: '12px',
+					track: { background: 'transparent' },
+					thumb: { background: 'hsl(235 20% 25%)', borderRadius: '100vmax' },
+					hover: { background: 'hsl(235 30% 35%)' }
+				},
+				visibleLight: {
+					size: '12px',
+					track: { background: 'transparent' },
+					thumb: { background: 'hsl(235 20% 75%)', borderRadius: '40px' },
+					hover: { background: 'hsl(235 30% 65%)' }
+				}
+			}
 		},
 	},
 	plugins: [
+		require('@gradin/tailwindcss-scrollbar'),
 		require('@shrutibalasa/tailwind-grid-auto-fit')
 	],
 }

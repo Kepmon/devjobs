@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.0.0",
+    "@gradin/tailwindcss-scrollbar": "^3.0.1",
     "@xata.io/client": "^0.26.6",
     "astro": "^3.1.4",
     "tailwindcss": "^3.3.3"
