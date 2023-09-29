@@ -5,7 +5,7 @@ import AdditionalFilterOptions from "./AdditionalFilterOptions.astro";
 ---
 
 <form class="main-form">
-  <div class="input-pair w-max focus-within">
+  <div class="input-pair focus-within">
     <SearchIcon fill="hsl(235, 68%, 61%)" classNames="hidden md:block" />
     <input autofocus type="text" name="search" placeholder="Filter by title, companies, expertise..">
     <button class="md:hidden flex items-center gap-5 ml-auto" aria-label="click here to see more filter options" data-button="filter">
@@ -51,7 +51,7 @@ import AdditionalFilterOptions from "./AdditionalFilterOptions.astro";
 
 <style>
   .main-form {
-    @apply flex justify-between items-center rounded-md;
+    @apply flex items-center rounded-md;
     @apply hover:cursor-pointer bg-white dark:bg-gray-800;
   }
 

@@ -53,7 +53,7 @@ img {
 }
 
 input[type="text"] {
-	@apply bg-inherit dark:text-white;
+	@apply w-full bg-inherit dark:text-white caret-blue-400 cursor-text;
 }
 
 .wrapper {
@@ -65,8 +65,8 @@ input[type="text"] {
 }
 
 .input-pair {
-	@apply flex gap-4 items-center grow px-6 py-7 h-full md:border-r-2;
-	@apply border-gray-200 dark:border-gray-700;
+	@apply flex gap-4 items-center grow px-6 py-5 md:py-7 h-full;
+	@apply md:border-r-2 border-gray-200 dark:border-gray-700;
 }
 
 .focus-within {
@@ -74,7 +74,7 @@ input[type="text"] {
 }
 
 .focus-within input {
-	@apply outline outline-transparent;
+	@apply grow outline outline-transparent;
 }
 
 .blue-outline {

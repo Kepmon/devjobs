@@ -10,6 +10,6 @@ const jobs = await allJobsDb.getAll()
 <BaseLayout title="DevJobs | Home">
 	<main class="grid gap-32">
 		<FilterOptions />
-		<div class="grid grid-auto-fit-[350px] gap-y-[65px] gap-x-6">{jobs.map((job) => <JobCard job={job} />)}</div>
+		<div class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6">{jobs.map((job) => <JobCard job={job} />)}</div>
 	</main>
 </BaseLayout>
