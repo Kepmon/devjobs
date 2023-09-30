@@ -3,12 +3,13 @@ interface Props {
   smallerPadding?: string
   ariaLabel?: string
   moreClasses?: string
+  dataLoad?: string
 }
 
-const { smallerPadding, ariaLabel, moreClasses } = Astro.props
+const { smallerPadding, ariaLabel, moreClasses, dataLoad } = Astro.props
 ---
 
-<button aria-label={ariaLabel || undefined} class:list={['custom-button', smallerPadding || 'px-10 py-4', moreClasses || '']}>
+<button aria-label={ariaLabel || undefined} class:list={['custom-button', smallerPadding || 'px-10 py-4', moreClasses || '']} data-load={dataLoad || undefined}>
  <slot />
 </button>
 
@@ -17,4 +18,8 @@ const { smallerPadding, ariaLabel, moreClasses } = Astro.props
     @apply text-white rounded-md font-[600];
     @apply bg-blue-400 hover:bg-blue-300 focus-visible:bg-blue-300;
   }
+
+  .hide-button {
+		@apply hidden;
+	}
 </style>
