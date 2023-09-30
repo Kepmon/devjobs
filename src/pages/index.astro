@@ -36,10 +36,13 @@ const jobs = await allJobsDb.getAll()
 		const jobsDiv = document.querySelector('[data-container="jobs"]')
 		
 		const cardContainers = [...jobsTemplateClone.querySelectorAll('.card-container')] as HTMLDivElement[]
-		cardContainers.forEach((cardContainer, index) => {
-			if (index + 1 > (jobPagesCount-1) * 12 && index + 1 <= jobPagesCount * 12) {
-				jobsDiv?.append(cardContainer)
-			}
+
+		const startIndex = (jobPagesCount-1) * 12
+		const endIndex = cardContainers.length + 1 > jobPagesCount * 12 ? jobPagesCount * 12 : cardContainers.length
+		const newCardContainers = cardContainers.slice(startIndex, endIndex)
+		
+		newCardContainers.forEach((newCard) => {
+			jobsDiv?.append(newCard)
 		})
 
 		hideButtonIfNeeded(cardContainers)
