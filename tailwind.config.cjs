@@ -54,13 +54,13 @@ module.exports = {
       },
 			scrollbar: {
 				visibleDark: {
-					size: '12px',
+					size: '10px',
 					track: { background: 'transparent' },
 					thumb: { background: 'hsl(235 20% 25%)', borderRadius: '100vmax' },
 					hover: { background: 'hsl(235 30% 35%)' }
 				},
 				visibleLight: {
-					size: '12px',
+					size: '10px',
 					track: { background: 'transparent' },
 					thumb: { background: 'hsl(235 20% 75%)', borderRadius: '40px' },
 					hover: { background: 'hsl(235 30% 65%)' }

@@ -26,7 +26,11 @@ const { job } = Astro.props
 <style>
   .card-container {
     @apply relative grid p-8 min-h-[228px] rounded-md;
-    @apply shadow-card bg-white dark:bg-gray-800;
+    @apply shadow-card bg-white dark:bg-gray-800 cursor-pointer;
+  }
+
+  .card-container:hover h2 {
+    @apply text-gray-500 transition-colors duration-300;
   }
 
   .card-logo {
