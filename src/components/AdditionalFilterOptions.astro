@@ -13,11 +13,11 @@ const { moreWrapperStyles, moreLocationStyles } = Astro.props
 <div class:list={['additional-form-options', moreWrapperStyles || '']}>
   <div class:list={['px-6 pt-6 focus-within', moreLocationStyles || '']}>
     <img src="/img/icon-location.svg" alt="">
-    <input type="text" name="location" placeholder="Filter by location..">
+    <input type="search" name="location" placeholder="Filter by location...">
   </div>
   <div class="grid gap-6 md:flex items-center px-6 pb-6 md:mr-4 md:pb-0 md:px-0 md:pl-6">
     <label class="relative flex items-center gap-2 p-2 w-max font-[700] dark:text-white cursor-pointer">
-      <input type="checkbox" class="peer blue-outline">
+      <input type="checkbox" name="full-time" class="peer blue-outline">
       <span class="hidden absolute top-2 left-[14px] text-white peer-checked:block">&#10003;</span>
       <span>Full Time</span>
       <span class="hidden lg:inline">Only</span>

@@ -3,10 +3,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
+
+
 import { allJobsDb } from '../xata'
 
 const jobs = await allJobsDb.getAll()
 ---
+<div data-jobs={JSON.stringify(jobs)}></div>
+
 
 <BaseLayout title="DevJobs | Home">
 	<main class="grid gap-32">
@@ -24,6 +28,11 @@ const jobs = await allJobsDb.getAll()
 </BaseLayout>
 
 <script>
+	import Fuse from 'fuse.js'
+	const jobsForm = document.querySelector('[data-form="jobs"]') as HTMLFormElement
+	const jobsDiv = document.querySelector('[data-jobs]') as HTMLDivElement
+	const jobs = JSON.parse(jobsDiv.dataset.jobs as string)
+	
 	const loadMoreButton = document.querySelector('button[data-load="true"]')
 	let jobPagesCount = 1
 	
@@ -40,7 +49,7 @@ const jobs = await allJobsDb.getAll()
 		const startIndex = (jobPagesCount-1) * 12
 		const endIndex = cardContainers.length + 1 > jobPagesCount * 12 ? jobPagesCount * 12 : cardContainers.length
 		const newCardContainers = cardContainers.slice(startIndex, endIndex)
-		
+
 		newCardContainers.forEach((newCard) => {
 			jobsDiv?.append(newCard)
 		})
@@ -54,10 +63,76 @@ const jobs = await allJobsDb.getAll()
 		loadMoreButton?.classList.add('hide-button')
 	}
 
+	const getInputValues = () => {
+		const searchInput = jobsForm.querySelector('input[name="search"]') as HTMLInputElement
+		const locationInput = jobsForm.querySelector('input[name="location"]') as HTMLInputElement
+		const fullTimeCheckbox = jobsForm.querySelector('input[name="full-time"]') as HTMLInputElement
+
+		const searchValue = searchInput.value
+		const locationValue = locationInput.value
+		const fullTimeValue = fullTimeCheckbox.checked
+
+		return { searchValue, locationValue, fullTimeValue }
+	}
+
+	const checkFormValidity = () => {
+		const { searchValue, locationValue, fullTimeValue } = getInputValues()
+
+		const noInputFilled = searchValue === '' && locationValue === '' && !fullTimeValue
+		if (noInputFilled) return false
+
+		return true
+	}
+	
+  const filterJobs = () => {
+		const isFormValid = checkFormValidity()
+
+		if (!isFormValid) return
+
+		const { searchValue, locationValue, fullTimeValue } = getInputValues()
+		const searchQueries = []
+		const fuse = new Fuse(jobs, {
+			keys: ['company', 'contract', 'description', 'location', 'position']
+		})
+
+		if (locationValue !== '') {
+			searchQueries.push({ location: locationValue })
+		}
+		
+		if (fullTimeValue) {
+			searchQueries.push({ contract: 'full' })
+		}
+
+		if (searchValue !== '' && searchQueries.length > 0) {
+			searchQueries.push({
+				$or: [{ company: searchValue }, { description: searchValue }, { position: searchValue }]
+			})
+		}
+		
+		if (searchQueries.length > 0) {
+			return fuse.search({
+				$and: searchQueries
+			})
+		}
+
+		return fuse.search({
+			$or: [{ company: searchValue }, { description: searchValue }, { position: searchValue }]
+		})
+  }
+
+	const handleSubmit = (e: Event) => {
+		e.preventDefault()
+
+		const filteredJobs = filterJobs()
+		console.log(filteredJobs);
+	}
+
 
 	loadMoreButton?.addEventListener('click', () => {
 		jobPagesCount++
 
 		loadMoreJobs()
 	})
+
+	jobsForm.addEventListener('submit', handleSubmit)
 </script>
