@@ -24,7 +24,7 @@ const jobs = await allJobsDb.getAll()
 </BaseLayout>
 
 <script>
-	import { loadMoreJobs, addListenerToLoadButton } from "../helpers/loadMoreButton"
+	import { addListenerToLoadButton, addListenerToWindow } from "../helpers/loadMoreButton"
 
 	const jobsForm = document.querySelector('[data-form="jobs"]') as HTMLFormElement
 
@@ -73,4 +73,5 @@ const jobs = await allJobsDb.getAll()
 
 	jobsForm.addEventListener('submit', handleSubmit)
 	addListenerToLoadButton('button[data-load="index"]')
+	addListenerToWindow('button[data-load="index"]')
 </script>

@@ -24,7 +24,7 @@ const jobs = await allJobsDb.getAll()
 
 <script>
 	import type { Job, SearchQuery } from '../../types/jobs'
-	import { addListenerToLoadButton } from '../../helpers/loadMoreButton'
+	import { returnCardsFromTemplate, addListenerToLoadButton, addListenerToWindow } from '../../helpers/loadMoreButton'
 	import Fuse from 'fuse.js'
 
 	const response = await fetch('/jobs.json')
@@ -74,28 +74,27 @@ const jobs = await allJobsDb.getAll()
 	}
 
 	const loadFilteredJobs = () => {
-		const jobsTemplate = document.querySelector('[data-template="jobs"]') as null | HTMLTemplateElement
-		if (jobsTemplate == null) return
-		
 		const filteredJobs = filterJobs()
 
-		if (filteredJobs == null || filteredJobs.length === 0) return
+		if (filteredJobs == null || filteredJobs.length === 0) return 0
 
 		const filteredJobsIDs = filteredJobs.map((job) => (job.item as Job).id)
 
-		const jobsTemplateClone = jobsTemplate.content.cloneNode(true) as DocumentFragment
 		const jobsDiv = document.querySelector('[data-container="jobs"]')
+		const cardContainers = returnCardsFromTemplate()
 
-		const cardContainers = [...jobsTemplateClone.querySelectorAll('.card-container')] as HTMLDivElement[]
 		cardContainers.forEach((container, index) => {
 			const jobID = container.dataset.id
 
-			if (index < 12 && filteredJobsIDs?.some((id) => id === jobID)) {
+			if (filteredJobsIDs?.some((id) => id === jobID)) {
 				jobsDiv?.append(container)
 			}
 		})
+
+		return filteredJobs.length
 	}
 
-	loadFilteredJobs()
-	addListenerToLoadButton('button[data-load="filteredJobs"]')
+	const filteredJobsLength = loadFilteredJobs()
+	addListenerToLoadButton('button[data-load="filteredJobs"]', filteredJobsLength)
+	addListenerToWindow('button[data-load="filteredJobs"]')
 </script>
