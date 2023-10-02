@@ -11,7 +11,7 @@ const jobs = await allJobsDb.getAll()
 <BaseLayout title="DevJobs | Home">
 	<main class="grid gap-32">
 		<FilterOptions />
-		<div class="grid mb-[104px]">
+		<div class="grid pb-[104px]">
 			<div class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6" data-container="jobs">
 				{jobs.map((job, index) => index + 1 <= 12 ? <JobCard job={job} />  : null)}
 				<template data-template="jobs">

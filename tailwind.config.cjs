@@ -37,7 +37,7 @@ module.exports = {
         normal: 'clamp(0.875rem, 0.8328rem + 0.241vw, 1rem)',
         md: 'clamp(1.05rem, 0.9825rem + 0.3855vw, 1.25rem)',
         lg: 'clamp(1.26rem, 1.158rem + 0.5831vw, 1.5625rem)',
-        xl: 'clamp(1.5119rem, 1.363rem + 0.8506vw, 1.9531rem)',
+        xl: 'clamp(1.25rem, 0.9583rem + 1.6667vw, 2.25rem);',
         xxl: 'clamp(2.1775rem, 1.8825rem + 1.6855vw, 3.0519rem)'
       },
 			animation: {
