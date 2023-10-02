@@ -25,6 +25,7 @@ const jobs = await allJobsDb.getAll()
 <script>
 	import type { Job, SearchQuery } from '../../types/jobs'
 	import { returnCardsFromTemplate, addListenerToLoadButton, addListenerToWindow } from '../../helpers/loadMoreButton'
+	import { addListenerToForm } from "../../helpers/jobsForm"
 	import Fuse from 'fuse.js'
 
 	const response = await fetch('/jobs.json')
@@ -35,7 +36,8 @@ const jobs = await allJobsDb.getAll()
 
 		const searchQueries = []
 		const fuse = new Fuse(jobs, {
-			keys: ['company', 'contract', 'description', 'location', 'position']
+			keys: ['company', 'contract', 'description', 'location', 'position'],
+			threshold: .3
 		})
 
 		const search = urlParams.get('job')
@@ -44,7 +46,7 @@ const jobs = await allJobsDb.getAll()
 
 		const areThereAnyParams = search != null || location != null || fullTime === 'true'
 
-		if (!areThereAnyParams)
+		if (!areThereAnyParams) return
 
 		if (location != null) {
 			searchQueries.push({ location: urlParams.get('location') })
@@ -96,5 +98,6 @@ const jobs = await allJobsDb.getAll()
 
 	const filteredJobsLength = loadFilteredJobs()
 	addListenerToLoadButton('button[data-load="filteredJobs"]', filteredJobsLength)
+	addListenerToForm()
 	addListenerToWindow('button[data-load="filteredJobs"]')
 </script>
