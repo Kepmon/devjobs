@@ -3,14 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
-
-
 import { allJobsDb } from '../xata'
 
 const jobs = await allJobsDb.getAll()
 ---
-<div data-jobs={JSON.stringify(jobs)}></div>
-
 
 <BaseLayout title="DevJobs | Home">
 	<main class="grid gap-32">
@@ -22,117 +18,59 @@ const jobs = await allJobsDb.getAll()
 					{jobs.map((job) => <JobCard job={job} />)}
 				</template>
 			</div>
-			{<CustomButton moreClasses='justify-self-center mt-14' dataLoad='true'>Load More</CustomButton>}
+			{<CustomButton moreClasses='justify-self-center mt-14' dataLoad='index'>Load More</CustomButton>}
 		</div>
 	</main>
 </BaseLayout>
 
 <script>
-	import Fuse from 'fuse.js'
+	import { loadMoreJobs, addListenerToLoadButton } from "../helpers/loadMoreButton"
+
 	const jobsForm = document.querySelector('[data-form="jobs"]') as HTMLFormElement
-	const jobsDiv = document.querySelector('[data-jobs]') as HTMLDivElement
-	const jobs = JSON.parse(jobsDiv.dataset.jobs as string)
-	
-	const loadMoreButton = document.querySelector('button[data-load="true"]')
-	let jobPagesCount = 1
-	
-	const loadMoreJobs = () => {
-		const jobsTemplate = document.querySelector('[data-template="jobs"]') as null | HTMLTemplateElement
-
-		if (jobsTemplate == null) return
-
-		const jobsTemplateClone = jobsTemplate.content.cloneNode(true) as DocumentFragment
-		const jobsDiv = document.querySelector('[data-container="jobs"]')
-		
-		const cardContainers = [...jobsTemplateClone.querySelectorAll('.card-container')] as HTMLDivElement[]
-
-		const startIndex = (jobPagesCount-1) * 12
-		const endIndex = cardContainers.length + 1 > jobPagesCount * 12 ? jobPagesCount * 12 : cardContainers.length
-		const newCardContainers = cardContainers.slice(startIndex, endIndex)
-
-		newCardContainers.forEach((newCard) => {
-			jobsDiv?.append(newCard)
-		})
-
-		hideButtonIfNeeded(cardContainers)
-	}
-
-	const hideButtonIfNeeded = (cardContainers: HTMLDivElement[]) => {
-		if (cardContainers.length + 1 > jobPagesCount * 12) return
-
-		loadMoreButton?.classList.add('hide-button')
-	}
 
 	const getInputValues = () => {
-		const searchInput = jobsForm.querySelector('input[name="search"]') as HTMLInputElement
-		const locationInput = jobsForm.querySelector('input[name="location"]') as HTMLInputElement
-		const fullTimeCheckbox = jobsForm.querySelector('input[name="full-time"]') as HTMLInputElement
-
-		const searchValue = searchInput.value
-		const locationValue = locationInput.value
-		const fullTimeValue = fullTimeCheckbox.checked
-
-		return { searchValue, locationValue, fullTimeValue }
+		const formDataInstance = new FormData(jobsForm)
+		return Object.fromEntries(formDataInstance)
 	}
 
 	const checkFormValidity = () => {
-		const { searchValue, locationValue, fullTimeValue } = getInputValues()
+		const { search, location, fullTime } = getInputValues()
 
-		const noInputFilled = searchValue === '' && locationValue === '' && !fullTimeValue
+		const noInputFilled = search === '' && location === '' && fullTime == null
 		if (noInputFilled) return false
 
 		return true
 	}
-	
-  const filterJobs = () => {
-		const isFormValid = checkFormValidity()
 
-		if (!isFormValid) return
+	const makeQueryLink = () => {
+		const { search, location, fullTime } = getInputValues()
 
-		const { searchValue, locationValue, fullTimeValue } = getInputValues()
-		const searchQueries = []
-		const fuse = new Fuse(jobs, {
-			keys: ['company', 'contract', 'description', 'location', 'position']
-		})
-
-		if (locationValue !== '') {
-			searchQueries.push({ location: locationValue })
-		}
-		
-		if (fullTimeValue) {
-			searchQueries.push({ contract: 'full' })
+		const searchURL = new URL('jobs', window.location.origin)
+		if (search !== '') {
+			searchURL.searchParams.set('job', search as string)
 		}
 
-		if (searchValue !== '' && searchQueries.length > 0) {
-			searchQueries.push({
-				$or: [{ company: searchValue }, { description: searchValue }, { position: searchValue }]
-			})
-		}
-		
-		if (searchQueries.length > 0) {
-			return fuse.search({
-				$and: searchQueries
-			})
+		if (location !== '') {
+			searchURL.searchParams.set('location', location as string)
 		}
 
-		return fuse.search({
-			$or: [{ company: searchValue }, { description: searchValue }, { position: searchValue }]
-		})
-  }
+		if (fullTime != null) {
+			searchURL.searchParams.set('full-time', 'true')
+		}
+
+		return searchURL
+	}
 
 	const handleSubmit = (e: Event) => {
 		e.preventDefault()
 
-		const filteredJobs = filterJobs()
-		console.log(filteredJobs);
+		const isFormValid = checkFormValidity()
+		if (!isFormValid) return
+
+		const searchURL = makeQueryLink()
+		window.location.assign(`jobs/${searchURL.search}`)
 	}
 
-
-	loadMoreButton?.addEventListener('click', () => {
-		jobPagesCount++
-
-		loadMoreJobs()
-	})
-
 	jobsForm.addEventListener('submit', handleSubmit)
+	addListenerToLoadButton('button[data-load="index"]')
 </script>
