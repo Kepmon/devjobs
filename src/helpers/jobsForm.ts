@@ -6,16 +6,16 @@ const getInputValues = () => {
 }
 
 const checkFormValidity = () => {
-  const { search, location, fullTime } = getInputValues()
+  const { search, location, locationMobile, fullTime, fullTimeMobile } = getInputValues()
 
-  const noInputFilled = search === '' && location === '' && fullTime == null
+  const noInputFilled = search === '' && location === '' && locationMobile === '' && fullTime == null && fullTimeMobile == null
   if (noInputFilled) return false
 
   return true
 }
 
 const makeQueryLink = () => {
-  const { search, location, fullTime } = getInputValues()
+  const { search, location, locationMobile, fullTime, fullTimeMobile } = getInputValues()
 
   const searchURL = new URL('jobs', window.location.origin)
   if (search !== '') {
@@ -25,8 +25,16 @@ const makeQueryLink = () => {
   if (location !== '') {
     searchURL.searchParams.set('location', location as string)
   }
+  
+  if (locationMobile !== '') {
+    searchURL.searchParams.set('location', locationMobile as string)
+  }
 
   if (fullTime != null) {
+    searchURL.searchParams.set('full-time', 'true')
+  }
+  
+  if (fullTimeMobile != null) {
     searchURL.searchParams.set('full-time', 'true')
   }
 
@@ -40,7 +48,6 @@ const handleSubmit = (e: Event) => {
   if (!isFormValid) return
 
   const searchURL = makeQueryLink()
-  
 
   const isHomePage = window.location.pathname === '/'
 

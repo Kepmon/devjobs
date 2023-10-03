@@ -15,14 +15,13 @@ import AdditionalFilterOptions from "./AdditionalFilterOptions.astro";
       <SearchIcon fill="white" classNames="scale-75" />
     </CustomButton>
   </div>
-  <AdditionalFilterOptions moreWrapperStyles="hidden md:flex" moreLocationStyles="input-pair" />
+  <AdditionalFilterOptions locationName="location" fullTimeName="fullTime" moreWrapperStyles="hidden md:flex" moreLocationStyles="input-pair" />
+  <dialog class="md:hidden backdrop:bg-black backdrop:opacity-50">
+    <form>
+      <AdditionalFilterOptions locationName="locationMobile" fullTimeName="fullTimeMobile" moreWrapperStyles="grid gap-6" moreLocationStyles="flex gap-4 px-0 pb-6 border-b border-gray-200 dark:border-gray-700" />
+    </form>
+  </dialog>
 </form>
-
-<dialog class="md:hidden backdrop:bg-black backdrop:opacity-50">
-  <form>
-    <AdditionalFilterOptions moreWrapperStyles="grid gap-6" moreLocationStyles="flex gap-4 px-0 pb-6 border-b border-gray-200 dark:border-gray-700" />
-  </form>
-</dialog>
 
 <script>
   const filterButton = document.querySelector('[data-button="filter"]')
