@@ -72,6 +72,7 @@ const DatabaseClient = buildClient();
 const defaultOptions = {
   databaseURL:
     "https://Monika-s-workspace-2n7qdb.eu-central-1.xata.sh/db/devjobs-app",
+  enableBrowser: true
 };
 
 export class XataClient extends DatabaseClient<DatabaseSchema> {
@@ -85,7 +86,7 @@ let instance: XataClient | undefined = undefined;
 export const getXataClient = () => {
   if (instance) return instance;
 
-  instance = new XataClient({ apiKey: import.meta.env.XATA_API_KEY });
+  instance = new XataClient({ apiKey: import.meta.env.XATA_API_KEY, branch: import.meta.env.XATA_BRANCH });
   return instance;
 };
 

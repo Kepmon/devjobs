@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import FilterOptions from '../../components/FilterOptions.astro'
+import JobCard from '../../components/JobCard.astro'
+import CustomButton from '../../components/CustomButton.astro'
+import NoJobInfo from '../../components/NoJobInfo.astro'
+import { allJobsDb } from '../../xata'
+
+const jobs = await allJobsDb.getAll()
+---
+
+<BaseLayout title="DevJobs | Home">
+	<main class="grid gap-32 [&:has(svg)]:gap-16">
+		<FilterOptions />
+		<div class="grid pb-[104px]">
+			<div class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6" data-container="jobs">
+				<template data-template="jobs">
+					{jobs.map((job) => <JobCard job={job} />)}
+				</template> 
+				<template data-template="no-jobs-message">
+					<NoJobInfo />
+				</template> 
+			</div>
+			{<CustomButton moreClasses='justify-self-center mt-14' dataLoad='filteredJobs'>Load More</CustomButton>}
+		</div>
+	</main>
+</BaseLayout>
+
+<script>
+	import type { Job, SearchQuery } from '../../types/jobs'
+	import { returnCardsFromTemplate, addListenerToLoadButton, addListenerToWindow } from '../../helpers/loadMoreButton'
+	import { addListenerToForm } from "../../helpers/jobsForm"
+	import Fuse from 'fuse.js'
+
+	const response = await fetch('/jobs.json')
+	const jobs = await response.json()
+
+	const filterJobs = () => {
+		const urlParams = new URLSearchParams(window.location.search)
+
+		const searchQueries = []
+		const fuse = new Fuse(jobs, {
+			keys: ['company', 'contract', 'description', 'location', 'position'],
+			threshold: .3
+		})
+
+		const search = urlParams.get('job')
+		const location = urlParams.get('location')
+		const fullTime = urlParams.get('full-time')
+
+		const areThereAnyParams = search != null || location != null || fullTime === 'true'
+
+		if (!areThereAnyParams) return
+
+		if (location != null) {
+			searchQueries.push({ location: urlParams.get('location') })
+		}
+		
+		if (fullTime === 'true') {
+			searchQueries.push({ contract: 'full' })
+		}
+
+		if (search != null && searchQueries.length > 0) {
+			searchQueries.push({
+				$or: [{ company: search }, { description: search }, { position: search }]
+			})
+		}
+		
+		if (searchQueries.length > 0) {
+			return fuse.search({
+				$and: searchQueries as Partial<SearchQuery>[]
+			})
+		}
+
+		if (search != null) {
+			return fuse.search({
+				$or: [{ company: search }, { description: search }, { position: search }]
+			})
+		}
+	}
+
+	const loadFilteredJobs = () => {
+		const filteredJobs = filterJobs()
+
+		if (filteredJobs == null) return 0
+
+		const jobsDiv = document.querySelector('[data-container="jobs"]')
+		if (filteredJobs.length === 0) {
+			const noJobsTemplate = document.querySelector('[data-template="no-jobs-message"]') as null | HTMLTemplateElement
+
+			if (noJobsTemplate == null) return
+
+  		const noJobsTemplateClone = noJobsTemplate.content.cloneNode(true) as DocumentFragment
+			jobsDiv?.append(noJobsTemplateClone)
+			return 0
+		}
+
+		const filteredJobsIDs = filteredJobs.map((job) => (job.item as Job).id)
+
+		const cardContainers = returnCardsFromTemplate()
+
+		cardContainers.forEach((container, index) => {
+			const jobID = container.dataset.id
+
+			if (filteredJobsIDs?.some((id) => id === jobID)) {
+				jobsDiv?.append(container)
+			}
+		})
+
+		return filteredJobs.length
+	}
+
+	const filteredJobsLength = loadFilteredJobs()
+	addListenerToLoadButton('button[data-load="filteredJobs"]', filteredJobsLength)
+	addListenerToForm()
+	addListenerToWindow('button[data-load="filteredJobs"]')
+</script>

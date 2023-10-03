@@ -11,53 +11,23 @@ const jobs = await allJobsDb.getAll()
 <BaseLayout title="DevJobs | Home">
 	<main class="grid gap-32">
 		<FilterOptions />
-		<div class="grid mb-[104px]">
+		<div class="grid pb-[104px]">
 			<div class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6" data-container="jobs">
 				{jobs.map((job, index) => index + 1 <= 12 ? <JobCard job={job} />  : null)}
 				<template data-template="jobs">
 					{jobs.map((job) => <JobCard job={job} />)}
 				</template>
 			</div>
-			{<CustomButton moreClasses='justify-self-center mt-14' dataLoad='true'>Load More</CustomButton>}
+			{<CustomButton moreClasses='justify-self-center mt-14' dataLoad='index'>Load More</CustomButton>}
 		</div>
 	</main>
 </BaseLayout>
 
 <script>
-	const loadMoreButton = document.querySelector('button[data-load="true"]')
-	let jobPagesCount = 1
-	
-	const loadMoreJobs = () => {
-		const jobsTemplate = document.querySelector('[data-template="jobs"]') as null | HTMLTemplateElement
+	import { addListenerToLoadButton, addListenerToWindow } from "../helpers/loadMoreButton"
+	import { addListenerToForm } from "../helpers/jobsForm"
 
-		if (jobsTemplate == null) return
-
-		const jobsTemplateClone = jobsTemplate.content.cloneNode(true) as DocumentFragment
-		const jobsDiv = document.querySelector('[data-container="jobs"]')
-		
-		const cardContainers = [...jobsTemplateClone.querySelectorAll('.card-container')] as HTMLDivElement[]
-
-		const startIndex = (jobPagesCount-1) * 12
-		const endIndex = cardContainers.length + 1 > jobPagesCount * 12 ? jobPagesCount * 12 : cardContainers.length
-		const newCardContainers = cardContainers.slice(startIndex, endIndex)
-		
-		newCardContainers.forEach((newCard) => {
-			jobsDiv?.append(newCard)
-		})
-
-		hideButtonIfNeeded(cardContainers)
-	}
-
-	const hideButtonIfNeeded = (cardContainers: HTMLDivElement[]) => {
-		if (cardContainers.length + 1 > jobPagesCount * 12) return
-
-		loadMoreButton?.classList.add('hide-button')
-	}
-
-
-	loadMoreButton?.addEventListener('click', () => {
-		jobPagesCount++
-
-		loadMoreJobs()
-	})
+	addListenerToLoadButton('button[data-load="index"]')
+	addListenerToForm()
+	addListenerToWindow('button[data-load="index"]')
 </script>
