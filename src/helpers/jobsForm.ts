@@ -4,6 +4,36 @@ import Fuse from 'fuse.js'
 
 const jobsForm = document.querySelector('[data-form="jobs"]') as HTMLFormElement
 
+const getQueryParams = () => {
+  const queryParams = new URLSearchParams(window.location.search)
+  const search = queryParams.get('job')
+  const location = queryParams.get('location')
+  const fullTime = queryParams.get('full-time')
+
+  return { search, location, fullTime }
+}
+
+export const prePopulateForm = () => {
+  const queryParams = getQueryParams()
+
+  
+  for (const param in queryParams) {
+    type Param = keyof typeof queryParams
+
+    if (queryParams[param as Param] != null) {
+      const input = document.querySelector(`[name="${param}"]`) as null | HTMLInputElement
+      
+      if (input != null && input.type === 'checkbox') {
+        input.checked = true
+      }
+      
+      if (input != null && input.type === 'search') {
+        input.value = queryParams[param as Param] as string
+      }
+    }
+  }
+}
+
 const getInputValues = () => {
   const formDataInstance = new FormData(jobsForm)
   return Object.fromEntries(formDataInstance)
@@ -128,13 +158,13 @@ const handleSubmit = () => {
   const invalidMessage = document.querySelector('[data-error="invalid-form"]')
   
   if (!isFormValid) {
-    invalidMessage.classList.remove('scale-0')
-    invalidMessage.classList.add('scale-100')
+    invalidMessage?.classList.remove('scale-0')
+    invalidMessage?.classList.add('scale-100')
     return
   }
 
-  invalidMessage.classList.remove('scale-100')
-  invalidMessage.classList.add('scale-0')
+  invalidMessage?.classList.remove('scale-100')
+  invalidMessage?.classList.add('scale-0')
 
   const searchURL = makeQueryLink()
   const isHomePage = window.location.pathname === '/'
