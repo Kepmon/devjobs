@@ -1,4 +1,6 @@
 ---
+import Header from '../components/Header.astro';
+
 interface Props {
 	title: string;
 }
@@ -16,10 +18,27 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body>
-		<slot />
+	<body class="no-initial-transition">
+		<Header />
+		<div class="wrapper wrapper-position">
+			<slot />
+		</div>
 	</body>
 </html>
+
+<script>
+	const theme = localStorage.getItem('devjobs-theme')
+
+	if (theme != null) {
+		const htmlElement = document.querySelector('html') as HTMLElement
+
+		htmlElement.classList.add('dark')
+	}
+
+	window.addEventListener('load', () => {
+		document.body.classList.remove('no-initial-transition');
+	})
+</script>
 
 <style is:global>
 @font-face {
@@ -27,7 +46,53 @@ const { title } = Astro.props;
 	src: local('Kumbh Sans'), url('/fonts/kumbh-sans.woff2') format('woff2');
 }
 
+@supports (scrollbar-width: thin) {
+	* {
+		scrollbar-width: thin;
+	}
+}
+
+body {
+	@apply grid grid-rows-[auto_40px_auto_1fr];
+	@apply text-normal bg-gray-100 dark:bg-gray-900;
+	@apply scrollbar-visibleLight dark:scrollbar-visibleDark overscroll-contain;
+}
+
 img {
 	@apply block max-w-full;
+}
+
+input[type="search"] {
+	@apply w-full truncate bg-inherit dark:text-white caret-blue-400 cursor-text;
+}
+
+.no-initial-transition * { 
+  transition: none !important;
+  animation-duration: 0.001s !important; 
+}
+
+.wrapper {
+	@apply mx-auto w-[min(90%,1110px)];
+}
+
+.wrapper-position {
+	@apply row-start-2 row-span-2 col-start-1;
+}
+
+.input-pair {
+	@apply flex gap-4 items-center grow px-6 py-5 md:py-7 h-full;
+	@apply md:border-r-2 border-gray-200 dark:border-gray-700;
+}
+
+.focus-within {
+	@apply focus-within:outline outline-4 outline-gray-200 dark:outline-gray-700 -outline-offset-4;
+}
+
+.focus-within input {
+	@apply grow outline outline-transparent;
+}
+
+.blue-outline {
+	@apply focus-visible:outline outline-[3px] outline-blue-400;
 }
 </style>

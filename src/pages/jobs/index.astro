@@ -1,0 +1,11 @@
+---
+import HomePageLayout from "../../layouts/HomePageLayout.astro";
+---
+
+<HomePageLayout dataLoad="filteredJobs" />
+
+<script>
+  import { prePopulateForm } from "../../helpers/jobsForm";
+
+  prePopulateForm()
+</script>

@@ -1,0 +1,33 @@
+<div class="flex items-center max-[350px]:gap-3 gap-4">
+  <img src="/img/icon-sun.svg" alt="">
+  <button aria-label="click here to change the theme" class="relative w-12 h-6 rounded-[100vmax] bg-white focus-visible:outline-violet-400">
+    <div class="toggler"></div>
+  </button>
+  <img src="/img/icon-moon.svg" alt="">
+</div>
+
+<script>
+  const button = document.querySelector('button')
+  
+  const toggleTheme = () => {
+    const htmlElement = document.querySelector('html') as HTMLElement
+
+    if (htmlElement.classList.contains('dark')) {
+      htmlElement.classList.remove('dark')
+      localStorage.removeItem('devjobs-theme')
+      return
+    }
+
+    htmlElement.classList.add('dark')
+    localStorage.setItem('devjobs-theme', 'dark')
+  }
+
+  button?.addEventListener('click', toggleTheme)
+</script>
+
+<style>
+  .toggler {
+    @apply absolute top-[5px] left-0 translate-x-[5px] dark:translate-x-[200%] w-[14px];
+    @apply bg-blue-400 aspect-square rounded-full transition-transform duration-300;
+  }
+</style>

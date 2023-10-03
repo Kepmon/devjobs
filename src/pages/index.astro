@@ -1,12 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { allJobsDb } from '../xata'
-
-const jobs = await allJobsDb.getAll()
+import HomePageLayout from "../layouts/HomePageLayout.astro";
 ---
 
-<BaseLayout title="DevJobs | Home">
-	<main>
-		<h1>Home Page</h1>
-	</main>
-</BaseLayout>
+<HomePageLayout dataLoad="index" isIndex={true} />
