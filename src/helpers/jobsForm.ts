@@ -125,10 +125,18 @@ export const loadFilteredJobs = async () => {
 
 const handleSubmit = () => {
   const isFormValid = checkFormValidity()
-  if (!isFormValid) return
+  const invalidMessage = document.querySelector('[data-error="invalid-form"]')
+  
+  if (!isFormValid) {
+    invalidMessage.classList.remove('scale-0')
+    invalidMessage.classList.add('scale-100')
+    return
+  }
+
+  invalidMessage.classList.remove('scale-100')
+  invalidMessage.classList.add('scale-0')
 
   const searchURL = makeQueryLink()
-
   const isHomePage = window.location.pathname === '/'
 
   if (isHomePage) {
