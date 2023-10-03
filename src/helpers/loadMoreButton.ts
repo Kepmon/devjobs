@@ -1,13 +1,10 @@
-import type { Job } from "../types/jobs"
-
 let jobPagesCount = 1
 
-const hideButtonIfNeeded = (length: number, selector: string) => {
-  const loadMoreButton = document.querySelector(selector)
+const hideButtonIfNeeded = (length: number, button: HTMLButtonElement | null) => {
 
   if (length + 1 > jobPagesCount * 12) return
 
-  loadMoreButton?.classList.add('hide-button')
+  button?.classList.add('hide-button')
 }
 
 export const returnCardsFromTemplate = () => {
@@ -20,7 +17,7 @@ export const returnCardsFromTemplate = () => {
   return [...jobsTemplateClone.querySelectorAll('.card-container')] as HTMLDivElement[]
 }
 
-const loadMoreJobs = (selector: string, length?: number) => {
+const loadMoreJobs = (button: HTMLButtonElement, length?: number) => {
   const jobsDiv = document.querySelector('[data-container="jobs"]')
   const cardContainers = returnCardsFromTemplate()
 
@@ -34,20 +31,18 @@ const loadMoreJobs = (selector: string, length?: number) => {
     jobsDiv?.append(newCard)
   })
 
-  hideButtonIfNeeded(length || cardContainers.length, selector)
+  hideButtonIfNeeded(length || cardContainers.length, button)
 }
 
-export const addListenerToLoadButton = (selector: string, length?: number) => {
-  const loadMoreButton = document.querySelector(selector)
-
-  loadMoreButton?.addEventListener('click', () => {
+export const addListenerToLoadButton = (button: HTMLButtonElement | null, length?: number) => {
+  button?.addEventListener('click', () => {
     jobPagesCount++
-    loadMoreJobs(selector, length || undefined)
+    loadMoreJobs(button, length || undefined)
   })
 }
 
-export const addListenerToWindow = (selector: string) => {
+export const addListenerToWindow = (button: HTMLButtonElement | null) => {
   const cardContainers = [...document.querySelectorAll('.card-container')] as HTMLDivElement[]
 
-  hideButtonIfNeeded(cardContainers.length, selector)
+  hideButtonIfNeeded(cardContainers.length, button)
 }

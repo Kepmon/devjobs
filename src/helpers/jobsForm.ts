@@ -1,3 +1,7 @@
+import type { Job, SearchQuery } from '../types/jobs'
+import { returnCardsFromTemplate } from '../helpers/loadMoreButton'
+import Fuse from 'fuse.js'
+
 const jobsForm = document.querySelector('[data-form="jobs"]') as HTMLFormElement
 
 const getInputValues = () => {
@@ -39,6 +43,84 @@ const makeQueryLink = () => {
   }
 
   return searchURL
+}
+
+const filterJobs = async () => {
+  const response = await fetch('/jobs.json')
+  const jobs = await response.json()
+
+  const urlParams = new URLSearchParams(window.location.search)
+
+  const searchQueries = []
+  const fuse = new Fuse(jobs, {
+    keys: ['company', 'contract', 'description', 'location', 'position'],
+    threshold: .3
+  })
+
+  const search = urlParams.get('job')
+  const location = urlParams.get('location')
+  const fullTime = urlParams.get('full-time')
+
+  const areThereAnyParams = search != null || location != null || fullTime === 'true'
+
+  if (!areThereAnyParams) return
+
+  if (location != null) {
+    searchQueries.push({ location: urlParams.get('location') })
+  }
+  
+  if (fullTime === 'true') {
+    searchQueries.push({ contract: 'full' })
+  }
+
+  if (search != null && searchQueries.length > 0) {
+    searchQueries.push({
+      $or: [{ company: search }, { description: search }, { position: search }]
+    })
+  }
+  
+  if (searchQueries.length > 0) {
+    return fuse.search({
+      $and: searchQueries as Partial<SearchQuery>[]
+    })
+  }
+
+  if (search != null) {
+    return fuse.search({
+      $or: [{ company: search }, { description: search }, { position: search }]
+    })
+  }
+}
+
+export const loadFilteredJobs = async () => {
+  const filteredJobs = await filterJobs()
+
+  if (filteredJobs == null) return 0
+
+  const jobsDiv = document.querySelector('[data-container="jobs"]')
+  if (filteredJobs.length === 0) {
+    const noJobsTemplate = document.querySelector('[data-template="no-jobs-message"]') as null | HTMLTemplateElement
+
+    if (noJobsTemplate == null) return
+
+    const noJobsTemplateClone = noJobsTemplate.content.cloneNode(true) as DocumentFragment
+    jobsDiv?.append(noJobsTemplateClone)
+    return 0
+  }
+
+  const filteredJobsIDs = filteredJobs.map((job) => (job.item as Job).id)
+
+  const cardContainers = returnCardsFromTemplate()
+
+  cardContainers.forEach((container, index) => {
+    const jobID = container.dataset.id
+
+    if (filteredJobsIDs?.some((id) => id === jobID)) {
+      jobsDiv?.append(container)
+    }
+  })
+
+  return filteredJobs.length
 }
 
 const handleSubmit = (e: Event) => {
