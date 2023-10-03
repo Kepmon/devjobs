@@ -10,7 +10,7 @@ import ErrorToast from "./ErrorToast.astro";
   <div class="input-pair focus-within">
     <SearchIcon fill="hsl(235, 68%, 61%)" classNames="hidden md:block" />
     <input autofocus type="search" name="search" placeholder="Filter by title, companies, expertise...">
-    <button class="md:hidden flex items-center gap-5 ml-auto" aria-label="click here to see more filter options" data-button="filter">
+    <button type="button" class="md:hidden flex items-center gap-5 p-3 ml-auto" aria-label="click here to see more filter options" data-button="filter">
       <img src="/img/icon-filter.svg" alt="">
     </button>
     <CustomButton ariaLabel="Click here to search" smallerPadding="px-2 py-2" moreClasses="md:hidden">
@@ -39,9 +39,7 @@ import ErrorToast from "./ErrorToast.astro";
     }
   })
 
-  filterButton?.addEventListener('click', (e) => {
-    e.preventDefault()
-
+  filterButton?.addEventListener('click', () => {
     if (dialog != null) {
       dialog.showModal()
       dialog.classList.remove('fadeOut')

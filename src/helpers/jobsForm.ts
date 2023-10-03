@@ -123,9 +123,7 @@ export const loadFilteredJobs = async () => {
   return filteredJobs.length
 }
 
-const handleSubmit = (e: Event) => {
-  e.preventDefault()
-
+const handleSubmit = () => {
   const isFormValid = checkFormValidity()
   if (!isFormValid) return
 
@@ -140,6 +138,9 @@ const handleSubmit = (e: Event) => {
   window.location.assign(`${searchURL.search}`)
 }
 
-export const addListenerToForm = (jobsPrefix?: true) => {
-  jobsForm.addEventListener('submit', handleSubmit)
+export const addListenerToForm = () => {
+  jobsForm.addEventListener('submit',(e: Event) => {
+    e.preventDefault()
+    handleSubmit()
+  })
 }
