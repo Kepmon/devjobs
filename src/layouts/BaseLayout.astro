@@ -18,7 +18,7 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body>
+	<body class="no-initial-transition">
 		<Header />
 		<div class="wrapper wrapper-position">
 			<slot />
@@ -34,6 +34,10 @@ const { title } = Astro.props;
 
 		htmlElement.classList.add('dark')
 	}
+
+	window.addEventListener('load', () => {
+		document.body.classList.remove('no-initial-transition');
+	})
 </script>
 
 <style is:global>
@@ -60,6 +64,11 @@ img {
 
 input[type="search"] {
 	@apply w-full truncate bg-inherit dark:text-white caret-blue-400 cursor-text;
+}
+
+.no-initial-transition * { 
+  transition: none !important;
+  animation-duration: 0.001s !important; 
 }
 
 .wrapper {

@@ -18,11 +18,10 @@ const { locationName, fullTimeName, moreWrapperStyles, moreLocationStyles } = As
     <input type="search" name={locationName} placeholder="Filter by location...">
   </div>
   <div class="grid gap-6 md:flex items-center px-6 pb-6 md:mr-4 md:pb-0 md:px-0 md:pl-6">
-    <label class="relative flex items-center gap-2 p-2 w-max font-[700] dark:text-white cursor-pointer">
-      <input type="checkbox" name={fullTimeName} class="peer blue-outline">
+    <label class="relative flex items-center gap-2 p-2 w-max font-[700] dark:text-white cursor-pointer group">
+      <input type="checkbox" name={fullTimeName} class="peer blue-outline group-hover:transition-colors group-hover:duration-300">
       <span class="hidden absolute top-2 left-[14px] text-white peer-checked:block">&#10003;</span>
-      <span>Full Time</span>
-      <span class="hidden lg:inline">Only</span>
+      <span>Full Time <span class="hidden lg:inline">Only</span></span>
     </label>
     <CustomButton smallerPadding="px-4 lg:px-10 py-4" moreClasses="blue-outline">Search</CustomButton>
   </div>
@@ -31,8 +30,7 @@ const { locationName, fullTimeName, moreWrapperStyles, moreLocationStyles } = As
 <style>
   input[type="checkbox"] {
     @apply appearance-none w-6 aspect-square rounded bg-gray-200 dark:bg-gray-700;
-    @apply cursor-pointer hover:bg-blue-300 transition-colors duration-300;
-    @apply checked:bg-blue-400;
+    @apply cursor-pointer hover:bg-blue-300 checked:bg-blue-400;
   }
 
   .additional-form-options {
