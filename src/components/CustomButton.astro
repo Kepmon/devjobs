@@ -9,8 +9,16 @@ interface Props {
 const { smallerPadding, ariaLabel, moreClasses, dataLoad } = Astro.props
 ---
 
-<button aria-label={ariaLabel || undefined} class:list={['custom-button', smallerPadding || 'px-10 py-4', moreClasses || '']} data-load={dataLoad || undefined}>
- <slot />
+<button
+  aria-label={ariaLabel || undefined}
+  class:list={[
+    'custom-button',
+    smallerPadding || 'px-10 py-4',
+    moreClasses || ''
+  ]}
+  data-load={dataLoad || undefined}
+>
+  <slot />
 </button>
 
 <style>
@@ -20,6 +28,6 @@ const { smallerPadding, ariaLabel, moreClasses, dataLoad } = Astro.props
   }
 
   .hide-button {
-		@apply hidden;
-	}
+    @apply hidden;
+  }
 </style>
