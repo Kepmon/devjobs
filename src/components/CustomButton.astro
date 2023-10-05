@@ -13,23 +13,12 @@ const { ariaLabel, moreClasses, dataLoad } = Astro.props
 <button
   aria-label={ariaLabel || undefined}
   data-load={dataLoad || undefined}
-  class={twMerge('custom-button px-10 py-4', moreClasses)}
+  class={twMerge('custom-button custom-button-padding', moreClasses)}
 >
   <slot />
 </button>
 
 <style>
-  .custom-button {
-    @apply text-white rounded-md font-[600];
-    @apply bg-blue-500 hover:bg-blue-400 focus-visible:bg-blue-400;
-  }
-
-  .custom-button--gray {
-    @apply text-blue-500 dark:text-white;
-    @apply bg-blue-200 hover:bg-blue-300 focus-visible:bg-blue-300;
-    @apply dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600;
-  }
-
   .hide-button {
     @apply hidden;
   }

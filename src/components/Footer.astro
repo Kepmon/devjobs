@@ -1,0 +1,21 @@
+---
+import type { Job } from '../types/jobs'
+import CustomButton from './CustomButton.astro'
+
+interface Props {
+  company: Job['company']
+  position: Job['position']
+}
+
+const { company, position } = Astro.props
+---
+
+<footer class="mt-20 py-6 bg-white dark:bg-gray-800 dark:text-white">
+  <div class="job-details-wrapper flex justify-between">
+    <div class="grid gap-3">
+      <p class="text-md font-[800]">{position}</p>
+      <p class="text-gray-500">{company}</p>
+    </div>
+    <CustomButton moreClasses="self-center">Apply Now</CustomButton>
+  </div>
+</footer>

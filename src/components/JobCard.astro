@@ -4,7 +4,7 @@ import { returnTimeDifference } from '../helpers/timeDifference'
 const { job } = Astro.props
 ---
 
-<a href={`job/${job.id}`}>
+<a href={`job/${job.id}`} data-link="job-details">
   <article data-id={job.id} class="card-container">
     <div style={{ backgroundColor: `${job.logoBackground}` }} class="card-logo">
       <img src={job.logo.at(0).url} alt="company logo" />

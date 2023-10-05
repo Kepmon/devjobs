@@ -1,11 +1,17 @@
 ---
+import type { Job } from '../types/jobs'
 import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
 
 interface Props {
   title: string
+  job?: {
+    company: Job['company']
+    position: Job['position']
+  }
 }
 
-const { title } = Astro.props
+const { title, job } = Astro.props
 ---
 
 <!doctype html>
@@ -23,6 +29,7 @@ const { title } = Astro.props
     <div class="wrapper wrapper-position">
       <slot />
     </div>
+    {job != null && <Footer company={job.company} position={job.position} />}
   </body>
 </html>
 
@@ -81,9 +88,29 @@ const { title } = Astro.props
     @apply row-start-2 row-span-2 col-start-1;
   }
 
+  .job-details-wrapper {
+    @apply mx-auto md:w-[min(100%,800px)];
+  }
+
   .input-pair {
     @apply flex gap-4 items-center grow px-6 py-5 md:py-7 h-full;
     @apply md:border-r-2 border-gray-200 dark:border-gray-700;
+  }
+
+  .custom-button {
+    @apply text-white rounded-md font-[600];
+    @apply bg-blue-500 hover:bg-blue-400 focus-visible:bg-blue-400;
+    @apply transition-colors duration-300;
+  }
+
+  .custom-button--gray {
+    @apply text-blue-500 dark:text-white;
+    @apply bg-blue-200 hover:bg-blue-300 focus-visible:bg-blue-300;
+    @apply dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600;
+  }
+
+  .custom-button-padding {
+    @apply px-5 py-4 md:px-10;
   }
 
   .focus-within {

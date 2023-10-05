@@ -21,7 +21,7 @@ export const returnCardsFromTemplate = () => {
   ) as DocumentFragment
 
   return [
-    ...jobsTemplateClone.querySelectorAll('.card-container')
+    ...jobsTemplateClone.querySelectorAll('[data-link="job-details"]')
   ] as HTMLDivElement[]
 }
 

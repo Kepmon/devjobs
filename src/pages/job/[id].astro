@@ -57,17 +57,20 @@ const {
 } = Astro.props
 ---
 
-<BaseLayout title={`${position} | ${company}`}>
-  <article data-id={id} class="mx-auto md:w-2/3">
+<BaseLayout
+  title={`${position} | ${company}`}
+  job={{
+    company,
+    position
+  }}
+>
+  <article data-id={id} class="job-details-wrapper">
     <header
       class="flex items-center bg-white dark:bg-gray-800 rounded-md overflow-hidden"
     >
-      <img
-        src={logo}
-        alt="company logo"
-        class="px-8 py-[55px] w-16 box-content"
-        style={{ backgroundColor: `${logoBackground}` }}
-      />
+      <div class="p-[55px]" style={{ backgroundColor: `${logoBackground}` }}>
+        <img src={logo} alt="company logo" class="scale-[2]" />
+      </div>
       <div class="grow flex justify-between px-10">
         <div>
           <p class="mb-2 text-md dark:text-white font-[700]">{company}</p>
@@ -75,9 +78,12 @@ const {
             >{website.replace('https://', '')}</a
           >
         </div>
-        <CustomButton moreClasses="custom-button--gray">
-          Company Site
-        </CustomButton>
+        <a
+          href={website}
+          target="_blank"
+          class="custom-button custom-button--gray custom-button-padding self-center"
+          >Company Site</a
+        >
       </div>
     </header>
     <main class="article-main">
