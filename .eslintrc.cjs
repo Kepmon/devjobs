@@ -29,6 +29,7 @@ module.exports = {
     ],
     'comma-dangle': ['error', 'never'],
     semi: ['error', 'never'],
+    'import/prefer-default-export': 'off',
     'import/extensions': ['error', 'never'],
     'no-tabs': ['error', { allowIndentationTabs: true }]
   },

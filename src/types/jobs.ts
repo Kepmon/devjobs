@@ -1,12 +1,18 @@
 export interface Job {
-  company: string,
-  contract: string,
-  description: string,
-  id: string,
-  location: string,
-  logo: string,
-  logoBackground: string,
+  company: string
+  contract: string
+  description: string
+  id: string
+  location: string
+  website: string
+  logo: string
+  logoBackground: string
   position: string
+  xata: {
+    createdAt: string
+    updatedAt: string
+    version: number
+  }
 }
 
 export interface SearchQuery {
@@ -17,4 +23,14 @@ export interface SearchQuery {
     { description: string },
     { position: string }
   ]
+}
+
+export interface JobErrorObject {
+  cause: undefined
+  status: number
+  requestedId: string
+  errors: {
+    message: string
+    status: number
+  }[]
 }

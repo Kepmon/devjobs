@@ -1,0 +1,158 @@
+---
+import type { GetStaticPaths } from 'astro'
+import type { JobErrorObject } from '../../types/jobs'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import CustomButton from '../../components/CustomButton.astro'
+import { allJobsDb } from '../../xata'
+import { returnTimeDifference } from '../../helpers/timeDifference'
+
+export const getStaticPaths = (async () => {
+  let jobs
+
+  try {
+    jobs = await allJobsDb.getAll()
+
+    if (jobs == null) throw new Error()
+
+    return jobs.map((job) => ({
+      params: {
+        id: job.id
+      },
+      props: {
+        company: job.company,
+        contract: job.contract,
+        description: job.description,
+        location: job.location,
+        website: job.website,
+        logo: job.logo?.at(0)?.url,
+        logoBackground: job.logoBackground,
+        position: job.position,
+        requirements: job.requirements,
+        role: job.role,
+        createdAt: job.xata.createdAt
+      }
+    }))
+  } catch (err) {
+    ;(err as JobErrorObject).errors.forEach((error) => {
+      // eslint-disable-next-line no-console
+      console.warn(`${error.status}: ${error.message}`)
+    })
+    return []
+  }
+}) satisfies GetStaticPaths
+
+const { id } = Astro.params
+const {
+  company,
+  contract,
+  description,
+  location,
+  website,
+  logo,
+  logoBackground,
+  position,
+  requirements,
+  role,
+  createdAt
+} = Astro.props
+---
+
+<BaseLayout title={`${position} | ${company}`}>
+  <article data-id={id} class="mx-auto md:w-2/3">
+    <header
+      class="flex items-center bg-white dark:bg-gray-800 rounded-md overflow-hidden"
+    >
+      <img
+        src={logo}
+        alt="company logo"
+        class="px-8 py-[55px] w-16 box-content"
+        style={{ backgroundColor: `${logoBackground}` }}
+      />
+      <div class="grow flex justify-between px-10">
+        <div>
+          <p class="mb-2 text-md dark:text-white font-[700]">{company}</p>
+          <a href={website} target="_blank" class="text-gray-500"
+            >{website.replace('https://', '')}</a
+          >
+        </div>
+        <CustomButton moreClasses="custom-button--gray">
+          Company Site
+        </CustomButton>
+      </div>
+    </header>
+    <main class="article-main">
+      <header class="flex justify-between">
+        <div>
+          <div class="flex items-center gap-3 text-gray-500">
+            <p>{returnTimeDifference(createdAt)}</p>
+            <p class="text-3xl leading-3">&#x2022;</p>
+            <p>{contract}</p>
+          </div>
+          <h1 class="text-lg font-[800]">{position}</h1>
+          <p class="self-end text-blue-500 text-xs font-[700]">{location}</p>
+        </div>
+        <CustomButton moreClasses="self-center">Apply Now</CustomButton>
+      </header>
+      <section aria-labelledby="description" class="job-offer-section">
+        <h2 id="description">Description</h2>
+        <p>{description}</p>
+      </section>
+      <section aria-labelledby="requirements" class="job-offer-section">
+        <h2 id="requirements">Requirements</h2>
+        <div>
+          <p class="mb-6">{requirements.content}</p>
+          <ul>
+            {
+              requirements.items.map((item: string) => (
+                <li>
+                  <span class="text-[2rem] leading-8">&#x2022;</span> {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+      <section aria-labelledby="role" class="job-offer-section">
+        <h2 id="role">What you will do</h2>
+        <div>
+          <p class="mb-6">{role.content}</p>
+          <ol>
+            {
+              role.items.map((item: string, index: number) => (
+                <li>
+                  <span>{index + 1}</span> {item}
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+    </main>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-main {
+    @apply grid gap-10 p-12 mt-8 bg-white dark:bg-gray-800 dark:text-white rounded-md;
+  }
+
+  .job-offer-section {
+    @apply grid gap-7;
+  }
+
+  .job-offer-section > h2 {
+    @apply text-md font-[800];
+  }
+
+  .job-offer-section :where(ul, ol) {
+    @apply grid gap-2;
+  }
+
+  .job-offer-section li {
+    @apply flex items-center gap-8;
+  }
+
+  .job-offer-section li > span {
+    @apply text-blue-500 font-[800];
+  }
+</style>

@@ -38,19 +38,14 @@ const { locationName, fullTimeName, moreWrapperStyles, moreLocationStyles } =
       >
       <span>Full Time <span class="hidden lg:inline">Only</span></span>
     </label>
-    <CustomButton
-      smallerPadding="px-4 lg:px-10 py-4"
-      moreClasses="blue-outline"
-    >
-      Search
-    </CustomButton>
+    <CustomButton moreClasses="blue-outline px-4 lg:px-10">Search</CustomButton>
   </div>
 </div>
 
 <style>
   input[type='checkbox'] {
     @apply appearance-none w-6 aspect-square rounded bg-gray-200 dark:bg-gray-700;
-    @apply cursor-pointer hover:bg-blue-300 checked:bg-blue-400;
+    @apply cursor-pointer hover:bg-blue-400 checked:bg-blue-500;
   }
 
   .additional-form-options {
