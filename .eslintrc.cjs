@@ -1,40 +1,58 @@
 module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    node: true
+  },
+  parser: '@astro/parser/eslint-plugin',
   extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:astro/recommended',
     'plugin:astro/jsx-a11y-recommended',
-    'eslint:recommended',
+    'plugin:astro/recommended',
     'airbnb-base',
+    'prettier'
   ],
   overrides: [
     {
-      env: {
-        node: true,
-        "astro/astro": true,
-        es2020: true,
-      },
-      files: ['*.astro', '*.ts'],
-      plugins: ["astro"],
+      files: ['*.astro'],
       parser: 'astro-eslint-parser',
       parserOptions: {
         parser: '@typescript-eslint/parser',
-        extraFileExtensions: ['.astro'],
-        sourceType: "module"
-      },
-      rules: {
-        'astro/prefer-class-list-directive': 'error',
-        'astro/no-unused-css-selector': 'error',
-      }
-    },
-    {
-      files: ["**/*.astro/*.js", "*.astro/*.js"],
-      env: {
-        browser: true,
-        es2020: true,
-      },
-      parserOptions: {
-        sourceType: "module",
+        extraFileExtensions: ['.astro']
       }
     }
-  ]
+  ],
+  plugins: ['prettier'],
+  rules: {
+    'prettier/prettier': [
+      'error',
+      { singleQuote: true, trailingComma: 'none', semi: false }
+    ],
+    'comma-dangle': ['error', 'never'],
+    semi: ['error', 'never'],
+    'import/prefer-default-export': 'off',
+    'import/extensions': ['error', 'never'],
+    'no-tabs': ['error', { allowIndentationTabs: true }],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "object",
+          "index",
+          "type",
+          "builtin",
+          "internal",
+          "parent",
+          "sibling",
+          "external"
+        ]
+      }
+    ]
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx']
+      }
+    }
+  }
 }

@@ -1,98 +1,136 @@
 ---
-import Header from '../components/Header.astro';
+import type { Job } from '../types/jobs'
+import Header from '../components/Header.astro'
+import Footer from '../components/Footer.astro'
 
 interface Props {
-	title: string;
+  title: string
+  job?: {
+    company: Job['company']
+    position: Job['position']
+  }
 }
 
-const { title } = Astro.props;
+const { title, job } = Astro.props
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href="/favicon.png" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body class="no-initial-transition">
-		<Header />
-		<div class="wrapper wrapper-position">
-			<slot />
-		</div>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="no-initial-transition">
+    <Header />
+    <div class="wrapper wrapper-position">
+      <slot />
+    </div>
+    {job != null && <Footer company={job.company} position={job.position} />}
+  </body>
 </html>
 
 <script>
-	const theme = localStorage.getItem('devjobs-theme')
+  const theme = localStorage.getItem('devjobs-theme')
 
-	if (theme != null) {
-		const htmlElement = document.querySelector('html') as HTMLElement
+  if (theme != null) {
+    const htmlElement = document.querySelector('html') as HTMLElement
 
-		htmlElement.classList.add('dark')
-	}
+    htmlElement.classList.add('dark')
+  }
 
-	window.addEventListener('load', () => {
-		document.body.classList.remove('no-initial-transition');
-	})
+  window.addEventListener('load', () => {
+    document.body.classList.remove('no-initial-transition')
+  })
 </script>
 
 <style is:global>
-@font-face {
-	font-family: 'Kumbh Sans';
-	src: local('Kumbh Sans'), url('/fonts/kumbh-sans.woff2') format('woff2');
-}
+  @font-face {
+    font-family: 'Kumbh Sans';
+    src:
+      local('Kumbh Sans'),
+      url('/fonts/kumbh-sans.woff2') format('woff2');
+      font-display: fallback;
+  }
 
-@supports (scrollbar-width: thin) {
-	* {
-		scrollbar-width: thin;
-	}
-}
+  @supports (scrollbar-width: thin) {
+    * {
+      scrollbar-width: thin;
+    }
+  }
 
-body {
-	@apply grid grid-rows-[auto_40px_auto_1fr];
-	@apply text-normal bg-gray-100 dark:bg-gray-900;
-	@apply scrollbar-visibleLight dark:scrollbar-visibleDark overscroll-contain;
-}
+  body {
+    @apply grid grid-rows-[auto_40px_auto_1fr] min-h-[100dvh];
+    @apply text-normal bg-blue-100 dark:bg-gray-900;
+    @apply scrollbar-visibleLight dark:scrollbar-visibleDark overscroll-contain;
+  }
 
-img {
-	@apply block max-w-full;
-}
+  img {
+    @apply block max-w-full;
+  }
 
-input[type="search"] {
-	@apply w-full truncate bg-inherit dark:text-white caret-blue-400 cursor-text;
-}
+  input[type='search'] {
+    @apply w-full truncate bg-inherit dark:text-white caret-blue-500 cursor-text;
+  }
 
-.no-initial-transition * { 
-  transition: none !important;
-  animation-duration: 0.001s !important; 
-}
+  .no-initial-transition * {
+    transition: none !important;
+    animation-duration: 0.001s !important;
+  }
 
-.wrapper {
-	@apply mx-auto w-[min(90%,1110px)];
-}
+  .wrapper {
+    @apply mx-auto w-[min(90%,70rem)];
+  }
 
-.wrapper-position {
-	@apply row-start-2 row-span-2 col-start-1;
-}
+  .wrapper-position {
+    @apply row-start-2 row-span-2 col-start-1;
+  }
 
-.input-pair {
-	@apply flex gap-4 items-center grow px-6 py-5 md:py-7 h-full;
-	@apply md:border-r-2 border-gray-200 dark:border-gray-700;
-}
+  .job-details-wrapper {
+    @apply mx-auto md:w-[min(100%,50rem)];
+  }
 
-.focus-within {
-	@apply focus-within:outline outline-4 outline-gray-200 dark:outline-gray-700 -outline-offset-4;
-}
+  .input-pair {
+    @apply flex gap-4 items-center grow px-6 py-5 md:py-7 h-full;
+    @apply md:border-r-2 border-gray-200 dark:border-gray-700;
+  }
 
-.focus-within input {
-	@apply grow outline outline-transparent;
-}
+  .custom-button {
+    @apply text-white rounded-md font-[600];
+    @apply bg-blue-500 hover:bg-blue-400 focus-visible:bg-blue-400;
+    @apply transition-colors duration-300;
+  }
 
-.blue-outline {
-	@apply focus-visible:outline outline-[3px] outline-blue-400;
-}
+  .custom-button--gray {
+    @apply text-blue-500 dark:text-white;
+    @apply bg-blue-200 hover:bg-blue-300 focus-visible:bg-blue-300;
+    @apply dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus-visible:bg-gray-600;
+  }
+
+  .custom-button-padding {
+    @apply px-5 py-4 md:px-10;
+  }
+
+  .gray-text-wrapper {
+    @apply flex items-center gap-3 text-gray-500;
+  }
+  
+  .gray-text-wrapper .dot {
+    @apply text-3xl leading-3;
+  }
+
+  .focus-within {
+    @apply focus-within:outline outline-4 outline-gray-200 dark:outline-gray-700 -outline-offset-4;
+  }
+
+  .focus-within input {
+    @apply grow outline outline-transparent;
+  }
+
+  .blue-outline {
+    @apply focus-visible:outline outline-[3px] outline-blue-500;
+  }
 </style>

@@ -1,6 +1,9 @@
-<div class="flex items-center max-[350px]:gap-3 gap-4">
+<div class="flex items-center gap-4 max-[350px]:scale-75">
   <img src="/img/icon-sun.svg" alt="">
-  <button aria-label="click here to change the theme" class="relative w-12 h-6 rounded-[100vmax] bg-white focus-visible:outline-violet-400">
+  <button
+    aria-label="click here to change the theme"
+    class="relative w-12 h-6 rounded-[100vmax] bg-white focus-visible:outline-violet-400 shrink-0"
+  >
     <div class="toggler"></div>
   </button>
   <img src="/img/icon-moon.svg" alt="">
@@ -28,6 +31,6 @@
 <style>
   .toggler {
     @apply absolute top-[5px] left-0 translate-x-[5px] dark:translate-x-[200%] w-[14px];
-    @apply bg-blue-400 aspect-square rounded-full transition-transform duration-300;
+    @apply bg-blue-500 aspect-square rounded-full transition-transform duration-300;
   }
 </style>

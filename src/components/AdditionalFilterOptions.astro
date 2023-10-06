@@ -1,36 +1,51 @@
 ---
-import CustomButton from "./CustomButton.astro";
+import CustomButton from './CustomButton.astro'
 
 interface Props {
-  locationName: string,
+  locationName: string
   fullTimeName: string
   moreWrapperStyles?: string
   moreLocationStyles?: string
 }
 
-const { locationName, fullTimeName, moreWrapperStyles, moreLocationStyles } = Astro.props
-
+const { locationName, fullTimeName, moreWrapperStyles, moreLocationStyles } =
+  Astro.props
 ---
 
 <div class:list={['additional-form-options', moreWrapperStyles || '']}>
   <div class:list={['px-6 pt-7 focus-within', moreLocationStyles || '']}>
-    <img src="/img/icon-location.svg" alt="">
-    <input type="search" name={locationName} placeholder="Filter by location...">
+    <img src="/img/icon-location.svg" alt="" />
+    <input
+      type="search"
+      name={locationName}
+      placeholder="Filter by location..."
+    />
   </div>
-  <div class="grid gap-6 md:flex items-center px-6 pb-6 md:mr-4 md:pb-0 md:px-0 md:pl-6">
-    <label class="relative flex items-center gap-2 p-2 w-max font-[700] dark:text-white cursor-pointer group">
-      <input type="checkbox" name={fullTimeName} class="peer blue-outline group-hover:transition-colors group-hover:duration-300">
-      <span class="hidden absolute top-2 left-[14px] text-white peer-checked:block">&#10003;</span>
+  <div
+    class="grid gap-6 md:flex items-center px-6 pb-6 md:mr-4 md:pb-0 md:px-0 md:pl-6"
+  >
+    <label
+      class="relative flex items-center gap-2 p-2 w-max font-[700] dark:text-white cursor-pointer group"
+    >
+      <input
+        type="checkbox"
+        name={fullTimeName}
+        class="peer blue-outline group-hover:transition-colors group-hover:duration-300"
+      />
+      <span
+        class="hidden absolute top-2 left-[14px] text-white peer-checked:block"
+        >&#10003;</span
+      >
       <span>Full Time <span class="hidden lg:inline">Only</span></span>
     </label>
-    <CustomButton smallerPadding="px-4 lg:px-10 py-4" moreClasses="blue-outline">Search</CustomButton>
+    <CustomButton moreClasses="blue-outline">Search</CustomButton>
   </div>
 </div>
 
 <style>
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     @apply appearance-none w-6 aspect-square rounded bg-gray-200 dark:bg-gray-700;
-    @apply cursor-pointer hover:bg-blue-300 checked:bg-blue-400;
+    @apply cursor-pointer hover:bg-blue-400 checked:bg-blue-500;
   }
 
   .additional-form-options {

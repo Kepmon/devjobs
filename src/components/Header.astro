@@ -1,12 +1,19 @@
 ---
-import ThemeToggler from "./ThemeToggler.astro";
+import ThemeToggler from './ThemeToggler.astro'
 ---
 
-<header class="grid content-start row-start-1 row-span-2 col-start-1 min-h-[8.5rem] md:min-h-[10rem] bg-hero-bg md:rounded-bl-[100px]">
+<header class="header">
   <div class="wrapper flex justify-between mt-7">
-    <a href="/" aria-label="company logo - click here to to the home page" class="-translate-x-4">
-      <img src="/img/logo.svg" alt="" class="p-4 max-[350px]:scale-75">
+    <a href="/" aria-label="company logo - click here to to the home page">
+      <img src="/img/logo.svg" alt="" class="md:p-4 max-[350px]:scale-75" />
     </a>
     <ThemeToggler />
   </div>
 </header>
+
+<style>
+  .header {
+    @apply grid content-start row-start-1 row-span-2 col-start-1;
+    @apply min-h-[8.5rem] md:min-h-[10rem] bg-hero-bg md:rounded-bl-[100px];
+  }
+</style>

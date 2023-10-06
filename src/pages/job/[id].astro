@@ -1,0 +1,178 @@
+---
+import type { GetStaticPaths } from 'astro'
+import type { JobErrorObject } from '../../types/jobs'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import CustomButton from '../../components/CustomButton.astro'
+import { allJobsDb } from '../../xata'
+import { returnTimeDifference } from '../../helpers/timeDifference'
+import { twMerge } from 'tailwind-merge'
+
+export const getStaticPaths = (async () => {
+  let jobs
+
+  try {
+    jobs = await allJobsDb.getAll()
+
+    if (jobs == null) throw new Error()
+
+    return jobs.map((job) => ({
+      params: {
+        id: job.id
+      },
+      props: {
+        company: job.company,
+        contract: job.contract,
+        description: job.description,
+        location: job.location,
+        website: job.website,
+        logo: job.logo?.at(0)?.url,
+        logoBackground: job.logoBackground,
+        position: job.position,
+        requirements: job.requirements,
+        role: job.role,
+        createdAt: job.xata.createdAt
+      }
+    }))
+  } catch (err) {
+    ;(err as JobErrorObject).errors.forEach((error) => {
+      // eslint-disable-next-line no-console
+      console.warn(`${error.status}: ${error.message}`)
+    })
+    return []
+  }
+}) satisfies GetStaticPaths
+
+const { id } = Astro.params
+const {
+  company,
+  contract,
+  description,
+  location,
+  website,
+  logo,
+  logoBackground,
+  position,
+  requirements,
+  role,
+  createdAt
+} = Astro.props
+---
+
+<BaseLayout
+  title={`${position} | ${company}`}
+  job={{
+    company,
+    position
+  }}
+>
+  <article data-id={id} class="job-details-wrapper">
+    <header
+      class="relative md:flex items-center py-6 bg-white dark:bg-gray-800 rounded-md md:overflow-hidden md:py-0"
+    >
+      <div
+        class={twMerge('logo-wrapper')}
+        style={{ backgroundColor: `${logoBackground}` }}
+      >
+        <img src={logo} alt="company logo" class="md:scale-[2]" />
+      </div>
+      <div
+        class="grid gap-6 justify-center md:grow md:flex md:justify-between md:px-10 mt-6 md:mt-0"
+      >
+        <div class="text-center md:text-left">
+          <p class="mb-2 text-md dark:text-white font-[700]">{company}</p>
+          <a href={website} target="_blank" class="text-gray-500"
+            >{website.replace('https://', '')}</a
+          >
+        </div>
+        <a
+          href={website}
+          target="_blank"
+          class="custom-button custom-button--gray custom-button-padding md:self-center"
+          >Company Site</a
+        >
+      </div>
+    </header>
+    <main class="article-main">
+      <header class="grid xs:flex xs:justify-between gap-12">
+        <div class="[&>:not(:last-child)]:mb-3">
+          <div class="gray-text-wrapper">
+            <p>{returnTimeDifference(createdAt)}</p>
+            <p class="dot">&#x2022;</p>
+            <p>{contract}</p>
+          </div>
+          <h1 class="text-lg font-[800]">{position}</h1>
+          <p class="self-end text-blue-500 text-xs font-[700]">{location}</p>
+        </div>
+        <CustomButton moreClasses="self-center whitespace-nowrap">
+          Apply Now
+        </CustomButton>
+      </header>
+      <section aria-labelledby="description" class="job-offer-section">
+        <h2 id="description">Description</h2>
+        <p>{description}</p>
+      </section>
+      <section aria-labelledby="requirements" class="job-offer-section">
+        <h2 id="requirements">Requirements</h2>
+        <div>
+          <p class="mb-6">{requirements.content}</p>
+          <ul>
+            {
+              requirements.items.map((item: string) => (
+                <li>
+                  <span class="text-[2rem] leading-5">&#x2022;</span> {item}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+      <section aria-labelledby="role" class="job-offer-section">
+        <h2 id="role">What you will do</h2>
+        <div>
+          <p class="mb-6">{role.content}</p>
+          <ol>
+            {
+              role.items.map((item: string, index: number) => (
+                <li>
+                  <span>{index + 1}</span> {item}
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+    </main>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-main {
+    @apply grid gap-10 p-6 md:p-12 mt-8 bg-white dark:bg-gray-800 dark:text-white rounded-md;
+  }
+
+  .logo-wrapper {
+    @apply grid place-content-center absolute inset-[-24px_0_auto];
+    @apply m-auto p-2 w-10 aspect-square rounded-2xl box-content;
+    @apply md:static md:m-0 md:py-2 md:px-4 md:w-28 md:rounded-none;
+  }
+
+  .job-offer-section {
+    @apply grid gap-7;
+  }
+
+  .job-offer-section > h2 {
+    @apply text-md font-[800];
+  }
+
+  .job-offer-section :where(ul, ol) {
+    @apply grid gap-2;
+  }
+
+  .job-offer-section li {
+    @apply flex items-start gap-4 md:gap-8;
+  }
+
+  .job-offer-section li > span {
+    @apply text-blue-500 font-[800];
+  }
+</style>

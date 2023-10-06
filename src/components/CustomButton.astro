@@ -1,25 +1,25 @@
 ---
+import { twMerge } from 'tailwind-merge'
+
 interface Props {
-  smallerPadding?: string
   ariaLabel?: string
   moreClasses?: string
   dataLoad?: string
 }
 
-const { smallerPadding, ariaLabel, moreClasses, dataLoad } = Astro.props
+const { ariaLabel, moreClasses, dataLoad } = Astro.props
 ---
 
-<button aria-label={ariaLabel || undefined} class:list={['custom-button', smallerPadding || 'px-10 py-4', moreClasses || '']} data-load={dataLoad || undefined}>
- <slot />
+<button
+  aria-label={ariaLabel || undefined}
+  data-load={dataLoad || undefined}
+  class={twMerge('custom-button custom-button-padding', moreClasses)}
+>
+  <slot />
 </button>
 
 <style>
-  .custom-button {
-    @apply text-white rounded-md font-[600];
-    @apply bg-blue-400 hover:bg-blue-300 focus-visible:bg-blue-300;
-  }
-
   .hide-button {
-		@apply hidden;
-	}
+    @apply hidden;
+  }
 </style>
