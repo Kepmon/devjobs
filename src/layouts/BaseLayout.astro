@@ -53,6 +53,7 @@ const { title, job } = Astro.props
     src:
       local('Kumbh Sans'),
       url('/fonts/kumbh-sans.woff2') format('woff2');
+      font-display: fallback;
   }
 
   @supports (scrollbar-width: thin) {
@@ -111,6 +112,14 @@ const { title, job } = Astro.props
 
   .custom-button-padding {
     @apply px-5 py-4 md:px-10;
+  }
+
+  .gray-text-wrapper {
+    @apply flex items-center gap-3 text-gray-500;
+  }
+  
+  .gray-text-wrapper .dot {
+    @apply text-3xl leading-3;
   }
 
   .focus-within {

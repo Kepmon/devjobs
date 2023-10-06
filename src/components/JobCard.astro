@@ -10,9 +10,9 @@ const { job } = Astro.props
       <img src={job.logo.at(0).url} alt="company logo" />
     </div>
     <div class="grid content-start gap-2">
-      <div class="flex items-center gap-3 text-gray-500">
+      <div class="gray-text-wrapper">
         <p>{returnTimeDifference(job.xata.createdAt)}</p>
-        <p class="text-3xl leading-3">&#x2022;</p>
+        <p class="dot">&#x2022;</p>
         <p>{job.contract}</p>
       </div>
       <h2 class="text-md font-[800] dark:text-white">{job.position}</h2>
