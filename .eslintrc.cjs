@@ -31,7 +31,22 @@ module.exports = {
     semi: ['error', 'never'],
     'import/prefer-default-export': 'off',
     'import/extensions': ['error', 'never'],
-    'no-tabs': ['error', { allowIndentationTabs: true }]
+    'no-tabs': ['error', { allowIndentationTabs: true }],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "object",
+          "index",
+          "type",
+          "builtin",
+          "internal",
+          "parent",
+          "sibling",
+          "external"
+        ]
+      }
+    ]
   },
   settings: {
     'import/resolver': {

@@ -10,12 +10,14 @@ interface Props {
 const { company, position } = Astro.props
 ---
 
-<footer class="mt-20 py-6 bg-white dark:bg-gray-800 dark:text-white">
-  <div class="job-details-wrapper flex justify-between">
-    <div class="grid gap-3">
+<footer class="self-end mt-20 p-6 bg-white dark:bg-gray-800 dark:text-white">
+  <div class="job-details-wrapper flex xs:justify-between">
+    <div class="hidden xs:grid gap-3">
       <p class="text-md font-[800]">{position}</p>
       <p class="text-gray-500">{company}</p>
     </div>
-    <CustomButton moreClasses="self-center">Apply Now</CustomButton>
+    <CustomButton moreClasses="grow xs:self-center xs:grow-0">
+      Apply Now
+    </CustomButton>
   </div>
 </footer>

@@ -61,6 +61,9 @@ module.exports = {
           '100%': { opacity: 0 }
         }
       },
+			screens: {
+				xs: '512px'
+			},
 			scrollbar: {
 				visibleDark: {
 					size: '10px',

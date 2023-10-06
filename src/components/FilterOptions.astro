@@ -15,20 +15,22 @@ import ErrorToast from './ErrorToast.astro'
       name="search"
       placeholder="Filter by title, companies, expertise..."
     />
-    <button
-      type="button"
-      class="md:hidden flex items-center gap-5 p-3 ml-auto"
-      aria-label="click here to see more filter options"
-      data-button="filter"
-    >
-      <img src="/img/icon-filter.svg" alt="" />
-    </button>
-    <CustomButton
-      ariaLabel="Click here to search"
-      moreClasses="md:hidden p-2"
-    >
-      <SearchIcon fill="white" classNames="scale-75" />
-    </CustomButton>
+    <div class="flex gap-1">
+      <button
+        type="button"
+        class="md:hidden flex p-3 ml-auto w-10 aspect-square shrink-0"
+        aria-label="click here to see more filter options"
+        data-button="filter"
+      >
+        <img src="/img/icon-filter.svg" alt="" class="shrink-0" />
+      </button>
+      <CustomButton
+        ariaLabel="Click here to search"
+        moreClasses="md:hidden p-2"
+      >
+        <SearchIcon fill="white" classNames="scale-75" />
+      </CustomButton>
+    </div>
   </div>
   <AdditionalFilterOptions
     locationName="location"

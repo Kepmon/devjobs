@@ -62,7 +62,7 @@ const { title, job } = Astro.props
   }
 
   body {
-    @apply grid grid-rows-[auto_40px_auto_1fr];
+    @apply grid grid-rows-[auto_40px_auto_1fr] min-h-[100dvh];
     @apply text-normal bg-blue-100 dark:bg-gray-900;
     @apply scrollbar-visibleLight dark:scrollbar-visibleDark overscroll-contain;
   }
@@ -81,7 +81,7 @@ const { title, job } = Astro.props
   }
 
   .wrapper {
-    @apply mx-auto w-[min(90%,1110px)];
+    @apply mx-auto w-[min(90%,70rem)];
   }
 
   .wrapper-position {
@@ -89,7 +89,7 @@ const { title, job } = Astro.props
   }
 
   .job-details-wrapper {
-    @apply mx-auto md:w-[min(100%,800px)];
+    @apply mx-auto md:w-[min(100%,50rem)];
   }
 
   .input-pair {
