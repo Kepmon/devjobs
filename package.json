@@ -11,6 +11,7 @@
     "lint": "eslint --fix --ext \"src/**/*.{cjs,js,ts,astro}\""
   },
   "dependencies": {
+    "@astrojs/netlify": "^3.0.2",
     "@astrojs/tailwind": "^5.0.0",
     "@gradin/tailwindcss-scrollbar": "^3.0.1",
     "@xata.io/client": "^0.26.7",

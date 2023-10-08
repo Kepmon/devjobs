@@ -32,18 +32,19 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/extensions': ['error', 'never'],
     'no-tabs': ['error', { allowIndentationTabs: true }],
-    "import/order": [
-      "error",
+    'consistent-return': ["error", 'never'],
+    'import/order': [
+      'error',
       {
-        "groups": [
-          "object",
-          "index",
-          "type",
-          "builtin",
-          "internal",
-          "parent",
-          "sibling",
-          "external"
+        'groups': [
+          'object',
+          'index',
+          'type',
+          'builtin',
+          'internal',
+          'parent',
+          'sibling',
+          'external'
         ]
       }
     ]
