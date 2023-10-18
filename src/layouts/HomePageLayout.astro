@@ -1,33 +1,53 @@
 ---
-import type { JobErrorObject } from '../types/jobs'
 import BaseLayout from './BaseLayout.astro'
+import { allJobsDb } from '../xata'
 import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
-import { allJobsDb } from '../xata'
+import ErrorToast from '../components/ErrorToast.astro'
+import { filterJobs } from '../helpers/jobsForm'
 
 interface Props {
   dataLoad: 'index' | 'filteredJobs'
-  isIndex?: true
 }
 
-const { dataLoad, isIndex } = Astro.props
+const { searchParams } = Astro.url
+const pageNumber =
+  searchParams.get('page') != null ? Number(searchParams.get('page')) : 0
+const { dataLoad } = Astro.props
+
 let jobs
-
-try {
-  jobs = await allJobsDb.getAll()
-
-  if (jobs == null) throw new Error()
-} catch (err) {
-  ;(err as JobErrorObject).errors.forEach((error) => {
-    // eslint-disable-next-line no-console
-    console.warn(`${error.status}: ${error.message}`)
+if (searchParams.size === 0) {
+  jobs = await allJobsDb.getPaginated({
+    pagination: { size: 12, offset: 0 }
   })
+}
+
+if (pageNumber > 0) {
+  jobs = await allJobsDb.getPaginated({
+    pagination: { size: 12, offset: (pageNumber - 1) * 12 }
+  })
+}
+
+if (searchParams.size > 0 && pageNumber === 0) {
+  const allJobs = await allJobsDb.getAll()
+  jobs = filterJobs(searchParams, allJobs)
+}
+
+const isNoJobInfoDisplayed =
+  jobs != null && !('records' in jobs) && jobs.length === 0
+const isThereAnotherPage =
+  jobs != null && 'records' in jobs ? jobs.hasNextPage() : false
+
+let isFetchingError = false
+if (jobs == null) {
+  isFetchingError = true
 }
 ---
 
 <BaseLayout title="DevJobs | Home">
+  {isFetchingError && <ErrorToast showingClass="translate-y-0" />}
   <main class="grid gap-12 xs:gap-32 [&:has([data-svg])]:gap-16">
     <div>
       <FilterOptions />
@@ -36,29 +56,28 @@ try {
       </p>
     </div>
     <div class="grid pb-[104px]">
+      {isNoJobInfoDisplayed && <NoJobInfo />}
       <div
         class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6"
         data-container="jobs"
       >
         {
-          isIndex &&
-            jobs != null &&
-            jobs.map((job, index) =>
-              index + 1 < 13 ? <JobCard job={job} /> : null
-            )
+          jobs != null &&
+            'records' in jobs &&
+            jobs.records.map((job) => <JobCard job={job} />)
         }
-        <template data-template="jobs">
-          {jobs != null && jobs.map((job) => <JobCard job={job} />)}
-        </template>
-        <template data-template="no-jobs-message">
-          <NoJobInfo />
-        </template>
+        {
+          jobs != null &&
+            !('records' in jobs) &&
+            jobs.map((job) => <JobCard job={job.item} />)
+        }
       </div>
       {
-        (
+        isThereAnotherPage && (
           <CustomButton
             moreClasses="justify-self-center mt-14"
             dataLoad={dataLoad}
+            dataNext={isThereAnotherPage.toString()}
           >
             Load More
           </CustomButton>
@@ -69,39 +88,21 @@ try {
 </BaseLayout>
 
 <script>
-  import {
-    addListenerToLoadButton,
-    addListenerToWindow
-  } from '../helpers/loadMoreButton'
-  import { loadFilteredJobs, addListenerToForm } from '../helpers/jobsForm'
+  import { addListenerToLoadButton } from '../helpers/loadMoreButton'
+  import { prePopulateForm, addListenerToForm } from '../helpers/jobsForm'
 
-  const cardContainers = [...document.querySelectorAll('.card-container')]
-  const errorToast = document.querySelector('.error-toast')
+  const jobsForm = document.querySelector(
+    '[data-form="jobs"]'
+  ) as HTMLFormElement
   const loadButton = document.querySelector(
     '[data-load]'
   ) as null | HTMLButtonElement
 
-  const currentPath = window.location.pathname
+  const isNextPage = loadButton?.dataset.next === 'true'
 
-  if (currentPath === '/') {
-    if (cardContainers.length === 0) {
-      errorToast?.classList.add('error-toast-visible')
-
-      setTimeout(() => {
-        errorToast?.classList.remove('error-toast-visible')
-      }, 3000)
-    }
-  }
-
-  if (currentPath !== '/') {
-    const filteredJobsLength = await loadFilteredJobs()
-    addListenerToLoadButton(loadButton, filteredJobsLength)
-  } else {
-    addListenerToLoadButton(loadButton)
-  }
-
-  addListenerToForm()
-  addListenerToWindow(loadButton)
+  prePopulateForm()
+  addListenerToLoadButton(isNextPage, loadButton)
+  addListenerToForm(jobsForm)
 </script>
 
 <style>

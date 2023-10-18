@@ -2,10 +2,8 @@
 import CustomButton from './CustomButton.astro'
 import SearchIcon from './svgs/SearchIcon.astro'
 import AdditionalFilterOptions from './AdditionalFilterOptions.astro'
-import ErrorToast from './ErrorToast.astro'
 ---
 
-<ErrorToast />
 <form class="main-form" data-form="jobs">
   <div class="input-pair focus-within">
     <SearchIcon fill="hsl(235, 68%, 61%)" classNames="hidden md:block" />
@@ -34,7 +32,7 @@ import ErrorToast from './ErrorToast.astro'
   </div>
   <AdditionalFilterOptions
     locationName="location"
-    fullTimeName="fullTime"
+    fullTimeName="contract"
     moreWrapperStyles="hidden md:flex"
     moreLocationStyles="input-pair"
   />
@@ -42,7 +40,7 @@ import ErrorToast from './ErrorToast.astro'
     <form>
       <AdditionalFilterOptions
         locationName="locationMobile"
-        fullTimeName="fullTimeMobile"
+        fullTimeName="contractMobile"
         moreWrapperStyles="grid gap-6"
         moreLocationStyles="flex gap-4 px-0 pb-6 border-b border-gray-200 dark:border-gray-700"
       />

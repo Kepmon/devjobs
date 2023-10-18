@@ -10,7 +10,7 @@ interface Props {
 const { company, position } = Astro.props
 ---
 
-<footer class="self-end mt-20 p-6 bg-white dark:bg-gray-800 dark:text-white">
+<footer>
   <div class="job-details-wrapper flex xs:justify-between">
     <div class="hidden xs:grid gap-3">
       <p class="text-md font-[800]">{position}</p>
@@ -21,3 +21,10 @@ const { company, position } = Astro.props
     </CustomButton>
   </div>
 </footer>
+
+<style>
+  footer {
+    @apply sticky bottom-0 shadow-fotter-light dark:shadow-fotter-dark;
+    @apply self-end mt-20 p-6 bg-white dark:bg-gray-800 dark:text-white;
+  }
+</style>

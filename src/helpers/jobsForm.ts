@@ -1,21 +1,19 @@
-import type { Job, SearchQuery } from '../types/jobs'
-import { returnCardsFromTemplate } from '../helpers/loadMoreButton'
+import type { SearchQuery } from '../types/jobs'
+import type { SelectedPick } from '@xata.io/client'
+import type { AllJobsRecord } from '../xata'
 import Fuse from 'fuse.js'
 
-const jobsForm = document.querySelector('[data-form="jobs"]') as HTMLFormElement
+const getQueryParams = (searchParams: URLSearchParams) => {
+  const search = searchParams.get('job')
+  const location = searchParams.get('location')
+  const contract = searchParams.get('contract')
 
-const getQueryParams = () => {
-  const queryParams = new URLSearchParams(window.location.search)
-  const search = queryParams.get('job')
-  const location = queryParams.get('location')
-  const fullTime = queryParams.get('full-time')
-
-  return { search, location, fullTime }
+  return { search, location, contract }
 }
 
 export const prePopulateForm = () => {
-  const queryParams = getQueryParams()
-
+  const searchParams = new URLSearchParams(window.location.search)
+  const queryParams = getQueryParams(searchParams)
   
   for (const param in queryParams) {
     type Param = keyof typeof queryParams
@@ -34,24 +32,30 @@ export const prePopulateForm = () => {
   }
 }
 
-const getInputValues = () => {
+const getInputValues = (jobsForm: HTMLFormElement) => {
   const formDataInstance = new FormData(jobsForm)
   return Object.fromEntries(formDataInstance)
 }
 
-const checkFormValidity = () => {
-  const { search, location, locationMobile, fullTime, fullTimeMobile } = getInputValues()
+const checkFormValidity = (jobsForm: HTMLFormElement) => {
+  const { search, location, locationMobile, contract, contractMobile } = getInputValues(jobsForm)
 
-  const noInputFilled = search === '' && location === '' && locationMobile === '' && fullTime == null && fullTimeMobile == null
+  const noInputFilled =
+    search === '' &&
+    location === '' &&
+    locationMobile === '' &&
+    contract == null &&
+    contractMobile == null
   if (noInputFilled) return false
 
   return true
 }
 
-const makeQueryLink = () => {
-  const { search, location, locationMobile, fullTime, fullTimeMobile } = getInputValues()
+const makeQueryLink = (jobsForm: HTMLFormElement) => {
+  const { search, location, locationMobile, contract, contractMobile } =
+    getInputValues(jobsForm)
 
-  const searchURL = new URL('jobs', window.location.origin)
+  const searchURL = new URL(window.location.origin)
   if (search !== '') {
     searchURL.searchParams.set('job', search as string)
   }
@@ -59,47 +63,54 @@ const makeQueryLink = () => {
   if (location !== '') {
     searchURL.searchParams.set('location', location as string)
   }
-  
+
   if (locationMobile !== '') {
     searchURL.searchParams.set('location', locationMobile as string)
   }
 
-  if (fullTime != null) {
-    searchURL.searchParams.set('full-time', 'true')
+  if (contract != null) {
+    searchURL.searchParams.set('contract', 'full')
   }
-  
-  if (fullTimeMobile != null) {
-    searchURL.searchParams.set('full-time', 'true')
+
+  if (contractMobile != null) {
+    searchURL.searchParams.set('contract', 'full')
   }
 
   return searchURL
 }
 
-const filterJobs = async () => {
-  const response = await fetch('/jobs.json')
-  const jobs = await response.json()
-
-  const urlParams = new URLSearchParams(window.location.search)
-
+export const filterJobs = (
+  urlParams: URLSearchParams,
+  jobs: Readonly<SelectedPick<AllJobsRecord, ['*']>>[]
+) => {
   const searchQueries = []
   const fuse = new Fuse(jobs, {
     keys: ['company', 'contract', 'description', 'location', 'position'],
-    threshold: .3
+    threshold: 0.3
   })
 
   const search = urlParams.get('job')
   const location = urlParams.get('location')
-  const fullTime = urlParams.get('full-time')
+  const locationMobile = urlParams.get('locationMobile')
+  const contract = urlParams.get('contract')
+  const contractMobile = urlParams.get('contractMobile')
 
-  const areThereAnyParams = search != null || location != null || fullTime === 'true'
+  const allPossibleParams = [
+    search,
+    location,
+    locationMobile,
+    contract,
+    contractMobile
+  ]
+  const areThereAnyParams = allPossibleParams.some((param) => param != null)
 
   if (!areThereAnyParams) return
 
   if (location != null) {
     searchQueries.push({ location: urlParams.get('location') })
   }
-  
-  if (fullTime === 'true') {
+
+  if (contract === 'full') {
     searchQueries.push({ contract: 'full' })
   }
 
@@ -108,7 +119,7 @@ const filterJobs = async () => {
       $or: [{ company: search }, { description: search }, { position: search }]
     })
   }
-  
+
   if (searchQueries.length > 0) {
     return fuse.search({
       $and: searchQueries as Partial<SearchQuery>[]
@@ -122,41 +133,10 @@ const filterJobs = async () => {
   }
 }
 
-export const loadFilteredJobs = async () => {
-  const filteredJobs = await filterJobs()
-
-  if (filteredJobs == null) return 0
-
-  const jobsDiv = document.querySelector('[data-container="jobs"]')
-  if (filteredJobs.length === 0) {
-    const noJobsTemplate = document.querySelector('[data-template="no-jobs-message"]') as null | HTMLTemplateElement
-
-    if (noJobsTemplate == null) return
-
-    const noJobsTemplateClone = noJobsTemplate.content.cloneNode(true) as DocumentFragment
-    jobsDiv?.append(noJobsTemplateClone)
-    return 0
-  }
-
-  const filteredJobsIDs = filteredJobs.map((job) => (job.item as Job).id)
-
-  const cardContainers = returnCardsFromTemplate()
-
-  cardContainers.forEach((container, index) => {
-    const jobID = container.dataset.id
-
-    if (filteredJobsIDs?.some((id) => id === jobID)) {
-      jobsDiv?.append(container)
-    }
-  })
-
-  return filteredJobs.length
-}
-
-const handleSubmit = () => {
-  const isFormValid = checkFormValidity()
+const handleSubmit = (jobsForm: HTMLFormElement) => {
+  const isFormValid = checkFormValidity(jobsForm)
   const invalidMessage = document.querySelector('[data-error="invalid-form"]')
-  
+
   if (!isFormValid) {
     invalidMessage?.classList.remove('scale-0')
     invalidMessage?.classList.add('scale-100')
@@ -166,19 +146,13 @@ const handleSubmit = () => {
   invalidMessage?.classList.remove('scale-100')
   invalidMessage?.classList.add('scale-0')
 
-  const searchURL = makeQueryLink()
-  const isHomePage = window.location.pathname === '/'
-
-  if (isHomePage) {
-    window.location.assign(`jobs/${searchURL.search}`)
-    return
-  }
-  window.location.assign(`${searchURL.search}`)
+  const searchURL = makeQueryLink(jobsForm)
+  window.location.assign(`/${searchURL.search}`)
 }
 
-export const addListenerToForm = () => {
-  jobsForm.addEventListener('submit',(e: Event) => {
+export const addListenerToForm = (jobsForm: HTMLFormElement) => {
+  jobsForm.addEventListener('submit', (e: Event) => {
     e.preventDefault()
-    handleSubmit()
+    handleSubmit(jobsForm)
   })
 }

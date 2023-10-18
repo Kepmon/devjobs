@@ -24,13 +24,3 @@ export interface SearchQuery {
     { position: string }
   ]
 }
-
-export interface JobErrorObject {
-  cause: undefined
-  status: number
-  requestedId: string
-  errors: {
-    message: string
-    status: number
-  }[]
-}

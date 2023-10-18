@@ -1,4 +1,5 @@
 ---
+import type { XataArrayFile } from '@xata.io/client'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import CustomButton from '../../components/CustomButton.astro'
 import { allJobsDb } from '../../xata'
@@ -18,10 +19,10 @@ if (jobOffer == null) {
 ---
 
 <BaseLayout
-  title={`${jobOffer.position} | ${jobOffer.company}`}
+  title={`${jobOffer?.position} | ${jobOffer?.company}`}
   job={{
-    company: jobOffer.company || '',
-    position: jobOffer.position || ''
+    company: jobOffer?.company || '',
+    position: jobOffer?.position || ''
   }}
 >
   <article data-id={id} class="job-details-wrapper">
@@ -30,10 +31,10 @@ if (jobOffer == null) {
     >
       <div
         class={twMerge('logo-wrapper')}
-        style={{ backgroundColor: `${jobOffer.logoBackground}` }}
+        style={{ backgroundColor: `${jobOffer?.logoBackground}` }}
       >
         <img
-          src={jobOffer.logo[0].url}
+          src={(jobOffer?.logo as XataArrayFile[])[0].url}
           alt="company logo"
           class="md:scale-[2]"
         />
@@ -43,14 +44,14 @@ if (jobOffer == null) {
       >
         <div class="text-center md:text-left">
           <p class="mb-2 text-md dark:text-white font-[700]">
-            {jobOffer.company}
+            {jobOffer?.company}
           </p>
-          <a href={jobOffer.website} target="_blank" class="text-gray-500"
-            >{jobOffer.website.replace('https://', '')}</a
+          <a href={jobOffer?.website} target="_blank" class="text-gray-500"
+            >{jobOffer?.website.replace('https://', '')}</a
           >
         </div>
         <a
-          href={jobOffer.website}
+          href={jobOffer?.website}
           target="_blank"
           class="custom-button custom-button--gray custom-button-padding md:self-center"
           >Company Site</a
@@ -61,13 +62,13 @@ if (jobOffer == null) {
       <header class="grid xs:flex xs:justify-between gap-12">
         <div class="[&>:not(:last-child)]:mb-3">
           <div class="gray-text-wrapper">
-            <p>{returnTimeDifference(jobOffer.xata.createdAt)}</p>
+            <p>{returnTimeDifference(jobOffer?.xata.createdAt as Date)}</p>
             <p class="dot">&#x2022;</p>
-            <p>{jobOffer.contract}</p>
+            <p>{jobOffer?.contract}</p>
           </div>
-          <h1 class="text-lg font-[800]">{jobOffer.position}</h1>
+          <h1 class="text-lg font-[800]">{jobOffer?.position}</h1>
           <p class="self-end text-blue-500 text-xs font-[700]">
-            {jobOffer.location}
+            {jobOffer?.location}
           </p>
         </div>
         <CustomButton moreClasses="self-center whitespace-nowrap">
@@ -76,15 +77,15 @@ if (jobOffer == null) {
       </header>
       <section aria-labelledby="description" class="job-offer-section">
         <h2 id="description">Description</h2>
-        <p>{jobOffer.description}</p>
+        <p>{jobOffer?.description}</p>
       </section>
       <section aria-labelledby="requirements" class="job-offer-section">
         <h2 id="requirements">Requirements</h2>
         <div>
-          <p class="mb-6">{jobOffer.requirements.content}</p>
+          <p class="mb-6">{jobOffer?.requirements.content}</p>
           <ul>
             {
-              jobOffer.requirements.items.map((item: string) => (
+              jobOffer?.requirements.items.map((item: string) => (
                 <li>
                   <span class="text-[2rem] leading-5">&#x2022;</span> {item}
                 </li>
@@ -96,10 +97,10 @@ if (jobOffer == null) {
       <section aria-labelledby="role" class="job-offer-section">
         <h2 id="role">What you will do</h2>
         <div>
-          <p class="mb-6">{jobOffer.role.content}</p>
+          <p class="mb-6">{jobOffer?.role.content}</p>
           <ol>
             {
-              jobOffer.role.items.map((item: string, index: number) => (
+              jobOffer?.role.items.map((item: string, index: number) => (
                 <li>
                   <span>{index + 1}</span> {item}
                 </li>

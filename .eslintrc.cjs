@@ -6,8 +6,10 @@ module.exports = {
   },
   parser: '@astro/parser/eslint-plugin',
   extends: [
-    'plugin:astro/jsx-a11y-recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:astro/recommended',
+    'plugin:astro/jsx-a11y-recommended',
+    'eslint:recommended',
     'airbnb-base',
     'prettier'
   ],
@@ -32,18 +34,17 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/extensions': ['error', 'never'],
     'no-tabs': ['error', { allowIndentationTabs: true }],
-    'consistent-return': ["error", 'never'],
     'import/order': [
       'error',
       {
-        'groups': [
+        groups: [
           'object',
           'index',
           'type',
           'builtin',
           'internal',
-          'parent',
           'sibling',
+          'parent',
           'external'
         ]
       }
