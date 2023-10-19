@@ -1,8 +1,3 @@
-import type { SearchQuery } from '../types/jobs'
-import type { SelectedPick } from '@xata.io/client'
-import type { AllJobsRecord } from '../xata'
-import Fuse from 'fuse.js'
-
 const getQueryParams = (searchParams: URLSearchParams) => {
   const search = searchParams.get('job')
   const location = searchParams.get('location')
@@ -69,68 +64,54 @@ const makeQueryLink = (jobsForm: HTMLFormElement) => {
   }
 
   if (contract != null) {
-    searchURL.searchParams.set('contract', 'full')
+    searchURL.searchParams.set('contract', 'Full Time')
   }
 
   if (contractMobile != null) {
-    searchURL.searchParams.set('contract', 'full')
+    searchURL.searchParams.set('contract', 'Full Time')
   }
 
   return searchURL
 }
 
-export const filterJobs = (
-  urlParams: URLSearchParams,
-  jobs: Readonly<SelectedPick<AllJobsRecord, ['*']>>[]
-) => {
-  const searchQueries = []
-  const fuse = new Fuse(jobs, {
-    keys: ['company', 'contract', 'description', 'location', 'position'],
-    threshold: 0.3
-  })
+interface SearchValues {
+  $any: {
+    company: { $iContains: string },
+    position: { $iContains: string },
+    description: { $iContains: string }
+  }
+  location: { $iContains: string }
+  contract: { $iContains: string }
+}
 
-  const search = urlParams.get('job')
-  const location = urlParams.get('location')
-  const locationMobile = urlParams.get('locationMobile')
-  const contract = urlParams.get('contract')
-  const contractMobile = urlParams.get('contractMobile')
-
-  const allPossibleParams = [
-    search,
-    location,
-    locationMobile,
-    contract,
-    contractMobile
-  ]
-  const areThereAnyParams = allPossibleParams.some((param) => param != null)
+export const filterJobs = (urlParams: URLSearchParams) => {
+  const params = Object.fromEntries(urlParams)
+  const keys = Object.keys(params)
+  const areThereAnyParams = keys.length > 0
 
   if (!areThereAnyParams) return
 
-  if (location != null) {
-    searchQueries.push({ location: urlParams.get('location') })
-  }
+  let searchValues: Partial<SearchValues> = {}
+  keys.forEach((key) => {
+    if (key !== 'job') {
+      searchValues[key as keyof Omit<SearchValues, '$any'>] = { $iContains: params[key] }
+    }
 
-  if (contract === 'full') {
-    searchQueries.push({ contract: 'full' })
-  }
+    if (key === 'job') {
+      const remainingColumns = ['company', 'position', 'description']
+      const orCase: SearchValues['$any'] = {
+        company: { $iContains: '' },
+        position: { $iContains: '' },
+        description: { $iContains: '' }
+      }
+      remainingColumns.forEach((column) => {
+        orCase[column as keyof SearchValues['$any']] = { $iContains: params[key] }
+      })
 
-  if (search != null && searchQueries.length > 0) {
-    searchQueries.push({
-      $or: [{ company: search }, { description: search }, { position: search }]
-    })
-  }
-
-  if (searchQueries.length > 0) {
-    return fuse.search({
-      $and: searchQueries as Partial<SearchQuery>[]
-    })
-  }
-
-  if (search != null) {
-    return fuse.search({
-      $or: [{ company: search }, { description: search }, { position: search }]
-    })
-  }
+      searchValues['$any'] = orCase
+    }
+  })
+  return searchValues
 }
 
 const handleSubmit = (jobsForm: HTMLFormElement) => {

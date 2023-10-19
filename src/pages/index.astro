@@ -1,5 +1,112 @@
 ---
-import HomePageLayout from '../layouts/HomePageLayout.astro'
+import type { SelectedPick } from '@xata.io/client'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { allJobsDb, type AllJobsRecord } from '../xata'
+import JobCard from '../components/JobCard.astro'
+import FilterOptions from '../components/FilterOptions.astro'
+import CustomButton from '../components/CustomButton.astro'
+import NoJobInfo from '../components/NoJobInfo.astro'
+import ErrorToast from '../components/ErrorToast.astro'
+import { filterJobs } from '../helpers/jobsForm'
+
+const { searchParams } = Astro.url
+const pageNumber =
+  searchParams.get('page') != null ? Number(searchParams.get('page')) : 0
+let isThereAnotherPage = true
+
+let jobs: Readonly<SelectedPick<AllJobsRecord, ["*"]>>[] = []
+if (searchParams.size === 0) {
+  const paginatedJobs = await allJobsDb.getPaginated({
+    pagination: { size: 12, offset: 0 }
+  })
+  jobs = paginatedJobs.records
+  isThereAnotherPage = paginatedJobs.hasNextPage()
+}
+
+if (pageNumber > 0) {
+  const paginatedJobs = await allJobsDb.getPaginated({
+    pagination: { size: 12, offset: (pageNumber - 1) * 12 }
+  })
+  jobs = paginatedJobs.records
+  isThereAnotherPage = paginatedJobs.hasNextPage()
+}
+
+if (searchParams.size > 0 && pageNumber === 0) {
+  const params = filterJobs(searchParams)
+  const records = await allJobsDb.filter(params).getPaginated({
+    pagination: { size: 12, offset: 0 }
+  });
+  
+  jobs = records.records
+  isThereAnotherPage = records.hasNextPage()
+}
+
+const isNoJobInfoDisplayed = jobs.length === 0
+
+let isFetchingError = false
+if (jobs.length === 0) {
+  isFetchingError = true
+}
 ---
 
-<HomePageLayout dataLoad="index" />
+<BaseLayout title="DevJobs | Home">
+  {isFetchingError && <ErrorToast showingClass="translate-y-0" />}
+  <main class="grid gap-12 xs:gap-32 [&:has([data-svg])]:gap-16">
+    <div>
+      <FilterOptions />
+      <p data-error="invalid-form" class="scale-0 invalid-form">
+        You need to fill at least one input in
+      </p>
+    </div>
+    <div class="grid pb-[104px]">
+      {isNoJobInfoDisplayed && <NoJobInfo />}
+      <div
+        class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6"
+        data-container="jobs"
+      >
+        {
+          jobs.length > 0 && jobs.map((job) => <JobCard job={job} />)
+        }
+      </div>
+      {
+        isThereAnotherPage && (
+          <CustomButton
+            moreClasses="justify-self-center mt-14"
+            dataNext={isThereAnotherPage.toString()}
+            dataLoad="load"
+          >
+            Load More
+          </CustomButton>
+        )
+      }
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import { addListenerToLoadButton } from '../helpers/loadMoreButton'
+  import { prePopulateForm, addListenerToForm } from '../helpers/jobsForm'
+
+  const jobsForm = document.querySelector(
+    '[data-form="jobs"]'
+  ) as HTMLFormElement
+  const loadButton = document.querySelector(
+    '[data-load]'
+  ) as null | HTMLButtonElement
+
+  const isNextPage = loadButton?.dataset.next === 'true'
+
+  prePopulateForm()
+  addListenerToLoadButton(isNextPage, loadButton)
+  addListenerToForm(jobsForm)
+</script>
+
+<style>
+  .invalid-form {
+    @apply text-sm text-red-300 font-[500];
+  }
+
+  .invalid-form.scale-100 {
+    @apply text-sm text-red-300 font-[500] transition-transform origin-left duration-300;
+  }
+</style>

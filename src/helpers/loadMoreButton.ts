@@ -20,7 +20,7 @@ export const addListenerToLoadButton = (
   isNextPage: boolean,
   button: HTMLButtonElement | null
 ) => {
-  button?.addEventListener('click', () => {
+  button?.addEventListener('click', (e: Event) => {
     loadMoreJobs(isNextPage, button)
   })
 }
