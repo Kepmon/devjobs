@@ -1,3 +1,5 @@
+export type JobCardType = 'logoBackground' & 'position' & 'contract' & 'location' & 'company' & 'id' & 'xata.createdAt' & 'logo.url'
+
 export interface Job {
   company: string
   contract: string
@@ -13,14 +15,4 @@ export interface Job {
     updatedAt: string
     version: number
   }
-}
-
-export interface SearchQuery {
-  location: string
-  contract: string
-  $or: [
-    { company: string },
-    { description: string },
-    { position: string }
-  ]
 }
