@@ -11,7 +11,6 @@ import ErrorToast from '../components/ErrorToast.astro'
 import { filterJobs } from '../helpers/jobsForm'
 
 const { searchParams } = Astro.url
-
 const pageNumber =
   searchParams.get('page') != null ? Number(searchParams.get('page')) : 0
 let isThereAnotherPage = true
@@ -88,7 +87,7 @@ if (jobs.length === 0) {
 
 <script>
   import { addListenerToLoadButton } from '../helpers/loadMoreButton'
-  import { prePopulateForm, addListenerToForm } from '../helpers/jobsForm'
+  import { prePopulateForm, addListenerToForm, addListenerToDoubledInputs } from '../helpers/jobsForm'
 
   const jobsForm = document.querySelector(
     '[data-form="jobs"]'
@@ -102,6 +101,7 @@ if (jobs.length === 0) {
   prePopulateForm()
   addListenerToLoadButton(isNextPage, loadButton)
   addListenerToForm(jobsForm)
+  addListenerToDoubledInputs()
 </script>
 
 <style>

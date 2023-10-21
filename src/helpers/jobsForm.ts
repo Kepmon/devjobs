@@ -1,9 +1,21 @@
+interface SearchValues {
+  $any: {
+    company: { $iContains: string },
+    position: { $iContains: string },
+    description: { $iContains: string }
+  }
+  location: { $iContains: string }
+  contract: { $iContains: string }
+}
+
 const getQueryParams = (searchParams: URLSearchParams) => {
   const search = searchParams.get('job')
   const location = searchParams.get('location')
+  const locationMobile = searchParams.get('locationMobile')
   const contract = searchParams.get('contract')
+  const contractMobile = searchParams.get('contractMobile')
 
-  return { search, location, contract }
+  return { search, location, locationMobile, contract, contractMobile }
 }
 
 export const prePopulateForm = () => {
@@ -14,15 +26,17 @@ export const prePopulateForm = () => {
     type Param = keyof typeof queryParams
 
     if (queryParams[param as Param] != null) {
-      const input = document.querySelector(`[name="${param}"]`) as null | HTMLInputElement
+      const inputs = [...document.querySelectorAll(`[name^="${param}"]`)] as (null | HTMLInputElement)[]
       
-      if (input != null && input.type === 'checkbox') {
-        input.checked = true
-      }
-      
-      if (input != null && input.type === 'search') {
-        input.value = queryParams[param as Param] as string
-      }
+      inputs.forEach((input) => {
+        if (input != null && input.type === 'checkbox') {
+          input.checked = true
+        }
+        
+        if (input != null && input.type === 'search') {
+          input.value = queryParams[param as Param] as string
+        }
+      })
     }
   }
 }
@@ -40,15 +54,15 @@ const checkFormValidity = (jobsForm: HTMLFormElement) => {
     location === '' &&
     locationMobile === '' &&
     contract == null &&
-    contractMobile == null
+    contractMobile === ''
+  
   if (noInputFilled) return false
 
   return true
 }
 
 const makeQueryLink = (jobsForm: HTMLFormElement) => {
-  const { search, location, locationMobile, contract, contractMobile } =
-    getInputValues(jobsForm)
+  const { search, location, locationMobile, contract, contractMobile } = getInputValues(jobsForm)
 
   const searchURL = new URL(window.location.origin)
   if (search !== '') {
@@ -58,30 +72,16 @@ const makeQueryLink = (jobsForm: HTMLFormElement) => {
   if (location !== '') {
     searchURL.searchParams.set('location', location as string)
   }
-
+  
   if (locationMobile !== '') {
     searchURL.searchParams.set('location', locationMobile as string)
   }
 
-  if (contract != null) {
-    searchURL.searchParams.set('contract', 'Full Time')
-  }
-
-  if (contractMobile != null) {
+  if (contract != null || contractMobile != null) {
     searchURL.searchParams.set('contract', 'Full Time')
   }
 
   return searchURL
-}
-
-interface SearchValues {
-  $any: {
-    company: { $iContains: string },
-    position: { $iContains: string },
-    description: { $iContains: string }
-  }
-  location: { $iContains: string }
-  contract: { $iContains: string }
 }
 
 export const filterJobs = (urlParams: URLSearchParams) => {
@@ -93,8 +93,16 @@ export const filterJobs = (urlParams: URLSearchParams) => {
 
   let searchValues: Partial<SearchValues> = {}
   keys.forEach((key) => {
-    if (key !== 'job') {
+    if (key === 'location' || key === 'contract') {
       searchValues[key as keyof Omit<SearchValues, '$any'>] = { $iContains: params[key] }
+    }
+    
+    if (key === 'locationMobile') {
+      searchValues[key as keyof Omit<SearchValues, '$any'>] = { $iContains: params['location'] }
+    }
+    
+    if (key === 'contractMobile') {
+      searchValues[key as keyof Omit<SearchValues, '$any'>] = { $iContains: params['contract'] }
     }
 
     if (key === 'job') {
@@ -135,5 +143,26 @@ export const addListenerToForm = (jobsForm: HTMLFormElement) => {
   jobsForm.addEventListener('submit', (e: Event) => {
     e.preventDefault()
     handleSubmit(jobsForm)
+  })
+}
+
+export const addListenerToDoubledInputs = () => {
+  const locationInputs = [...document.querySelectorAll('[name^="location"]')] as (null | HTMLInputElement)[]
+  const contractInputs = [...document.querySelectorAll('[name^="contract"]')] as (null | HTMLInputElement)[]
+  const allDoubledInputs = [...locationInputs, ...contractInputs]
+
+  allDoubledInputs.forEach((input) => {
+    input?.addEventListener('input', () => {
+      const doubledInput = allDoubledInputs.find((secondInput) => secondInput?.name !== input.name && secondInput?.name.includes(input.name.replace('Mobile', '')))
+
+      if (doubledInput != null && input.type === 'checkbox') {
+        doubledInput.checked = input.checked
+        return
+      }
+      
+      if (doubledInput != null) {
+        doubledInput.value = input.value
+      }
+    })
   })
 }
