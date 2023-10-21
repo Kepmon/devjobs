@@ -21,8 +21,9 @@ const getQueryParams = (searchParams: URLSearchParams) => {
 export const prePopulateForm = () => {
   const searchParams = new URLSearchParams(window.location.search)
   const queryParams = getQueryParams(searchParams)
-  
-  for (const param in queryParams) {
+  const queryParamsKeys = Object.keys(queryParams)
+
+  queryParamsKeys.forEach((param) => {
     type Param = keyof typeof queryParams
 
     if (queryParams[param as Param] != null) {
@@ -38,7 +39,7 @@ export const prePopulateForm = () => {
         }
       })
     }
-  }
+  })
 }
 
 const getInputValues = (jobsForm: HTMLFormElement) => {
@@ -164,5 +165,16 @@ export const addListenerToDoubledInputs = () => {
         doubledInput.value = input.value
       }
     })
+  })
+}
+
+export const addListenerToWindow = () => {
+  window.addEventListener('resize', () => {
+    const dialog = document.querySelector('dialog')
+    const isDialogDisplayed = dialog != null ? window.getComputedStyle(dialog).display === 'block' : true
+
+    if (isDialogDisplayed) return
+
+    dialog?.close()
   })
 }

@@ -87,7 +87,7 @@ if (jobs.length === 0) {
 
 <script>
   import { addListenerToLoadButton } from '../helpers/loadMoreButton'
-  import { prePopulateForm, addListenerToForm, addListenerToDoubledInputs } from '../helpers/jobsForm'
+  import { prePopulateForm, addListenerToForm, addListenerToDoubledInputs, addListenerToWindow } from '../helpers/jobsForm'
 
   const jobsForm = document.querySelector(
     '[data-form="jobs"]'
@@ -102,6 +102,7 @@ if (jobs.length === 0) {
   addListenerToLoadButton(isNextPage, loadButton)
   addListenerToForm(jobsForm)
   addListenerToDoubledInputs()
+  addListenerToWindow()
 </script>
 
 <style>
