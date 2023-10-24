@@ -14,7 +14,16 @@ const { searchParams } = Astro.url
 const pageNumber =
   searchParams.get('page') != null ? Number(searchParams.get('page')) : 0
 let isThereAnotherPage = true
-const jobColumns = ['id', 'logo.url', 'logoBackground', 'xata.createdAt', 'contract', 'position', 'company', 'location'] as JobCardType
+const jobColumns = [
+  'id',
+  'logo.url',
+  'logoBackground',
+  'xata.createdAt',
+  'contract',
+  'position',
+  'company',
+  'location'
+] as JobCardType
 
 let jobs: Readonly<SelectedPick<AllJobsRecord, Partial<JobCardType>[]>>[] = []
 if (searchParams.size === 0) {
@@ -25,20 +34,15 @@ if (searchParams.size === 0) {
   isThereAnotherPage = paginatedJobs.hasNextPage()
 }
 
-if (pageNumber > 0) {
-  const paginatedJobs = await allJobsDb.select(jobColumns).getPaginated({
-    pagination: { size: 12, offset: (pageNumber - 1) * 12 }
-  })
-  jobs = paginatedJobs.records
-  isThereAnotherPage = paginatedJobs.hasNextPage()
-}
-
 if (searchParams.size > 0 && pageNumber === 0) {
   const params = filterJobs(searchParams)
-  const records = await allJobsDb.filter(params).select(jobColumns).getPaginated({
-    pagination: { size: 12, offset: (pageNumber - 1) * 12 }
-  })
-  
+  const records = await allJobsDb
+    .filter(params)
+    .select(jobColumns)
+    .getPaginated({
+      pagination: { size: 12, offset: (pageNumber - 1) * 12 }
+    })
+
   jobs = records.records
   isThereAnotherPage = records.hasNextPage()
 }
@@ -66,9 +70,7 @@ if (jobs.length === 0) {
         class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6"
         data-container="jobs"
       >
-        {
-          jobs.length > 0 && jobs.map((job) => <JobCard job={job} />)
-        }
+        {jobs.length > 0 && jobs.map((job) => <JobCard job={job} />)}
       </div>
       {
         isThereAnotherPage && (
@@ -87,7 +89,12 @@ if (jobs.length === 0) {
 
 <script>
   import { addListenerToLoadButton } from '../helpers/loadMoreButton'
-  import { prePopulateForm, addListenerToForm, addListenerToDoubledInputs, addListenerToWindow } from '../helpers/jobsForm'
+  import {
+    prePopulateForm,
+    addListenerToForm,
+    addListenerToDoubledInputs,
+    addListenerToWindow
+  } from '../helpers/jobsForm'
 
   const jobsForm = document.querySelector(
     '[data-form="jobs"]'

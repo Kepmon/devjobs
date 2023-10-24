@@ -4,7 +4,7 @@ import { returnTimeDifference } from '../helpers/timeDifference'
 const { job } = Astro.props
 ---
 
-<a href={`job/${job.id}`} data-link="job-details">
+<a href={`job/${job.id}`} target="_blank" data-link="job-details">
   <article data-id={job.id} class="card-container">
     <div style={{ backgroundColor: `${job.logoBackground}` }} class="card-logo">
       <img src={job.logo.at(0).url} alt="company logo" />
@@ -21,6 +21,28 @@ const { job } = Astro.props
     <p class="self-end text-blue-500 text-xs font-[700]">{job.location}</p>
   </article>
 </a>
+
+<template data-template="new-job">
+  <a href="/" target="_blank" data-link="job-details">
+    <article class="card-container">
+      <div class="card-logo">
+        <img alt="company logo" />
+      </div>
+      <div class="grid content-start gap-2">
+        <div data-wrapper="gray-text" class="gray-text-wrapper">
+          <p></p>
+          <p class="dot">&#x2022;</p>
+          <p></p>
+        </div>
+        <h2 data-heading class="text-md font-[800] dark:text-white">
+          Software Developer
+        </h2>
+        <p data-company class="text-gray-500"></p>
+      </div>
+      <p data-location class="self-end text-blue-500 text-xs font-[700]"></p>
+    </article>
+  </a>
+</template>
 
 <style>
   .card-container {

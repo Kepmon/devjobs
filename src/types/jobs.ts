@@ -7,12 +7,18 @@ export interface Job {
   id: string
   location: string
   website: string
-  logo: string
+  logo: [{
+    url: string
+  }]
   logoBackground: string
   position: string
   xata: {
-    createdAt: string
-    updatedAt: string
+    createdAt: Date
+    updatedAt: Date
     version: number
   }
+}
+
+export type PageParam = {
+  jobPagesCount: number
 }
