@@ -2,57 +2,40 @@
 import type { JobCardType } from '../types/jobs'
 import type { SelectedPick } from '@xata.io/client'
 import BaseLayout from '../layouts/BaseLayout.astro'
-import { allJobsDb, type AllJobsRecord } from '../xata'
+import { type AllJobsRecord } from '../xata'
 import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
 import ErrorToast from '../components/ErrorToast.astro'
-import { filterJobs } from '../helpers/jobsForm'
+import { returnJobsToDisplay } from '../helpers/jobsData'
 
 const { searchParams } = Astro.url
 const pageNumber =
   searchParams.get('page') != null ? Number(searchParams.get('page')) : 0
-let isThereAnotherPage = true
-const jobColumns = [
-  'id',
-  'logo.url',
-  'logoBackground',
-  'xata.createdAt',
-  'contract',
-  'position',
-  'company',
-  'location'
-] as JobCardType
 
+let isThereAnotherPage = true
 let jobs: Readonly<SelectedPick<AllJobsRecord, Partial<JobCardType>[]>>[] = []
+
 if (searchParams.size === 0) {
-  const paginatedJobs = await allJobsDb.select(jobColumns).getPaginated({
-    pagination: { size: 12, offset: 0 }
-  })
-  jobs = paginatedJobs.records
-  isThereAnotherPage = paginatedJobs.hasNextPage()
+  const { returnedJobs, anotherPage } = await returnJobsToDisplay(12, 0)
+
+  jobs = returnedJobs
+  isThereAnotherPage = anotherPage
 }
 
 if (searchParams.size > 0 && pageNumber > 0) {
-  const paginatedJobs = await allJobsDb.select(jobColumns).getPaginated({
-    pagination: { size: 12 * pageNumber, offset: 0 }
-  })
-  jobs = paginatedJobs.records
-  isThereAnotherPage = paginatedJobs.hasNextPage()
+  const { returnedJobs, anotherPage } = await returnJobsToDisplay(12 * pageNumber, 0)
+
+  jobs = returnedJobs
+  isThereAnotherPage = anotherPage
 }
 
 if (searchParams.size > 0 && pageNumber === 0) {
-  const params = filterJobs(searchParams)
-  const records = await allJobsDb
-    .filter(params)
-    .select(jobColumns)
-    .getPaginated({
-      pagination: { size: 12, offset: 0 }
-    })
+  const { returnedJobs, anotherPage } = await returnJobsToDisplay(12, 0, searchParams)
 
-  jobs = records.records
-  isThereAnotherPage = records.hasNextPage()
+  jobs = returnedJobs
+  isThereAnotherPage = anotherPage
 }
 
 const isNoJobInfoDisplayed = jobs.length === 0

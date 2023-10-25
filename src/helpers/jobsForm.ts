@@ -153,7 +153,16 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
   const response = await fetch('/index.json')
   const jobs = await response.json()
 
-  createNewJobCard(jobs, true)
+  if (!jobs.isThereAnotherPage) {
+    const loadButton = document.querySelector('[data-load]') as null | HTMLButtonElement
+
+    if (loadButton != null) {
+      loadButton.dataset.next = 'false'
+      loadButton?.classList.add('hide-button')
+    }
+  }
+
+  createNewJobCard(jobs.paginatedJobs, true)
 }
 
 export const addListenerToForm = (jobsForm: HTMLFormElement) => {

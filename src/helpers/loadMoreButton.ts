@@ -15,8 +15,7 @@ const handleButtonClick = async (isNextPage: boolean, button: HTMLButtonElement)
   jobPagesCount++
   history.pushState({}, '', `?page=${jobPagesCount}`)
 
-  hideButtonIfNeeded(isNextPage, button)
-
+  
   await fetch('/index.json', {
     method: 'POST',
     body: JSON.stringify({ searchParams: window.location.search }),
@@ -24,11 +23,21 @@ const handleButtonClick = async (isNextPage: boolean, button: HTMLButtonElement)
       'Content-Type': 'application/json'
     }
   })
-
+  
   const response = await fetch('/index.json')
   const jobs = await response.json()
-
-  createNewJobCard(jobs)
+  
+  if (!jobs.isThereAnotherPage) {
+    const loadButton = document.querySelector('[data-load]') as null | HTMLButtonElement
+    
+    if (loadButton != null) {
+      loadButton.dataset.next = 'false'
+      loadButton?.classList.add('hide-button')
+    }
+  }
+  
+  hideButtonIfNeeded(isNextPage, button)
+  createNewJobCard(jobs.paginatedJobs)
 }
 
 export const addListenerToLoadButton = (
