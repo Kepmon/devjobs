@@ -23,23 +23,27 @@ const { job } = Astro.props
 </a>
 
 <template data-template="new-job">
-  <a href="/" target="_blank" data-link="job-details">
+  <a href="/" target="_blank" data-template="link">
     <article class="card-container">
       <div class="card-logo">
-        <img alt="company logo" />
+        <img alt="company logo" data-template="logo" />
       </div>
       <div class="grid content-start gap-2">
-        <div data-wrapper="gray-text" class="gray-text-wrapper">
-          <p></p>
+        <div class="gray-text-wrapper">
+          <p data-template="first-gray-p"></p>
           <p class="dot">&#x2022;</p>
-          <p></p>
+          <p data-template="third-gray-p"></p>
         </div>
-        <h2 data-heading class="text-md font-[800] dark:text-white">
+        <h2 data-template="heading" class="text-md font-[800] dark:text-white">
           Software Developer
         </h2>
-        <p data-company class="text-gray-500"></p>
+        <p data-template="company" class="text-gray-500"></p>
       </div>
-      <p data-location class="self-end text-blue-500 text-xs font-[700]"></p>
+      <p
+        data-template="location"
+        class="self-end text-blue-500 text-xs font-[700]"
+      >
+      </p>
     </article>
   </a>
 </template>
