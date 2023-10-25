@@ -34,13 +34,21 @@ if (searchParams.size === 0) {
   isThereAnotherPage = paginatedJobs.hasNextPage()
 }
 
+if (searchParams.size > 0 && pageNumber > 0) {
+  const paginatedJobs = await allJobsDb.select(jobColumns).getPaginated({
+    pagination: { size: 12 * pageNumber, offset: 0 }
+  })
+  jobs = paginatedJobs.records
+  isThereAnotherPage = paginatedJobs.hasNextPage()
+}
+
 if (searchParams.size > 0 && pageNumber === 0) {
   const params = filterJobs(searchParams)
   const records = await allJobsDb
     .filter(params)
     .select(jobColumns)
     .getPaginated({
-      pagination: { size: 12, offset: (pageNumber - 1) * 12 }
+      pagination: { size: 12, offset: 0 }
     })
 
   jobs = records.records
@@ -48,15 +56,10 @@ if (searchParams.size > 0 && pageNumber === 0) {
 }
 
 const isNoJobInfoDisplayed = jobs.length === 0
-
-let isFetchingError = false
-if (jobs.length === 0) {
-  isFetchingError = true
-}
 ---
 
 <BaseLayout title="DevJobs | Home">
-  {isFetchingError && <ErrorToast showingClass="translate-y-0" />}
+  <ErrorToast showingClass="translate-y-0" />
   <main class="grid gap-12 xs:gap-32 [&:has([data-svg])]:gap-16">
     <div>
       <FilterOptions />

@@ -1,3 +1,5 @@
+import { createNewJobCard } from './jobCards'
+
 interface SearchValues {
   $any: {
     company: { $iContains: string },
@@ -123,8 +125,9 @@ export const filterJobs = (urlParams: URLSearchParams) => {
   return searchValues
 }
 
-const handleSubmit = (jobsForm: HTMLFormElement) => {
+const handleSubmit = async (jobsForm: HTMLFormElement) => {
   const isFormValid = checkFormValidity(jobsForm)
+
   const invalidMessage = document.querySelector('[data-error="invalid-form"]')
 
   if (!isFormValid) {
@@ -137,13 +140,26 @@ const handleSubmit = (jobsForm: HTMLFormElement) => {
   invalidMessage?.classList.add('scale-0')
 
   const searchURL = makeQueryLink(jobsForm)
-  window.location.assign(`/${searchURL.search}`)
+  history.pushState({}, '', searchURL)
+
+  await fetch('/index.json', {
+    method: 'POST',
+    body: JSON.stringify({ searchParams: searchURL.search }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
+  const response = await fetch('/index.json')
+  const jobs = await response.json()
+
+  createNewJobCard(jobs, true)
 }
 
 export const addListenerToForm = (jobsForm: HTMLFormElement) => {
-  jobsForm.addEventListener('submit', (e: Event) => {
+  jobsForm.addEventListener('submit', async (e: Event) => {
     e.preventDefault()
-    handleSubmit(jobsForm)
+    await handleSubmit(jobsForm)
   })
 }
 

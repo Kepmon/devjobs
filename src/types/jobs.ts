@@ -18,7 +18,3 @@ export interface Job {
     version: number
   }
 }
-
-export type PageParam = {
-  jobPagesCount: number
-}

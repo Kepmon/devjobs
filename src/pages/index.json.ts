@@ -1,26 +1,39 @@
-import type { JobCardType, PageParam } from '../types/jobs'
+import type { APIRoute } from 'astro'
+import type { JobCardType } from '../types/jobs'
 import { allJobsDb } from '../xata'
+import { filterJobs } from '../helpers/jobsForm'
 
-interface RequestData {
-  json: () => Promise<PageParam>
-}
+let searchParams: URLSearchParams
 
-let pageParam: PageParam
-
-export const POST = async ({ request }: { request: RequestData }) => {
+export const POST: APIRoute = async ({ request }) => {
   const data = await request.json()
-  pageParam = data
+  searchParams = data.searchParams
 
   return new Response(JSON.stringify(data))
 }
 
-export const GET = async () => {
+export const GET: APIRoute = async () => {
+  let paginatedJobs
   const jobColumns = ['id', 'logo.url', 'logoBackground', 'xata.createdAt', 'contract', 'position', 'company', 'location'] as JobCardType
-  const paginatedJobs = await allJobsDb.select(jobColumns).getPaginated({
-    pagination: { size: 12, offset: (pageParam.jobPagesCount - 1) * 12 }
-  })
+  const pageNumber = Number((new URLSearchParams(searchParams)).get('page'))
 
-  return new Response(JSON.stringify(paginatedJobs.records), {
+  if (pageNumber > 0) {
+    paginatedJobs = await allJobsDb.select(jobColumns).getPaginated({
+      pagination: { size: 12, offset: (pageNumber - 1) * 12 }
+    })
+  }
+
+  if (pageNumber === 0) {
+    const params = filterJobs(new URLSearchParams(searchParams))
+    paginatedJobs = await allJobsDb
+      .filter(params)
+      .select(jobColumns)
+      .getPaginated({
+        pagination: { size: 12, offset: 0 }
+      })
+  }
+
+  return new Response(JSON.stringify(paginatedJobs != null ? paginatedJobs.records : {}), {
     status: 200,
     headers: {
       'Content-Type': 'application/json'
