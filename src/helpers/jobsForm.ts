@@ -152,6 +152,12 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
   const response = await fetch('/index.json')
   const jobs = await response.json()
 
+  if (jobs.paginatedJobs.length === 0) {
+    const noJobInfo = document.querySelector('[data-displayed]') as null | HTMLDivElement
+
+    noJobInfo?.setAttribute('data-displayed', 'true')
+  }
+
   if (!jobs.isThereAnotherPage) {
     const loadButton = document.querySelector('[data-load]') as null | HTMLButtonElement
 

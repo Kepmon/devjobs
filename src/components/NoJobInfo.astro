@@ -1,8 +1,14 @@
 ---
 import ErrorMagnifyingGlass from './svgs/ErrorMagnifyingGlass.astro'
+
+interface Props {
+  isDisplayed: string
+}
+
+const { isDisplayed } = Astro.props
 ---
 
-<div class="error-container">
+<div data-displayed={isDisplayed} class="error-container">
   <ErrorMagnifyingGlass />
   <h2 class="text-xl font-bold">No job offers found</h2>
   <p>
@@ -10,3 +16,13 @@ import ErrorMagnifyingGlass from './svgs/ErrorMagnifyingGlass.astro'
     <a href="/">home page</a>
   </p>
 </div>
+
+<style>
+  [data-displayed='false'] {
+    @apply hidden;
+  }
+
+  [data-displayed='true'] {
+    @apply block;
+  }
+</style>

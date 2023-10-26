@@ -56,7 +56,7 @@ const isNoJobInfoDisplayed = jobs.length === 0
       </p>
     </div>
     <div class="grid pb-[104px]">
-      {isNoJobInfoDisplayed && <NoJobInfo />}
+      <NoJobInfo isDisplayed={isNoJobInfoDisplayed.toString()} />
       <div
         class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6"
         data-container="jobs"
