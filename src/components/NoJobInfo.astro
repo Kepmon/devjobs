@@ -2,22 +2,11 @@
 import ErrorMagnifyingGlass from './svgs/ErrorMagnifyingGlass.astro'
 ---
 
-<div class="mx-auto text-center dark:text-white">
+<div class="error-container">
   <ErrorMagnifyingGlass />
   <h2 class="text-xl font-bold">No job offers found</h2>
   <p>
     <span>Try searching by a different query or go back to the&nbsp;</span>
-    <a href="/">
-      <span class="home-link">home page</span>
-    </a>
+    <a href="/">home page</a>
   </p>
 </div>
-
-<style>
-  .home-link {
-    @apply relative text-blue-500 after:absolute after:left-0 after:-bottom-1;
-    @apply after:h-[3px] after:w-full after:bg-blue-500 after:scale-x-0;
-    @apply hover:after:scale-x-100 after:origin-left;
-    @apply after:transition-transform after:duration-300;
-  }
-</style>

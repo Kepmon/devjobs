@@ -15,7 +15,6 @@ const handleButtonClick = async (isNextPage: boolean, button: HTMLButtonElement)
   jobPagesCount++
   history.pushState({}, '', `?page=${jobPagesCount}`)
 
-  
   await fetch('/index.json', {
     method: 'POST',
     body: JSON.stringify({ searchParams: window.location.search }),

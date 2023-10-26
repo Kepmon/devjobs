@@ -57,8 +57,7 @@ const checkFormValidity = (jobsForm: HTMLFormElement) => {
     location === '' &&
     locationMobile === '' &&
     contract == null &&
-    contractMobile === ''
-  
+    contractMobile == null
   if (noInputFilled) return false
 
   return true

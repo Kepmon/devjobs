@@ -9,9 +9,10 @@ interface Props {
     company: Job['company']
     position: Job['position']
   }
+  isMovedDown?: true
 }
 
-const { title, job } = Astro.props
+const { title, job, isMovedDown } = Astro.props
 ---
 
 <!doctype html>
@@ -26,7 +27,16 @@ const { title, job } = Astro.props
   </head>
   <body class="no-initial-transition">
     <Header />
-    <div class="wrapper wrapper-position">
+    <div
+      class:list={[
+        'wrapper',
+        'row-span-2 col-start-1',
+        {
+          'row-start-2': isMovedDown == null,
+          'row-start-3 mt-10': isMovedDown === true
+        }
+      ]}
+    >
       <slot />
     </div>
     {job != null && <Footer company={job.company} position={job.position} />}
@@ -53,7 +63,7 @@ const { title, job } = Astro.props
     src:
       local('Kumbh Sans'),
       url('/fonts/kumbh-sans.woff2') format('woff2');
-      font-display: fallback;
+    font-display: fallback;
   }
 
   @supports (scrollbar-width: thin) {
@@ -85,10 +95,6 @@ const { title, job } = Astro.props
     @apply mx-auto w-[min(90%,70rem)];
   }
 
-  .wrapper-position {
-    @apply row-start-2 row-span-2 col-start-1;
-  }
-
   .job-details-wrapper {
     @apply mx-auto md:w-[min(100%,50rem)];
   }
@@ -117,7 +123,7 @@ const { title, job } = Astro.props
   .gray-text-wrapper {
     @apply flex items-center gap-3 text-gray-500;
   }
-  
+
   .gray-text-wrapper .dot {
     @apply text-3xl leading-3;
   }
@@ -132,5 +138,23 @@ const { title, job } = Astro.props
 
   .blue-outline {
     @apply focus-visible:outline outline-[3px] outline-blue-500;
+  }
+
+  .error-container {
+    @apply mx-auto text-center dark:text-white;
+  }
+  .error-container a {
+    @apply relative text-blue-500 after:absolute after:left-0 after:-bottom-1;
+    @apply after:h-[3px] after:w-full after:bg-blue-500 after:scale-x-0;
+    @apply outline outline-transparent;
+    @apply hover:after:scale-x-100 focus-visible:after:scale-x-100;
+    @apply after:origin-left after:transition-transform after:duration-300;
+  }
+
+  .error-container .buttons > * {
+    @apply block px-4 py-1 bg-blue-500 text-white font-[500] rounded-full;
+    @apply outline outline-transparent;
+    @apply hover:bg-gray-600 focus-visible:bg-gray-600;
+    @apply transition-colors duration-300 after:content-none;
   }
 </style>

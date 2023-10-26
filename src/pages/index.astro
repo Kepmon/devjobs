@@ -7,7 +7,6 @@ import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
-import ErrorToast from '../components/ErrorToast.astro'
 import { returnJobsToDisplay } from '../helpers/jobsData'
 
 const { searchParams } = Astro.url
@@ -25,14 +24,21 @@ if (searchParams.size === 0) {
 }
 
 if (searchParams.size > 0 && pageNumber > 0) {
-  const { returnedJobs, anotherPage } = await returnJobsToDisplay(12 * pageNumber, 0)
+  const { returnedJobs, anotherPage } = await returnJobsToDisplay(
+    12 * pageNumber,
+    0
+  )
 
   jobs = returnedJobs
   isThereAnotherPage = anotherPage
 }
 
 if (searchParams.size > 0 && pageNumber === 0) {
-  const { returnedJobs, anotherPage } = await returnJobsToDisplay(12, 0, searchParams)
+  const { returnedJobs, anotherPage } = await returnJobsToDisplay(
+    12,
+    0,
+    searchParams
+  )
 
   jobs = returnedJobs
   isThereAnotherPage = anotherPage
@@ -42,7 +48,6 @@ const isNoJobInfoDisplayed = jobs.length === 0
 ---
 
 <BaseLayout title="DevJobs | Home">
-  <ErrorToast showingClass="translate-y-0" />
   <main class="grid gap-12 xs:gap-32 [&:has([data-svg])]:gap-16">
     <div>
       <FilterOptions />

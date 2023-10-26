@@ -1,5 +1,4 @@
 ---
-import type { XataArrayFile } from '@xata.io/client'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import CustomButton from '../../components/CustomButton.astro'
 import { allJobsDb } from '../../xata'
@@ -34,7 +33,7 @@ if (jobOffer == null) {
         style={{ backgroundColor: `${jobOffer?.logoBackground}` }}
       >
         <img
-          src={(jobOffer?.logo as XataArrayFile[])[0].url}
+          src={jobOffer != null && jobOffer.logo ? jobOffer.logo[0].url : null}
           alt="company logo"
           class="md:scale-[2]"
         />
