@@ -36,7 +36,7 @@ import AdditionalFilterOptions from './AdditionalFilterOptions.astro'
     moreWrapperStyles="hidden md:flex"
     moreLocationStyles="input-pair"
   />
-  <dialog class="md:hidden backdrop:bg-black backdrop:opacity-50">
+  <dialog data-dialog="filter-jobs" class="md:hidden backdrop:bg-black backdrop:opacity-50">
     <form>
       <AdditionalFilterOptions
         locationName="locationMobile"
@@ -49,8 +49,8 @@ import AdditionalFilterOptions from './AdditionalFilterOptions.astro'
 </form>
 
 <script>
-  const filterButton = document.querySelector('[data-button="filter"]')
-  const dialog = document.querySelector('dialog')
+  const filterButton = document.querySelector('[data-button="filter"]') as null | HTMLButtonElement
+  const dialog = document.querySelector('[data-dialog="filter-jobs"]') as null | HTMLDialogElement
 
   dialog?.addEventListener('click', (e) => {
     if (e.target === e.currentTarget) {

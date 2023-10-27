@@ -49,6 +49,9 @@ module.exports = {
         lg: 'clamp(1.26rem, 1.158rem + 0.5831vw, 1.5625rem)',
         xl: 'clamp(1.25rem, 0.9583rem + 1.6667vw, 2.25rem)'
       },
+      gridTemplateColumns: {
+        'fill-350': 'repeat(auto-fill, minmax(350px, 1fr))'
+      },
       animation: {
         fadeIn: 'fadeIn .3s linear forwards',
         fadeOut: 'fadeOut .3s linear forwards'
@@ -81,7 +84,6 @@ module.exports = {
     }
   },
   plugins: [
-    require('@gradin/tailwindcss-scrollbar'),
-    require('@shrutibalasa/tailwind-grid-auto-fit')
+    require('@gradin/tailwindcss-scrollbar')
   ]
 }

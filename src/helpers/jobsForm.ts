@@ -149,24 +149,30 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
     }
   })
 
+  const dialog = document.querySelector('[data-dialog="filter-jobs"]') as null | HTMLDialogElement
   const response = await fetch('/index.json')
   const jobs = await response.json()
 
+  if (dialog != null && dialog.hasAttribute('open')) {
+    dialog.close()
+  }
+
+  
   if (jobs.paginatedJobs.length === 0) {
     const noJobInfo = document.querySelector('[data-displayed]') as null | HTMLDivElement
-
+    
     noJobInfo?.setAttribute('data-displayed', 'true')
   }
 
   if (!jobs.isThereAnotherPage) {
     const loadButton = document.querySelector('[data-load]') as null | HTMLButtonElement
-
+    
     if (loadButton != null) {
       loadButton.dataset.next = 'false'
       loadButton?.classList.add('hide-button')
     }
   }
-
+  
   createNewJobCard(jobs.paginatedJobs, true)
 }
 
@@ -200,7 +206,7 @@ export const addListenerToDoubledInputs = () => {
 
 export const addListenerToWindow = () => {
   window.addEventListener('resize', () => {
-    const dialog = document.querySelector('dialog')
+    const dialog = document.querySelector('[data-dialog="filter-jobs"]') as null | HTMLDialogElement
     const isDialogDisplayed = dialog != null ? window.getComputedStyle(dialog).display === 'block' : true
 
     if (isDialogDisplayed) return

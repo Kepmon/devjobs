@@ -58,7 +58,7 @@ const isNoJobInfoDisplayed = jobs.length === 0
     <div class="grid pb-[104px]">
       <NoJobInfo isDisplayed={isNoJobInfoDisplayed.toString()} />
       <div
-        class="grid md:grid-auto-fit-[350px] gap-y-[65px] gap-x-6"
+        class="grid md:grid-cols-fill-350 gap-y-[65px] gap-x-6"
         data-container="jobs"
       >
         {jobs.length > 0 && jobs.map((job) => <JobCard job={job} />)}

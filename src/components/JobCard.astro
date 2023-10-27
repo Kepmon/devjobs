@@ -18,48 +18,8 @@ const { job } = Astro.props
       <h2 class="text-md font-[800] dark:text-white">{job.position}</h2>
       <p class="text-gray-500">{job.company}</p>
     </div>
-    <p class="self-end text-blue-500 text-xs font-[700]">{job.location}</p>
+    <p class="mt-10 self-end text-blue-500 text-xs font-[700]">
+      {job.location}
+    </p>
   </article>
 </a>
-
-<template data-template="new-job">
-  <a href="/" target="_blank" data-template="link">
-    <article class="card-container">
-      <div class="card-logo">
-        <img alt="company logo" data-template="logo" />
-      </div>
-      <div class="grid content-start gap-2">
-        <div class="gray-text-wrapper">
-          <p data-template="first-gray-p"></p>
-          <p class="dot">&#x2022;</p>
-          <p data-template="third-gray-p"></p>
-        </div>
-        <h2 data-template="heading" class="text-md font-[800] dark:text-white">
-          Software Developer
-        </h2>
-        <p data-template="company" class="text-gray-500"></p>
-      </div>
-      <p
-        data-template="location"
-        class="self-end text-blue-500 text-xs font-[700]"
-      >
-      </p>
-    </article>
-  </a>
-</template>
-
-<style>
-  .card-container {
-    @apply relative grid p-8 min-h-[228px] rounded-md;
-    @apply shadow-card bg-white dark:bg-gray-800 cursor-pointer;
-  }
-
-  .card-container:hover h2 {
-    @apply text-gray-500 transition-colors duration-300;
-  }
-
-  .card-logo {
-    @apply absolute left-8 -translate-y-1/2 grid place-content-center;
-    @apply w-[50px] aspect-square rounded-2xl;
-  }
-</style>

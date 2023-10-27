@@ -36,7 +36,7 @@ const returnJobStaticData = (job: Job) => ([
 
 const setElementProperty = <T extends HTMLElement>(element: null | T, property: keyof T, value: T[keyof T]) => {
   if (element == null) return
-  
+
   element[property] = value
 }
 
@@ -48,10 +48,11 @@ const renderJobCard = (job: Job, jobsContainer: null | HTMLDivElement, newJobTem
   if (cardLink == null) return
 
   const jobStaticData = returnJobStaticData(job)
+  setElementProperty(cardLink, 'href', `job/${job.id}`)
+
   jobStaticData.forEach((pieceOfData) => {
     const htmlElement = cardLink.querySelector(`[data-template="${pieceOfData.selector}"]`) as null | HTMLElement
 
-    setElementProperty(cardLink, 'href', `job/${job.id}`)
     setElementProperty(htmlElement, (pieceOfData.property as keyof HTMLElement), pieceOfData.value)
   })
 
