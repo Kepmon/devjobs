@@ -7,42 +7,17 @@ import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
-import { returnJobsToDisplay } from '../helpers/jobsData'
+import { fetchJobs } from '../helpers/jobsData'
 
 const { searchParams } = Astro.url
-const pageNumber =
-  searchParams.get('page') != null ? Number(searchParams.get('page')) : 0
 
 let isThereAnotherPage = true
 let jobs: Readonly<SelectedPick<AllJobsRecord, Partial<JobCardType>[]>>[] = []
 
-if (searchParams.size === 0) {
-  const { returnedJobs, anotherPage } = await returnJobsToDisplay(12, 0)
+const { returnedJobs, anotherPage } = await fetchJobs(searchParams)
 
-  jobs = returnedJobs
-  isThereAnotherPage = anotherPage
-}
-
-if (searchParams.size > 0 && pageNumber > 0) {
-  const { returnedJobs, anotherPage } = await returnJobsToDisplay(
-    12 * pageNumber,
-    0
-  )
-
-  jobs = returnedJobs
-  isThereAnotherPage = anotherPage
-}
-
-if (searchParams.size > 0 && pageNumber === 0) {
-  const { returnedJobs, anotherPage } = await returnJobsToDisplay(
-    12,
-    0,
-    searchParams
-  )
-
-  jobs = returnedJobs
-  isThereAnotherPage = anotherPage
-}
+jobs = returnedJobs != null ? returnedJobs : []
+isThereAnotherPage = anotherPage != null ? anotherPage : true
 
 const isNoJobInfoDisplayed = jobs.length === 0
 ---
@@ -68,7 +43,6 @@ const isNoJobInfoDisplayed = jobs.length === 0
           <CustomButton
             moreClasses="justify-self-center mt-14"
             dataNext={isThereAnotherPage.toString()}
-            dataLoad="load"
           >
             Load More
           </CustomButton>
@@ -87,17 +61,16 @@ const isNoJobInfoDisplayed = jobs.length === 0
     addListenerToWindow
   } from '../helpers/jobsForm'
 
+  let jobPagesCount = 1
   const jobsForm = document.querySelector(
     '[data-form="jobs"]'
   ) as HTMLFormElement
   const loadButton = document.querySelector(
-    '[data-load]'
+    '[data-next="true"], [data-next="false"]'
   ) as null | HTMLButtonElement
 
-  const isNextPage = loadButton?.dataset.next === 'true'
-
   prePopulateForm()
-  addListenerToLoadButton(isNextPage, loadButton)
+  addListenerToLoadButton(jobPagesCount, loadButton)
   addListenerToForm(jobsForm)
   addListenerToDoubledInputs()
   addListenerToWindow()

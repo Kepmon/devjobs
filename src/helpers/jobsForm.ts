@@ -65,8 +65,8 @@ const checkFormValidity = (jobsForm: HTMLFormElement) => {
 
 const makeQueryLink = (jobsForm: HTMLFormElement) => {
   const { search, location, locationMobile, contract, contractMobile } = getInputValues(jobsForm)
-
   const searchURL = new URL(window.location.origin)
+
   if (search !== '') {
     searchURL.searchParams.set('job', search as string)
   }
@@ -126,18 +126,18 @@ export const filterJobs = (urlParams: URLSearchParams) => {
 
 const handleSubmit = async (jobsForm: HTMLFormElement) => {
   const isFormValid = checkFormValidity(jobsForm)
-
+  
   const invalidMessage = document.querySelector('[data-error="invalid-form"]')
-
+  
   if (!isFormValid) {
     invalidMessage?.classList.remove('scale-0')
     invalidMessage?.classList.add('scale-100')
     return
   }
-
+  
   invalidMessage?.classList.remove('scale-100')
   invalidMessage?.classList.add('scale-0')
-
+  
   const searchURL = makeQueryLink(jobsForm)
   history.pushState({}, '', searchURL)
 
@@ -164,13 +164,9 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
     noJobInfo?.setAttribute('data-displayed', 'true')
   }
 
-  if (!jobs.isThereAnotherPage) {
-    const loadButton = document.querySelector('[data-load]') as null | HTMLButtonElement
-    
-    if (loadButton != null) {
-      loadButton.dataset.next = 'false'
-      loadButton?.classList.add('hide-button')
-    }
+  const loadButton = document.querySelector('[data-next="true"], [data-next="false"]') as null | HTMLButtonElement
+  if (loadButton != null) {
+    loadButton.dataset.next = jobs.isThereAnotherPage ? 'true' : 'false'
   }
   
   createNewJobCard(jobs.paginatedJobs, true)

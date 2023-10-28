@@ -4,16 +4,14 @@ import { twMerge } from 'tailwind-merge'
 interface Props {
   ariaLabel?: string
   moreClasses?: string
-  dataLoad?: string
   dataNext?: string
 }
 
-const { ariaLabel, moreClasses, dataLoad, dataNext } = Astro.props
+const { ariaLabel, moreClasses, dataNext } = Astro.props
 ---
 
 <button
   aria-label={ariaLabel || undefined}
-  data-load={dataLoad || undefined}
   data-next={dataNext || undefined}
   class={twMerge('custom-button custom-button-padding', moreClasses)}
 >
@@ -21,7 +19,7 @@ const { ariaLabel, moreClasses, dataLoad, dataNext } = Astro.props
 </button>
 
 <style>
-  .hide-button {
+  [data-next='false'] {
     @apply hidden;
   }
 </style>

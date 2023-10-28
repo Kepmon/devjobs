@@ -61,7 +61,7 @@ const { title, job, isMovedDown } = Astro.props
             </div>
             <p
               data-template="location"
-              class="mt-10 self-end text-blue-500 text-xs font-[700]"
+              class="self-end text-blue-500 text-xs font-[700]"
             >
             </p>
           </article>
@@ -187,7 +187,7 @@ const { title, job, isMovedDown } = Astro.props
   }
 
   .card-container {
-    @apply relative grid max-[350px]:p-4 max-[350px]:pt-8 p-8 rounded-md;
+    @apply relative grid max-[350px]:p-4 max-[350px]:pt-8 p-8 min-h-[230px] rounded-md;
     @apply shadow-card bg-white dark:bg-gray-800 cursor-pointer;
   }
 

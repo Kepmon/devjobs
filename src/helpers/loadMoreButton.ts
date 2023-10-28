@@ -1,19 +1,12 @@
 import { createNewJobCard } from "./jobCards"
+import { returnExistingParams } from "./jobParams"
 
-let jobPagesCount = 1
-
-const hideButtonIfNeeded = (
-  isNextPage: boolean,
-  button: HTMLButtonElement | null
-) => {
-  if (!isNextPage) return
-
-  button?.classList.add('hide-button')
-}
-
-const handleButtonClick = async (isNextPage: boolean, button: HTMLButtonElement) => {
+const handleButtonClick = async (jobPagesCount: number, button: null | HTMLButtonElement) => {
   jobPagesCount++
-  history.pushState({}, '', `?page=${jobPagesCount}`)
+
+  const searchURL = returnExistingParams()
+  searchURL.searchParams.set('page', jobPagesCount.toString())
+  history.pushState({}, '', searchURL)
 
   await fetch('/index.json', {
     method: 'POST',
@@ -25,25 +18,19 @@ const handleButtonClick = async (isNextPage: boolean, button: HTMLButtonElement)
   
   const response = await fetch('/index.json')
   const jobs = await response.json()
-  
-  if (!jobs.isThereAnotherPage) {
-    const loadButton = document.querySelector('[data-load]') as null | HTMLButtonElement
     
-    if (loadButton != null) {
-      loadButton.dataset.next = 'false'
-      loadButton?.classList.add('hide-button')
-    }
+  if (button != null) {
+    button.dataset.next = jobs.isThereAnotherPage ? 'true' : 'false'
   }
-  
-  hideButtonIfNeeded(isNextPage, button)
+
   createNewJobCard(jobs.paginatedJobs)
 }
 
 export const addListenerToLoadButton = (
-  isNextPage: boolean,
+  jobPagesCount: number,
   button: HTMLButtonElement | null
 ) => {
-  button?.addEventListener('click', async (e: Event) => {
-    await handleButtonClick(isNextPage, button)
+  button?.addEventListener('click', async () => {
+    await handleButtonClick(jobPagesCount, button)
   })
 }
