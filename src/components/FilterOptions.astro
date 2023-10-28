@@ -2,10 +2,8 @@
 import CustomButton from './CustomButton.astro'
 import SearchIcon from './svgs/SearchIcon.astro'
 import AdditionalFilterOptions from './AdditionalFilterOptions.astro'
-import ErrorToast from './ErrorToast.astro'
 ---
 
-<ErrorToast />
 <form class="main-form" data-form="jobs">
   <div class="input-pair focus-within">
     <SearchIcon fill="hsl(235, 68%, 61%)" classNames="hidden md:block" />
@@ -34,15 +32,18 @@ import ErrorToast from './ErrorToast.astro'
   </div>
   <AdditionalFilterOptions
     locationName="location"
-    fullTimeName="fullTime"
+    fullTimeName="contract"
     moreWrapperStyles="hidden md:flex"
     moreLocationStyles="input-pair"
   />
-  <dialog class="md:hidden backdrop:bg-black backdrop:opacity-50">
+  <dialog
+    data-dialog="filter-jobs"
+    class="md:hidden backdrop:bg-black backdrop:opacity-50"
+  >
     <form>
       <AdditionalFilterOptions
         locationName="locationMobile"
-        fullTimeName="fullTimeMobile"
+        fullTimeName="contractMobile"
         moreWrapperStyles="grid gap-6"
         moreLocationStyles="flex gap-4 px-0 pb-6 border-b border-gray-200 dark:border-gray-700"
       />
@@ -51,8 +52,12 @@ import ErrorToast from './ErrorToast.astro'
 </form>
 
 <script>
-  const filterButton = document.querySelector('[data-button="filter"]')
-  const dialog = document.querySelector('dialog')
+  const filterButton = document.querySelector(
+    '[data-button="filter"]'
+  ) as null | HTMLButtonElement
+  const dialog = document.querySelector(
+    '[data-dialog="filter-jobs"]'
+  ) as null | HTMLDialogElement
 
   dialog?.addEventListener('click', (e) => {
     if (e.target === e.currentTarget) {

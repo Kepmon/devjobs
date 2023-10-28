@@ -1,68 +1,27 @@
 ---
-import type { GetStaticPaths } from 'astro'
-import type { JobErrorObject } from '../../types/jobs'
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import CustomButton from '../../components/CustomButton.astro'
 import { allJobsDb } from '../../xata'
 import { returnTimeDifference } from '../../helpers/timeDifference'
 import { twMerge } from 'tailwind-merge'
 
-export const getStaticPaths = (async () => {
-  let jobs
-
-  try {
-    jobs = await allJobsDb.getAll()
-
-    if (jobs == null) throw new Error()
-
-    return jobs.map((job) => ({
-      params: {
-        id: job.id
-      },
-      props: {
-        company: job.company,
-        contract: job.contract,
-        description: job.description,
-        location: job.location,
-        website: job.website,
-        logo: job.logo?.at(0)?.url,
-        logoBackground: job.logoBackground,
-        position: job.position,
-        requirements: job.requirements,
-        role: job.role,
-        createdAt: job.xata.createdAt
-      }
-    }))
-  } catch (err) {
-    ;(err as JobErrorObject).errors.forEach((error) => {
-      // eslint-disable-next-line no-console
-      console.warn(`${error.status}: ${error.message}`)
-    })
-    return []
-  }
-}) satisfies GetStaticPaths
-
 const { id } = Astro.params
-const {
-  company,
-  contract,
-  description,
-  location,
-  website,
-  logo,
-  logoBackground,
-  position,
-  requirements,
-  role,
-  createdAt
-} = Astro.props
+const jobOffer = await allJobsDb.read(id as string)
+
+if (jobOffer == null) {
+  const error = await fetch(`${Astro.url}/404`)
+  return new Response(error.body, {
+    headers: error.headers,
+    status: 404
+  })
+}
 ---
 
 <BaseLayout
-  title={`${position} | ${company}`}
+  title={`${jobOffer?.position} | ${jobOffer?.company}`}
   job={{
-    company,
-    position
+    company: jobOffer?.company || '',
+    position: jobOffer?.position || ''
   }}
 >
   <article data-id={id} class="job-details-wrapper">
@@ -71,21 +30,27 @@ const {
     >
       <div
         class={twMerge('logo-wrapper')}
-        style={{ backgroundColor: `${logoBackground}` }}
+        style={{ backgroundColor: `${jobOffer?.logoBackground}` }}
       >
-        <img src={logo} alt="company logo" class="md:scale-[2]" />
+        <img
+          src={jobOffer != null && jobOffer.logo ? jobOffer.logo[0].url : null}
+          alt="company logo"
+          class="md:scale-[2]"
+        />
       </div>
       <div
         class="grid gap-6 justify-center md:grow md:flex md:justify-between md:px-10 mt-6 md:mt-0"
       >
         <div class="text-center md:text-left">
-          <p class="mb-2 text-md dark:text-white font-[700]">{company}</p>
-          <a href={website} target="_blank" class="text-gray-500"
-            >{website.replace('https://', '')}</a
+          <p class="mb-2 text-md dark:text-white font-[700]">
+            {jobOffer?.company}
+          </p>
+          <a href={jobOffer?.website} target="_blank" class="text-gray-500"
+            >{jobOffer?.website.replace('https://', '')}</a
           >
         </div>
         <a
-          href={website}
+          href={jobOffer?.website}
           target="_blank"
           class="custom-button custom-button--gray custom-button-padding md:self-center"
           >Company Site</a
@@ -96,12 +61,14 @@ const {
       <header class="grid xs:flex xs:justify-between gap-12">
         <div class="[&>:not(:last-child)]:mb-3">
           <div class="gray-text-wrapper">
-            <p>{returnTimeDifference(createdAt)}</p>
+            <p>{returnTimeDifference(jobOffer?.xata.createdAt as Date)}</p>
             <p class="dot">&#x2022;</p>
-            <p>{contract}</p>
+            <p>{jobOffer?.contract}</p>
           </div>
-          <h1 class="text-lg font-[800]">{position}</h1>
-          <p class="self-end text-blue-500 text-xs font-[700]">{location}</p>
+          <h1 class="text-lg font-[800]">{jobOffer?.position}</h1>
+          <p class="self-end text-blue-500 text-xs font-[700]">
+            {jobOffer?.location}
+          </p>
         </div>
         <CustomButton moreClasses="self-center whitespace-nowrap">
           Apply Now
@@ -109,15 +76,15 @@ const {
       </header>
       <section aria-labelledby="description" class="job-offer-section">
         <h2 id="description">Description</h2>
-        <p>{description}</p>
+        <p>{jobOffer?.description}</p>
       </section>
       <section aria-labelledby="requirements" class="job-offer-section">
         <h2 id="requirements">Requirements</h2>
         <div>
-          <p class="mb-6">{requirements.content}</p>
+          <p class="mb-6">{jobOffer?.requirements.content}</p>
           <ul>
             {
-              requirements.items.map((item: string) => (
+              jobOffer?.requirements.items.map((item: string) => (
                 <li>
                   <span class="text-[2rem] leading-5">&#x2022;</span> {item}
                 </li>
@@ -129,10 +96,10 @@ const {
       <section aria-labelledby="role" class="job-offer-section">
         <h2 id="role">What you will do</h2>
         <div>
-          <p class="mb-6">{role.content}</p>
+          <p class="mb-6">{jobOffer?.role.content}</p>
           <ol>
             {
-              role.items.map((item: string, index: number) => (
+              jobOffer?.role.items.map((item: string, index: number) => (
                 <li>
                   <span>{index + 1}</span> {item}
                 </li>

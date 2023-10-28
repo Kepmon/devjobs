@@ -11,22 +11,21 @@
     "lint": "eslint --fix --ext \"src/**/*.{cjs,js,ts,astro}\""
   },
   "dependencies": {
+    "@astrojs/netlify": "^3.0.2",
     "@astrojs/tailwind": "^5.0.0",
     "@gradin/tailwindcss-scrollbar": "^3.0.1",
     "@xata.io/client": "^0.26.7",
     "astro": "^3.1.4",
-    "fuse.js": "^6.6.2",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "^3.3.3"
   },
   "devDependencies": {
-    "@shrutibalasa/tailwind-grid-auto-fit": "^1.1.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
-    "eslint": "^8.50.0",
+    "eslint": "^8.51.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-astro": "^0.29.0",
+    "eslint-plugin-astro": "^0.29.1",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.3",

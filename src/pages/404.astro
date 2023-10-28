@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import ErrorMagnifyingGlass from '../components/svgs/ErrorMagnifyingGlass.astro'
+---
+
+<BaseLayout title="DevJobs | Page Not Found" isMovedDown={true}>
+  <div class="error-container">
+    <ErrorMagnifyingGlass />
+    <h2 class="mb-8 text-xl font-bold">
+      Ooops, the requested page has not been found!
+    </h2>
+    <p class="mb-2">
+      We're sorry, it seems like the page you're looking for has been moved,
+      deleted or might not have even existed.
+    </p>
+    <div class="buttons flex justify-center gap-4 p-6">
+      <a href="/">Home Page</a>
+      <button data-page="previous">Previous Page</button>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+const previousPageButton = document.querySelector('[data-page="previous"]')
+
+previousPageButton?.addEventListener('click', () => {
+  history.back()
+})
+</script>

@@ -1,64 +1,36 @@
-let jobPagesCount = 1
+import { createNewJobCard } from "./jobCards"
+import { returnExistingParams } from "./jobParams"
 
-const hideButtonIfNeeded = (
-  length: number,
-  button: HTMLButtonElement | null
-) => {
-  if (length + 1 > jobPagesCount * 12) return
+const handleButtonClick = async (jobPagesCount: number, button: null | HTMLButtonElement) => {
+  jobPagesCount++
 
-  button?.classList.add('hide-button')
-}
+  const searchURL = returnExistingParams()
+  searchURL.searchParams.set('page', jobPagesCount.toString())
+  history.pushState({}, '', searchURL)
 
-export const returnCardsFromTemplate = () => {
-  const jobsTemplate = document.querySelector(
-    '[data-template="jobs"]'
-  ) as null | HTMLTemplateElement
-
-  if (jobsTemplate == null) return []
-
-  const jobsTemplateClone = jobsTemplate.content.cloneNode(
-    true
-  ) as DocumentFragment
-
-  return [
-    ...jobsTemplateClone.querySelectorAll('[data-link="job-details"]')
-  ] as HTMLDivElement[]
-}
-
-const loadMoreJobs = (button: HTMLButtonElement, length?: number) => {
-  const jobsDiv = document.querySelector('[data-container="jobs"]')
-  const cardContainers = returnCardsFromTemplate()
-
-  if (cardContainers.length === 0) return
-
-  const startIndex = (jobPagesCount - 1) * 12
-  const endIndex =
-    cardContainers.length + 1 > jobPagesCount * 12
-      ? jobPagesCount * 12
-      : cardContainers.length
-  const newCardContainers = cardContainers.slice(startIndex, endIndex)
-
-  newCardContainers.forEach((newCard) => {
-    jobsDiv?.append(newCard)
+  await fetch('/index.json', {
+    method: 'POST',
+    body: JSON.stringify({ searchParams: window.location.search }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
   })
+  
+  const response = await fetch('/index.json')
+  const jobs = await response.json()
+    
+  if (button != null) {
+    button.dataset.next = jobs.isThereAnotherPage ? 'true' : 'false'
+  }
 
-  hideButtonIfNeeded(length || cardContainers.length, button)
+  createNewJobCard(jobs.paginatedJobs)
 }
 
 export const addListenerToLoadButton = (
-  button: HTMLButtonElement | null,
-  length?: number
+  jobPagesCount: number,
+  button: HTMLButtonElement | null
 ) => {
-  button?.addEventListener('click', () => {
-    jobPagesCount += 1
-    loadMoreJobs(button, length || undefined)
+  button?.addEventListener('click', async () => {
+    await handleButtonClick(jobPagesCount, button)
   })
-}
-
-export const addListenerToWindow = (button: HTMLButtonElement | null) => {
-  const cardContainers = [
-    ...document.querySelectorAll('.card-container')
-  ] as HTMLDivElement[]
-
-  hideButtonIfNeeded(cardContainers.length, button)
 }

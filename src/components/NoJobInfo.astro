@@ -1,24 +1,28 @@
 ---
 import ErrorMagnifyingGlass from './svgs/ErrorMagnifyingGlass.astro'
+
+interface Props {
+  isDisplayed: string
+}
+
+const { isDisplayed } = Astro.props
 ---
 
-<div class="mx-auto text-center dark:text-white">
+<div data-displayed={isDisplayed} class="error-container">
   <ErrorMagnifyingGlass />
   <h2 class="text-xl font-bold">No job offers found</h2>
   <p>
-    <span>Try searching by a different query or</span>
-    <a href="/">
-      <span>go back to the</span>
-      <span class="home-link">home page</span>
-    </a>
+    <span>Try searching by a different query or go back to the&nbsp;</span>
+    <a href="/">home page</a>
   </p>
 </div>
 
 <style>
-  .home-link {
-    @apply relative text-blue-500 after:absolute after:left-0 after:-bottom-1;
-    @apply after:h-[3px] after:w-full after:bg-blue-500 after:scale-x-0;
-    @apply hover:after:scale-x-100 after:origin-left;
-    @apply after:transition-transform after:duration-300;
+  [data-displayed='false'] {
+    @apply hidden;
+  }
+
+  [data-displayed='true'] {
+    @apply block;
   }
 </style>

@@ -9,9 +9,10 @@ interface Props {
     company: Job['company']
     position: Job['position']
   }
+  isMovedDown?: true
 }
 
-const { title, job } = Astro.props
+const { title, job, isMovedDown } = Astro.props
 ---
 
 <!doctype html>
@@ -26,10 +27,47 @@ const { title, job } = Astro.props
   </head>
   <body class="no-initial-transition">
     <Header />
-    <div class="wrapper wrapper-position">
+    <div
+      class:list={[
+        'wrapper',
+        'row-span-2 col-start-1',
+        {
+          'row-start-2': isMovedDown == null,
+          'row-start-3 mt-10': isMovedDown === true
+        }
+      ]}
+    >
       <slot />
     </div>
+    
     {job != null && <Footer company={job.company} position={job.position} />}
+    {job == null && (
+      <template data-template="new-job">
+        <a href="/" target="_blank" data-template="link">
+          <article class="card-container">
+            <div class="card-logo">
+              <img alt="company logo" data-template="logo" />
+            </div>
+            <div class="grid content-start gap-2">
+              <div class="gray-text-wrapper">
+                <p data-template="first-gray-p"></p>
+                <p class="dot">&#x2022;</p>
+                <p data-template="third-gray-p"></p>
+              </div>
+              <h2 data-template="heading" class="text-md font-[800] dark:text-white">
+                Software Developer
+              </h2>
+              <p data-template="company" class="text-gray-500"></p>
+            </div>
+            <p
+              data-template="location"
+              class="self-end text-blue-500 text-xs font-[700]"
+            >
+            </p>
+          </article>
+        </a>
+      </template>
+    )}
   </body>
 </html>
 
@@ -53,7 +91,7 @@ const { title, job } = Astro.props
     src:
       local('Kumbh Sans'),
       url('/fonts/kumbh-sans.woff2') format('woff2');
-      font-display: fallback;
+    font-display: fallback;
   }
 
   @supports (scrollbar-width: thin) {
@@ -69,7 +107,7 @@ const { title, job } = Astro.props
   }
 
   img {
-    @apply block max-w-full;
+    @apply block max-w-full dark:text-white;
   }
 
   input[type='search'] {
@@ -83,10 +121,6 @@ const { title, job } = Astro.props
 
   .wrapper {
     @apply mx-auto w-[min(90%,70rem)];
-  }
-
-  .wrapper-position {
-    @apply row-start-2 row-span-2 col-start-1;
   }
 
   .job-details-wrapper {
@@ -117,7 +151,7 @@ const { title, job } = Astro.props
   .gray-text-wrapper {
     @apply flex items-center gap-3 text-gray-500;
   }
-  
+
   .gray-text-wrapper .dot {
     @apply text-3xl leading-3;
   }
@@ -132,5 +166,37 @@ const { title, job } = Astro.props
 
   .blue-outline {
     @apply focus-visible:outline outline-[3px] outline-blue-500;
+  }
+
+  .error-container {
+    @apply mx-auto text-center dark:text-white;
+  }
+  .error-container a {
+    @apply relative text-blue-500 after:absolute after:left-0 after:-bottom-1;
+    @apply after:h-[3px] after:w-full after:bg-blue-500 after:scale-x-0;
+    @apply outline outline-transparent;
+    @apply hover:after:scale-x-100 focus-visible:after:scale-x-100;
+    @apply after:origin-left after:transition-transform after:duration-300;
+  }
+
+  .error-container .buttons > * {
+    @apply block px-4 py-1 bg-blue-500 text-white font-[500] rounded-full;
+    @apply outline outline-transparent;
+    @apply hover:bg-gray-600 focus-visible:bg-gray-600;
+    @apply transition-colors duration-300 after:content-none;
+  }
+
+  .card-container {
+    @apply relative grid max-[350px]:p-4 max-[350px]:pt-8 p-8 min-h-[230px] rounded-md;
+    @apply shadow-card bg-white dark:bg-gray-800 cursor-pointer;
+  }
+
+  .card-container:hover h2 {
+    @apply text-gray-500 transition-colors duration-300;
+  }
+
+  .card-logo {
+    @apply absolute max-[350px]:left-4 left-8 -translate-y-1/2;
+    @apply grid place-content-center w-[50px] aspect-square rounded-2xl;
   }
 </style>
