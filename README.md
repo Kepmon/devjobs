@@ -4,6 +4,8 @@ For this project, I'm using the [xata](https://xata.io/) platform for storing al
 
 At first, I coded this website using the Astro's default SSG mode to sort of push the limits and see what exactly can be done with it. It turned out that it ain't much of it, therefore, after finishing this part of coding the website, I refactored the whole code for the SSR mode.
 
+This was actually my very first time working with a rendering mode other than SPA, so coding the existing state of the website took me way too long, I faced many challenges and I still have different issues that need to be addressed (described in detail below) but, at the moment, I'm not sure how to approach those. Nevertheless, I do feel that I've learnt a lot, so, ultimately, I'm actually really happy that I took this challenge on.
+
 ### From the very beginning, I had a couple of goals in mind:
 * since I' making use of the SSG/SSR rendering modes, all data should be fetched on a server side
 * only the necessary data should be fetched, meaning:
@@ -39,3 +41,16 @@ At first, I coded this website using the Astro's default SSG mode to sort of pus
     - before, I used `Fuse.js`, that handled this task very well but the issue was I had to pass the data to be filtered - and since the data were actually my jobs, this means I had to fetch all of them first, in order to be able to do that 
     - that's why, ultimately, I decided to use the [xata's filtering API](https://xata.io/docs/sdk/filtering) but this solution doesn't really allow me for applying any kind of fuzziness
     - now, as a user you could tr to filter the jobs using for example the "Frontend (developer)" query - and the thing is, some of the jobs' titles spell it as "Frontend" and others as "Front-end"; this is where the fuzziness is really needed but I don't think can use it with this filter API, which means that a user is not able to find results meeting both of those spelling patterns when searching for only one of them
+    - so, it seems to me like what I actually need is the [xata's search API](https://xata.io/docs/sdk/search) (in fact, you can actually combine both those APIs) but nowhere in their docs I found the information on how to pass more than one search query
+    - which I abviously need, considering the fact that my form consists of 3 inputs and a user may fill in 1/2/3 of them and depending on which one is actually filled, I need to search through different columns as well as in some cases I need the results that contain all of the searching criteria and in other ones I need to get back the results that contain one search query but in any of several (defined) colums
+    - and currently, it seems to me that this is impossible to do using any xata's API but it might be also that I just overlooked something, that's why, I'll probably reach out the xata's team on their discord community and ask whether is there a better way (than my current approach) of handling my case
+* I'm pretty sure, my current approach of rendering job cards, using the `JobCard` component on a server side **and** a separate template tag (containing the same markup, except for the job's data) on a client side is wrong - unfortunately, at the moment, I have no idea what approach would be better, since:
+    - I can't use the `JobCard` component on a client side and I can't pass the `jobs` props to the server side component as the action of fetching new set of jobs/filtered jobs is triggered on a client side
+    - as mentioned previously, I'm unconviced of rendering the whole page content on a client-side, which, by the way, doesn't seem to me like it would be an easy thing to do, in the first place, since I can't see a **good** way to pass the data from a server side JavaScript to the client's one
+    - so, I'm letting it be as is for now, sort of hoping that the right idea will just hit me eventually 🙈
+* finally, I also don't like the idea of passing the url query params to the json endpoint, using the POST request, only so I can use them inside the GET request:
+    - I feel like I should be able to read the query params from the link inside the GET request, without passing them first through the POST request at all
+    - in fact, I tried to do that already but I always get an empty `URLSearchParams` object
+    - I believe, the issue here is that the page I set the query params onto and the json endpoint are completely different endpoints/links
+    - nonetheless, if the above is true, that probably means my current approach is wrong, in the first place, and I have to get to know what am I doing wrong and fix it
+    - so, again, currently I'm not really sure how to approach this one, but I hope I'll be able to make it right in the future 🙈
