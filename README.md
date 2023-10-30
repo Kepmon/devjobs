@@ -6,6 +6,7 @@ At first, I coded this website using the Astro's default SSG mode to sort of pus
 
 This was actually my very first time working with a rendering mode other than SPA, so coding the existing state of the website took me way too long, I faced many challenges and I still have different issues that need to be addressed (described in detail below) but, at the moment, I'm not sure how to approach those. Nevertheless, I do feel that I've learnt a lot, so, ultimately, I'm actually really happy that I took this challenge on.
 
+## 🕵️‍♀Details of the project
 ### From the very beginning, I had a couple of goals in mind:
 * since I' making use of the SSG/SSR rendering modes, all data should be fetched on a server side
 * only the necessary data should be fetched, meaning:
@@ -54,3 +55,18 @@ This was actually my very first time working with a rendering mode other than SP
     - I believe, the issue here is that the page I set the query params onto and the json endpoint are completely different endpoints/links
     - nonetheless, if the above is true, that probably means my current approach is wrong, in the first place, and I have to get to know what am I doing wrong and fix it
     - so, again, currently I'm not really sure how to approach this one, but I hope I'll be able to make it right in the future 🙈
+
+## 💻 Technologies
+![Astro](https://img.shields.io/badge/Astro-BC52EE?style=for-the-badge&logo=astro&logoColor=white)
+![Tailwind-css](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Typescript](https://img.shields.io/badge/Typescript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Xata](https://img.shields.io/badge/Xata-6C53CD?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iMTYwMCIgaGVpZ2h0PSIxNjAwIiB2aWV3Qm94PSIwIDAgMTYwMCAxNjAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMjUwLjEyIDU3Ni40OThjLS4xMSA4OS45OTctMzYgMTc2LjI2Ny05OS43OSAyMzkuODNsLS4wMS0uMDA3LTIyNi4yODIgMjI1LjQ4OWMtNy44NDEgNy44Mi0yMC41OCA3Ljg0LTI3LjkyNy0uNDQtNTUuMDE1LTYxLjk5NS04NS41ODctMTQyLjE3NS04NS40OS0yMjUuNDc4LjEwNi04OS45OTcgMzYtMTc2LjI2NyA5OS43ODctMjM5LjgzbC4wMDcuMDA3IDIwNi43NDUtMjA2LjAxNGMxOC42My0xOC41NjkgNDkuMTItMTguNzAyIDY0LjkyIDIuMzI0IDQzLjk5IDU4LjUyNSA2OC4xMiAxMzAuMDg5IDY4LjA0IDIwNC4xMTl6TTQ0MC41NTIgODE3LjcwMmMtNjMuNzg3LTYzLjU2My05OS42ODItMTQ5LjgzMy05OS43ODctMjM5LjgzLS4wODctNzQuMDMgMjQuMDQ4LTE0NS41OTQgNjguMDM1LTIwNC4xMTkgMTUuODAzLTIxLjAyNiA0Ni4yOTQtMjAuODkzIDY0LjkyOC0yLjMyNGwyMDYuNzQxIDIwNi4wMTYuMDA2LS4wMDdjNjMuNzg3IDYzLjU2NCA5OS42ODEgMTQ5LjgzMyA5OS43ODcgMjM5LjgzMS4wOTcgODMuMzAyLTMwLjQ3NSAxNjMuNDgzLTg1LjQ5IDIyNS40NzEtNy4zNDcgOC4yOC0yMC4wODYgOC4yNi0yNy45MjcuNDVMNDQwLjU1OCA4MTcuNjk2bC0uMDA2LjAwNnpNMTE0MS44MiAxMjIxLjE5Yy0xNi42MyAyMC4zOS00Ny4wNCAyMC4yMS02NS42MyAxLjU5bC0xMjcuNjk4LTEyNy44NGMtNy44MzYtNy44NS03LjgyMS0yMC41Ni4wMzMtMjguMzlsMjEyLjA5NS0yMTEuMzQ1YzcuODQtNy44MTMgMjAuNjItNy44NTkgMjcuNTQuNzg0IDM2LjgxIDQ1Ljk5NiA1MS4yOSAxMDkuNTY2IDQwLjM0IDE3OS41NTEtMTAuMDEgNjQuMDYtNDAuNjUgMTI5LjE5LTg2LjY4IDE4NS42NXpNNTE0LjY5NiAxMjI0LjE2Yy0xOC41OTQgMTguNjEtNDkuMDAyIDE4Ljc5LTY1LjYyNi0xLjYtNDYuMDM2LTU2LjQ2LTc2LjY3Mi0xMjEuNTgtODYuNjg3LTE4NS42NC0xMC45NDMtNjkuOTkyIDMuNTMxLTEzMy41NjIgNDAuMzQyLTE3OS41NTggNi45MTYtOC42NDIgMTkuNzAzLTguNTk3IDI3LjU0NC0uNzg0bDIxMi4wOTIgMjExLjM1MmM3Ljg1NCA3LjgyIDcuODY4IDIwLjU0LjAzMyAyOC4zOGwtMTI3LjY5OCAxMjcuODV6IiBmaWxsPSIjZmZmIi8+PC9zdmc+&logoColor=white)
+
+## 📁 Sources
+
+| Data          | Correct input    |
+| ------------- |:----------------:|
+| Icons | [Frontend Mentor](https://www.frontendmentor.io/challenges/devjobs-web-app-HuvC_LP4l) (if not stated otherwise)|
+| All jobs data    | [Frontend Mentor](https://www.frontendmentor.io/challenges/devjobs-web-app-HuvC_LP4l)|
+| Font | [Google Fonts](https://fonts.google.com/specimen/Kumbh+Sans) |
+| Magnifying glass image | Own drawing |
