@@ -1,12 +1,16 @@
-import { createNewJobCard } from "./jobCards"
-import { returnExistingParams } from "./jobParams"
+import { createNewJobCard } from './jobCards'
+import { returnExistingParams } from './jobParams'
 
-const handleButtonClick = async (jobPagesCount: number, button: null | HTMLButtonElement) => {
-  jobPagesCount++
+const handleButtonClick = async (
+  jobPagesCount: number,
+  button: null | HTMLButtonElement
+) => {
+  // eslint-disable-next-line no-param-reassign
+  jobPagesCount += 1
 
   const searchURL = returnExistingParams()
   searchURL.searchParams.set('page', jobPagesCount.toString())
-  history.pushState({}, '', searchURL)
+  window.history.pushState({}, '', searchURL)
 
   await fetch('/index.json', {
     method: 'POST',
@@ -15,10 +19,10 @@ const handleButtonClick = async (jobPagesCount: number, button: null | HTMLButto
       'Content-Type': 'application/json'
     }
   })
-  
+
   const response = await fetch('/index.json')
   const jobs = await response.json()
-    
+
   if (button != null) {
     button.dataset.next = jobs.isThereAnotherPage ? 'true' : 'false'
   }

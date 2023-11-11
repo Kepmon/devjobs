@@ -4,7 +4,6 @@ module.exports = {
     es2021: true,
     node: true
   },
-  parser: '@astro/parser/eslint-plugin',
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:astro/recommended',
@@ -25,15 +24,12 @@ module.exports = {
   ],
   plugins: ['prettier'],
   rules: {
-    'prettier/prettier': [
-      'error',
-      { singleQuote: true, trailingComma: 'none', semi: false }
-    ],
     'comma-dangle': ['error', 'never'],
     semi: ['error', 'never'],
     'import/prefer-default-export': 'off',
     'import/extensions': ['error', 'never'],
     'no-tabs': ['error', { allowIndentationTabs: true }],
+    'no-param-reassign': ['error', { props: false }],
     'import/order': [
       'error',
       {
