@@ -41,33 +41,6 @@ const { title, job, isMovedDown } = Astro.props
     </div>
     
     {job != null && <Footer company={job.company} position={job.position} />}
-    {job == null && (
-      <template data-template="new-job">
-        <a href="/" target="_blank" data-template="link">
-          <article class="card-container">
-            <div class="card-logo">
-              <img alt="company logo" data-template="logo" />
-            </div>
-            <div class="grid content-start gap-2">
-              <div class="gray-text-wrapper">
-                <p data-template="first-gray-p"></p>
-                <p class="dot">&#x2022;</p>
-                <p data-template="third-gray-p"></p>
-              </div>
-              <h2 data-template="heading" class="text-md font-[800] dark:text-white">
-                Software Developer
-              </h2>
-              <p data-template="company" class="text-gray-500"></p>
-            </div>
-            <p
-              data-template="location"
-              class="self-end text-blue-500 text-xs font-[700]"
-            >
-            </p>
-          </article>
-        </a>
-      </template>
-    )}
   </body>
 </html>
 
