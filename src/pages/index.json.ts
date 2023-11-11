@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { fetchJobs } from '../helpers/jobsData.ts'
+import { fetchJobs } from '../helpers/jobsData'
 
 let searchParams: URLSearchParams
 

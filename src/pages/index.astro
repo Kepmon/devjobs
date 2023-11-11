@@ -7,7 +7,7 @@ import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
-import { fetchJobs } from '../helpers/jobsData.ts'
+import { fetchJobs } from '../helpers/jobsData'
 
 const { searchParams } = Astro.url
 
@@ -53,13 +53,13 @@ const isNoJobInfoDisplayed = jobs.length === 0
 </BaseLayout>
 
 <script>
-  import { addListenerToLoadButton } from '../helpers/loadMoreButton.ts'
+  import { addListenerToLoadButton } from '../helpers/loadMoreButton'
   import {
     prePopulateForm,
     addListenerToForm,
     addListenerToDoubledInputs,
     addListenerToWindow
-  } from '../helpers/jobsForm.ts'
+  } from '../helpers/jobsForm'
 
   const jobPagesCount = 1
   const jobsForm = document.querySelector(

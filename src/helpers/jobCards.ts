@@ -84,14 +84,14 @@ export const createNewJobCard = (jobs: Job[], clearContainer?: true) => {
 
   if (jobsContainer == null) return
 
-  if (clearContainer) {
-    jobsContainer.replaceChildren()
-  }
-
   const cardLink = document.querySelector(
     '[data-link="job-card"]'
   ) as null | HTMLAnchorElement
   if (cardLink == null) return
+
+  if (clearContainer) {
+    jobsContainer.replaceChildren()
+  }
 
   jobs.forEach((job) => {
     const cardLinkNode = cardLink.cloneNode(true) as HTMLAnchorElement
