@@ -1,6 +1,6 @@
-import { allJobsDb } from '../xata'
 import type { JobCardType } from '../types/jobs'
 import { filterJobs } from './jobsForm'
+import { allJobsDb } from '../xata'
 
 const jobColumns = [
   'id',
@@ -13,7 +13,11 @@ const jobColumns = [
   'location'
 ] as JobCardType
 
-export const returnJobsToDisplay = async (size: number, offset: number, searchParams: URLSearchParams) => {
+export const returnJobsToDisplay = async (
+  size: number,
+  offset: number,
+  searchParams: URLSearchParams
+) => {
   const paginatedJobs = await allJobsDb
     .filter(searchParams ? filterJobs(searchParams) : '')
     .select(jobColumns)
@@ -27,17 +31,23 @@ export const returnJobsToDisplay = async (size: number, offset: number, searchPa
   return { returnedJobs, anotherPage }
 }
 
-export const fetchJobs = async (searchParams: URLSearchParams, paginatedJobs?: true) => {
+export const fetchJobs = async (
+  searchParams: URLSearchParams,
+  paginatedJobs?: true
+) => {
   const pageNumber =
-  searchParams.get('page') != null ? Number(searchParams.get('page')) : 1
+    searchParams.get('page') != null ? Number(searchParams.get('page')) : 1
 
   if (pageNumber > 1) {
-    return await returnJobsToDisplay(
+    const jobs = await returnJobsToDisplay(
       paginatedJobs != null ? 12 : 12 * pageNumber,
       paginatedJobs != null ? (pageNumber - 1) * 12 : 0,
       searchParams
     )
+
+    return jobs
   }
 
-  return await returnJobsToDisplay(12, 0, searchParams)
+  const jobs = await returnJobsToDisplay(12, 0, searchParams)
+  return jobs
 }

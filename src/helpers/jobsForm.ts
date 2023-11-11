@@ -2,8 +2,8 @@ import { createNewJobCard } from './jobCards'
 
 interface SearchValues {
   $any: {
-    company: { $iContains: string },
-    position: { $iContains: string },
+    company: { $iContains: string }
+    position: { $iContains: string }
     description: { $iContains: string }
   }
   location: { $iContains: string }
@@ -29,13 +29,15 @@ export const prePopulateForm = () => {
     type Param = keyof typeof queryParams
 
     if (queryParams[param as Param] != null) {
-      const inputs = [...document.querySelectorAll(`[name^="${param}"]`)] as (null | HTMLInputElement)[]
-      
+      const inputs = [
+        ...document.querySelectorAll(`[name^="${param}"]`)
+      ] as (null | HTMLInputElement)[]
+
       inputs.forEach((input) => {
         if (input != null && input.type === 'checkbox') {
           input.checked = true
         }
-        
+
         if (input != null && input.type === 'search') {
           input.value = queryParams[param as Param] as string
         }
@@ -50,7 +52,8 @@ const getInputValues = (jobsForm: HTMLFormElement) => {
 }
 
 const checkFormValidity = (jobsForm: HTMLFormElement) => {
-  const { search, location, locationMobile, contract, contractMobile } = getInputValues(jobsForm)
+  const { search, location, locationMobile, contract, contractMobile } =
+    getInputValues(jobsForm)
 
   const noInputFilled =
     search === '' &&
@@ -64,7 +67,8 @@ const checkFormValidity = (jobsForm: HTMLFormElement) => {
 }
 
 const makeQueryLink = (jobsForm: HTMLFormElement) => {
-  const { search, location, locationMobile, contract, contractMobile } = getInputValues(jobsForm)
+  const { search, location, locationMobile, contract, contractMobile } =
+    getInputValues(jobsForm)
   const searchURL = new URL(window.location.origin)
 
   if (search !== '') {
@@ -74,7 +78,7 @@ const makeQueryLink = (jobsForm: HTMLFormElement) => {
   if (location !== '') {
     searchURL.searchParams.set('location', location as string)
   }
-  
+
   if (locationMobile !== '') {
     searchURL.searchParams.set('location', locationMobile as string)
   }
@@ -91,20 +95,26 @@ export const filterJobs = (urlParams: URLSearchParams) => {
   const keys = Object.keys(params)
   const areThereAnyParams = keys.length > 0
 
-  if (!areThereAnyParams) return
+  if (!areThereAnyParams) return {}
 
-  let searchValues: Partial<SearchValues> = {}
+  const searchValues: Partial<SearchValues> = {}
   keys.forEach((key) => {
     if (key === 'location' || key === 'contract') {
-      searchValues[key as keyof Omit<SearchValues, '$any'>] = { $iContains: params[key] }
+      searchValues[key as keyof Omit<SearchValues, '$any'>] = {
+        $iContains: params[key]
+      }
     }
-    
+
     if (key === 'locationMobile') {
-      searchValues[key as keyof Omit<SearchValues, '$any'>] = { $iContains: params['location'] }
+      searchValues[key as keyof Omit<SearchValues, '$any'>] = {
+        $iContains: params.location
+      }
     }
-    
+
     if (key === 'contractMobile') {
-      searchValues[key as keyof Omit<SearchValues, '$any'>] = { $iContains: params['contract'] }
+      searchValues[key as keyof Omit<SearchValues, '$any'>] = {
+        $iContains: params.contract
+      }
     }
 
     if (key === 'job') {
@@ -115,10 +125,12 @@ export const filterJobs = (urlParams: URLSearchParams) => {
         description: { $iContains: '' }
       }
       remainingColumns.forEach((column) => {
-        orCase[column as keyof SearchValues['$any']] = { $iContains: params[key] }
+        orCase[column as keyof SearchValues['$any']] = {
+          $iContains: params[key]
+        }
       })
 
-      searchValues['$any'] = orCase
+      searchValues.$any = orCase
     }
   })
   return searchValues
@@ -126,20 +138,20 @@ export const filterJobs = (urlParams: URLSearchParams) => {
 
 const handleSubmit = async (jobsForm: HTMLFormElement) => {
   const isFormValid = checkFormValidity(jobsForm)
-  
+
   const invalidMessage = document.querySelector('[data-error="invalid-form"]')
-  
+
   if (!isFormValid) {
     invalidMessage?.classList.remove('scale-0')
     invalidMessage?.classList.add('scale-100')
     return
   }
-  
+
   invalidMessage?.classList.remove('scale-100')
   invalidMessage?.classList.add('scale-0')
-  
+
   const searchURL = makeQueryLink(jobsForm)
-  history.pushState({}, '', searchURL)
+  window.history.pushState({}, '', searchURL)
 
   await fetch('/index.json', {
     method: 'POST',
@@ -149,7 +161,9 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
     }
   })
 
-  const dialog = document.querySelector('[data-dialog="filter-jobs"]') as null | HTMLDialogElement
+  const dialog = document.querySelector(
+    '[data-dialog="filter-jobs"]'
+  ) as null | HTMLDialogElement
   const response = await fetch('/index.json')
   const jobs = await response.json()
 
@@ -157,18 +171,21 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
     dialog.close()
   }
 
-  
   if (jobs.paginatedJobs.length === 0) {
-    const noJobInfo = document.querySelector('[data-displayed]') as null | HTMLDivElement
-    
+    const noJobInfo = document.querySelector(
+      '[data-displayed]'
+    ) as null | HTMLDivElement
+
     noJobInfo?.setAttribute('data-displayed', 'true')
   }
 
-  const loadButton = document.querySelector('[data-next="true"], [data-next="false"]') as null | HTMLButtonElement
+  const loadButton = document.querySelector(
+    '[data-next="true"], [data-next="false"]'
+  ) as null | HTMLButtonElement
   if (loadButton != null) {
     loadButton.dataset.next = jobs.isThereAnotherPage ? 'true' : 'false'
   }
-  
+
   createNewJobCard(jobs.paginatedJobs, true)
 }
 
@@ -180,19 +197,27 @@ export const addListenerToForm = (jobsForm: HTMLFormElement) => {
 }
 
 export const addListenerToDoubledInputs = () => {
-  const locationInputs = [...document.querySelectorAll('[name^="location"]')] as (null | HTMLInputElement)[]
-  const contractInputs = [...document.querySelectorAll('[name^="contract"]')] as (null | HTMLInputElement)[]
+  const locationInputs = [
+    ...document.querySelectorAll('[name^="location"]')
+  ] as (null | HTMLInputElement)[]
+  const contractInputs = [
+    ...document.querySelectorAll('[name^="contract"]')
+  ] as (null | HTMLInputElement)[]
   const allDoubledInputs = [...locationInputs, ...contractInputs]
 
   allDoubledInputs.forEach((input) => {
     input?.addEventListener('input', () => {
-      const doubledInput = allDoubledInputs.find((secondInput) => secondInput?.name !== input.name && secondInput?.name.includes(input.name.replace('Mobile', '')))
+      const doubledInput = allDoubledInputs.find(
+        (secondInput) =>
+          secondInput?.name !== input.name &&
+          secondInput?.name.includes(input.name.replace('Mobile', ''))
+      )
 
       if (doubledInput != null && input.type === 'checkbox') {
         doubledInput.checked = input.checked
         return
       }
-      
+
       if (doubledInput != null) {
         doubledInput.value = input.value
       }
@@ -202,8 +227,13 @@ export const addListenerToDoubledInputs = () => {
 
 export const addListenerToWindow = () => {
   window.addEventListener('resize', () => {
-    const dialog = document.querySelector('[data-dialog="filter-jobs"]') as null | HTMLDialogElement
-    const isDialogDisplayed = dialog != null ? window.getComputedStyle(dialog).display === 'block' : true
+    const dialog = document.querySelector(
+      '[data-dialog="filter-jobs"]'
+    ) as null | HTMLDialogElement
+    const isDialogDisplayed =
+      dialog != null
+        ? window.getComputedStyle(dialog).display === 'block'
+        : true
 
     if (isDialogDisplayed) return
 
