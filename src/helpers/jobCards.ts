@@ -1,7 +1,7 @@
-import type { Job } from "../types/jobs"
-import { returnTimeDifference } from "./timeDifference"
+import type { Job } from '../types/jobs'
+import { returnTimeDifference } from './timeDifference'
 
-const returnJobStaticData = (job: Job) => ([
+const returnJobStaticData = (job: Job) => [
   {
     selector: 'logo',
     property: 'src',
@@ -32,16 +32,26 @@ const returnJobStaticData = (job: Job) => ([
     property: 'textContent',
     value: job.location
   }
-])
+]
 
-const setElementProperty = <T extends HTMLElement>(element: null | T, property: keyof T, value: T[keyof T]) => {
+const setElementProperty = <T extends HTMLElement>(
+  element: null | T,
+  property: keyof T,
+  value: T[keyof T]
+) => {
   if (element == null) return
 
   element[property] = value
 }
 
-const renderJobCard = (job: Job, jobsContainer: HTMLDivElement, cardLinkNode: HTMLAnchorElement) => {
-  const cardLogoContainer = cardLinkNode.querySelector('.card-logo') as null | HTMLDivElement
+const renderJobCard = (
+  job: Job,
+  jobsContainer: HTMLDivElement,
+  cardLinkNode: HTMLAnchorElement
+) => {
+  const cardLogoContainer = cardLinkNode.querySelector(
+    '.card-logo'
+  ) as null | HTMLDivElement
 
   if (cardLinkNode == null) return
 
@@ -49,9 +59,15 @@ const renderJobCard = (job: Job, jobsContainer: HTMLDivElement, cardLinkNode: HT
   setElementProperty(cardLinkNode, 'href', `job/${job.id}`)
 
   jobStaticData.forEach((pieceOfData) => {
-    const htmlElement = cardLinkNode.querySelector(`[data-${pieceOfData.selector}="job-card"]`) as null | HTMLElement
+    const htmlElement = cardLinkNode.querySelector(
+      `[data-${pieceOfData.selector}="job-card"]`
+    ) as null | HTMLElement
 
-    setElementProperty(htmlElement, (pieceOfData.property as keyof HTMLElement), pieceOfData.value)
+    setElementProperty(
+      htmlElement,
+      pieceOfData.property as keyof HTMLElement,
+      pieceOfData.value
+    )
   })
 
   if (cardLogoContainer != null) {
@@ -62,7 +78,9 @@ const renderJobCard = (job: Job, jobsContainer: HTMLDivElement, cardLinkNode: HT
 }
 
 export const createNewJobCard = (jobs: Job[], clearContainer?: true) => {
-  const jobsContainer = document.querySelector('[data-container="jobs"]') as null | HTMLDivElement
+  const jobsContainer = document.querySelector(
+    '[data-container="jobs"]'
+  ) as null | HTMLDivElement
 
   if (jobsContainer == null) return
 
@@ -70,9 +88,11 @@ export const createNewJobCard = (jobs: Job[], clearContainer?: true) => {
     jobsContainer.replaceChildren()
   }
 
-  const cardLink = document.querySelector('[data-link="job-card"]') as null | HTMLAnchorElement
+  const cardLink = document.querySelector(
+    '[data-link="job-card"]'
+  ) as null | HTMLAnchorElement
   if (cardLink == null) return
-  
+
   jobs.forEach((job) => {
     const cardLinkNode = cardLink.cloneNode(true) as HTMLAnchorElement
 

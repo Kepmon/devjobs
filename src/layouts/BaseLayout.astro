@@ -39,7 +39,7 @@ const { title, job, isMovedDown } = Astro.props
     >
       <slot />
     </div>
-    
+
     {job != null && <Footer company={job.company} position={job.position} />}
   </body>
 </html>

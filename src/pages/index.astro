@@ -1,13 +1,13 @@
 ---
-import type { JobCardType } from '../types/jobs'
 import type { SelectedPick } from '@xata.io/client'
+import type { JobCardType } from '../types/jobs'
+import type { AllJobsRecord } from '../xata'
 import BaseLayout from '../layouts/BaseLayout.astro'
-import { type AllJobsRecord } from '../xata'
 import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
-import { fetchJobs } from '../helpers/jobsData'
+import { fetchJobs } from '../helpers/jobsData.ts'
 
 const { searchParams } = Astro.url
 
@@ -53,15 +53,15 @@ const isNoJobInfoDisplayed = jobs.length === 0
 </BaseLayout>
 
 <script>
-  import { addListenerToLoadButton } from '../helpers/loadMoreButton'
+  import { addListenerToLoadButton } from '../helpers/loadMoreButton.ts'
   import {
     prePopulateForm,
     addListenerToForm,
     addListenerToDoubledInputs,
     addListenerToWindow
-  } from '../helpers/jobsForm'
+  } from '../helpers/jobsForm.ts'
 
-  let jobPagesCount = 1
+  const jobPagesCount = 1
   const jobsForm = document.querySelector(
     '[data-form="jobs"]'
   ) as HTMLFormElement

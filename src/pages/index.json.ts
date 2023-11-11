@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { fetchJobs } from '../helpers/jobsData'
+import { fetchJobs } from '../helpers/jobsData.ts'
 
 let searchParams: URLSearchParams
 
@@ -11,13 +11,10 @@ export const POST: APIRoute = async ({ request }) => {
 }
 
 export const GET: () => Promise<Response | undefined> = async () => {
-  let paginatedJobs
-  let isThereAnotherPage
-
   const { returnedJobs, anotherPage } = await fetchJobs(searchParams, true)
 
-  paginatedJobs = returnedJobs != null ? returnedJobs : []
-  isThereAnotherPage = anotherPage != null ? anotherPage : true
+  const paginatedJobs = returnedJobs != null ? returnedJobs : []
+  const isThereAnotherPage = anotherPage != null ? anotherPage : true
 
   return new Response(JSON.stringify({ paginatedJobs, isThereAnotherPage }), {
     status: 200,
