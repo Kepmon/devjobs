@@ -12,12 +12,14 @@ import { fetchJobs } from '../helpers/jobsData'
 const { searchParams } = Astro.url
 
 let isThereAnotherPage = true
+let isResponseError = false
 let jobs: Readonly<SelectedPick<AllJobsRecord, Partial<JobCardType>[]>>[] = []
 
-const { returnedJobs, anotherPage } = await fetchJobs(searchParams)
+const { returnedJobs, anotherPage, isError } = await fetchJobs(searchParams)
 
-jobs = returnedJobs != null ? returnedJobs : []
-isThereAnotherPage = anotherPage != null ? anotherPage : true
+jobs = returnedJobs
+isThereAnotherPage = anotherPage
+isResponseError = isError
 
 const isNoJobInfoDisplayed = jobs.length === 0
 ---
@@ -31,7 +33,10 @@ const isNoJobInfoDisplayed = jobs.length === 0
       </p>
     </div>
     <div class="grid pb-[104px]">
-      <NoJobInfo isDisplayed={isNoJobInfoDisplayed.toString()} />
+      <NoJobInfo
+        isDisplayed={isNoJobInfoDisplayed.toString()}
+        isError={isResponseError}
+      />
       <div
         class="grid md:grid-cols-fill-350 gap-y-[65px] gap-x-6"
         data-container="jobs"

@@ -84,7 +84,7 @@ const makeQueryLink = (jobsForm: HTMLFormElement) => {
   }
 
   if (contract != null || contractMobile != null) {
-    searchURL.searchParams.set('contract', 'Full Time')
+    searchURL.searchParams.set('contract', 'full time')
   }
 
   return searchURL
@@ -198,30 +198,32 @@ export const addListenerToForm = (jobsForm: HTMLFormElement) => {
 export const addListenerToDoubledInputs = () => {
   const locationInputs = [
     ...document.querySelectorAll('[name^="location"]')
-  ] as (null | HTMLInputElement)[]
+  ] as HTMLInputElement[]
   const contractInputs = [
     ...document.querySelectorAll('[name^="contract"]')
-  ] as (null | HTMLInputElement)[]
+  ] as HTMLInputElement[]
   const allDoubledInputs = [...locationInputs, ...contractInputs]
 
-  allDoubledInputs.forEach((input) => {
-    input?.addEventListener('input', () => {
-      const doubledInput = allDoubledInputs.find(
-        (secondInput) =>
-          secondInput?.name !== input.name &&
-          secondInput?.name.includes(input.name.replace('Mobile', ''))
-      )
+  if (allDoubledInputs.length > 0) {
+    allDoubledInputs.forEach((input) => {
+      input.addEventListener('input', () => {
+        const doubledInput = allDoubledInputs.find(
+          (secondInput) =>
+            secondInput.name !== input.name &&
+            secondInput.name.includes(input.name.replace('Mobile', ''))
+        )
 
-      if (doubledInput != null && input.type === 'checkbox') {
-        doubledInput.checked = input.checked
-        return
-      }
+        if (doubledInput != null && input.type === 'checkbox') {
+          doubledInput.checked = input.checked
+          return
+        }
 
-      if (doubledInput != null) {
-        doubledInput.value = input.value
-      }
+        if (doubledInput != null) {
+          doubledInput.value = input.value
+        }
+      })
     })
-  })
+  }
 }
 
 export const addListenerToWindow = () => {

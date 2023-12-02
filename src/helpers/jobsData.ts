@@ -18,36 +18,45 @@ export const returnJobsToDisplay = async (
   offset: number,
   searchParams: URLSearchParams
 ) => {
-  const paginatedJobs = await allJobsDb
-    .filter(searchParams ? filterJobs(searchParams) : '')
-    .select(jobColumns)
-    .getPaginated({
-      pagination: { size, offset }
-    })
+  try {
+    const paginatedJobs = await allJobsDb
+      .filter(searchParams ? filterJobs(searchParams) : '')
+      .select(jobColumns)
+      .getPaginated({
+        pagination: { size, offset }
+      })
 
-  const returnedJobs = paginatedJobs.records
-  const anotherPage = paginatedJobs.hasNextPage()
+    const returnedJobs = paginatedJobs.records
+    const anotherPage = paginatedJobs.hasNextPage()
 
-  return { returnedJobs, anotherPage }
+    return { returnedJobs, anotherPage, isError: false }
+  } catch (err) {
+    return {
+      returnedJobs: [],
+      anotherPage: false,
+      isError: true
+    }
+  }
 }
 
 export const fetchJobs = async (
   searchParams: URLSearchParams,
   paginatedJobs?: true
 ) => {
+  const resultsPerPage = 12
   const pageNumber =
     searchParams.get('page') != null ? Number(searchParams.get('page')) : 1
 
   if (pageNumber > 1) {
     const jobs = await returnJobsToDisplay(
-      paginatedJobs != null ? 12 : 12 * pageNumber,
-      paginatedJobs != null ? (pageNumber - 1) * 12 : 0,
+      paginatedJobs != null ? resultsPerPage : resultsPerPage * pageNumber,
+      paginatedJobs != null ? (pageNumber - 1) * resultsPerPage : 0,
       searchParams
     )
 
     return jobs
   }
 
-  const jobs = await returnJobsToDisplay(12, 0, searchParams)
+  const jobs = await returnJobsToDisplay(resultsPerPage, 0, searchParams)
   return jobs
 }
