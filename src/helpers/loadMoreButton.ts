@@ -12,15 +12,13 @@ const handleButtonClick = async (
   searchURL.searchParams.set('page', jobPagesCount.toString())
   window.history.pushState({}, '', searchURL)
 
-  await fetch('/index.json', {
+  const response = await fetch('/index.json', {
     method: 'POST',
     body: JSON.stringify({ searchParams: window.location.search }),
     headers: {
       'Content-Type': 'application/json'
     }
   })
-
-  const response = await fetch('/index.json')
   const jobs = await response.json()
 
   if (button != null) {

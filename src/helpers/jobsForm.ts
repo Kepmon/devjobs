@@ -153,19 +153,18 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
   const searchURL = makeQueryLink(jobsForm)
   window.history.pushState({}, '', searchURL)
 
-  await fetch('/index.json', {
+  const response = await fetch('/index.json', {
     method: 'POST',
     body: JSON.stringify({ searchParams: searchURL.search }),
     headers: {
       'Content-Type': 'application/json'
     }
   })
+  const jobs = await response.json()
 
   const dialog = document.querySelector(
     '[data-dialog="filter-jobs"]'
   ) as null | HTMLDialogElement
-  const response = await fetch('/index.json')
-  const jobs = await response.json()
 
   if (dialog != null && dialog.hasAttribute('open')) {
     dialog.close()
