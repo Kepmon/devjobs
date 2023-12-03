@@ -1,0 +1,23 @@
+<button
+  aria-label="click here to scroll up to the top of the page"
+  data-button="scroll-to-top"
+  class="scroll-to-top blue-outline"
+>
+  <img src="/img/top-arrow.svg" alt="" class="scale-[0.8]" />
+</button>
+
+<script>
+  const button = document.querySelector('[data-button="scroll-to-top"]')
+
+  button?.addEventListener('click', () => {
+    window.scrollTo(0, 0)
+  })
+</script>
+
+<style>
+  .scroll-to-top {
+    @apply fixed bottom-6 right-6 p-3 w-12 aspect-square bg-blue-500;
+    @apply box-content rounded-full z-50 hover:bg-blue-400 focus-visible:bg-blue-400;
+    @apply transition-colors duration-300;
+  }
+</style>

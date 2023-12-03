@@ -7,8 +7,8 @@ import JobCard from '../components/JobCard.astro'
 import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
-import { fetchJobs } from '../helpers/jobsData'
 import Spinner from '../components/Spinner.astro'
+import { fetchJobs } from '../helpers/jobsData'
 
 const { searchParams } = Astro.url
 
@@ -50,7 +50,7 @@ const isNoJobInfoDisplayed = jobs.length === 0
       {
         isThereAnotherPage && (
           <CustomButton
-            moreClasses="justify-self-center mt-14"
+            moreClasses="justify-self-center mt-14 blue-outline"
             dataNext={isThereAnotherPage.toString()}
             dataButton="load"
           >
