@@ -8,20 +8,26 @@ import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
 import { fetchJobs } from '../helpers/jobsData'
+import Spinner from '../components/Spinner.astro'
 
 const { searchParams } = Astro.url
 
 let isThereAnotherPage = true
+let isResponseError = false
 let jobs: Readonly<SelectedPick<AllJobsRecord, Partial<JobCardType>[]>>[] = []
 
-const { returnedJobs, anotherPage } = await fetchJobs(searchParams)
+const { returnedJobs, anotherPage, isError } = await fetchJobs(searchParams)
 
-jobs = returnedJobs != null ? returnedJobs : []
-isThereAnotherPage = anotherPage != null ? anotherPage : true
+jobs = returnedJobs
+isThereAnotherPage = anotherPage
+isResponseError = isError
 
 const isNoJobInfoDisplayed = jobs.length === 0
 ---
 
+<template data-template="spinner">
+  <Spinner />
+</template>
 <BaseLayout title="DevJobs | Home">
   <main class="grid gap-12 xs:gap-32 [&:has([data-svg])]:gap-16">
     <div>
@@ -31,7 +37,10 @@ const isNoJobInfoDisplayed = jobs.length === 0
       </p>
     </div>
     <div class="grid pb-[104px]">
-      <NoJobInfo isDisplayed={isNoJobInfoDisplayed.toString()} />
+      <NoJobInfo
+        isDisplayed={isNoJobInfoDisplayed.toString()}
+        isError={isResponseError}
+      />
       <div
         class="grid md:grid-cols-fill-350 gap-y-[65px] gap-x-6"
         data-container="jobs"
@@ -43,6 +52,7 @@ const isNoJobInfoDisplayed = jobs.length === 0
           <CustomButton
             moreClasses="justify-self-center mt-14"
             dataNext={isThereAnotherPage.toString()}
+            dataButton="load"
           >
             Load More
           </CustomButton>
@@ -66,7 +76,7 @@ const isNoJobInfoDisplayed = jobs.length === 0
     '[data-form="jobs"]'
   ) as HTMLFormElement
   const loadButton = document.querySelector(
-    '[data-next="true"], [data-next="false"]'
+    '[data-button="load"]'
   ) as null | HTMLButtonElement
 
   prePopulateForm()

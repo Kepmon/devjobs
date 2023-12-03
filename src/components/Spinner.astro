@@ -1,0 +1,41 @@
+<div data-spinner></div>
+
+<style>
+  [data-spinner],
+  [data-spinner]::before,
+  [data-spinner]::after {
+    --spinner-color: hsl(219, 29%, 90%);
+    --spinner-width: 1.5rem;
+    --spinner-border-width: 0.25rem;
+    position: relative;
+    width: var(--spinner-width);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: var(--spinner-border-width) solid transparent;
+    border-top-color: var(--spinner-color);
+    animation: rotate 2s ease-in infinite;
+  }
+
+  [data-spinner]::before,
+  [data-spinner]::after {
+    content: '';
+    position: absolute;
+    inset: calc(var(--spinner-border-width) * -1);
+  }
+
+  [data-spinner]::before {
+    border-left-color: var(--spinner-color);
+    animation-duration: 1s;
+  }
+
+  [data-spinner]::after {
+    border-right-color: var(--spinner-color);
+    animation-duration: 3s;
+  }
+
+  @keyframes rotate {
+    100% {
+      rotate: 1turn;
+    }
+  }
+</style>

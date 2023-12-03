@@ -1,10 +1,15 @@
 import { createNewJobCard } from './jobCards'
 import { returnExistingParams } from './jobParams'
+import { addLoadingState } from './spinner'
 
 const handleButtonClick = async (
   jobPagesCount: number,
   button: null | HTMLButtonElement
 ) => {
+  const oldButtonContent = button?.innerHTML || ''
+
+  const addOldContentBack = addLoadingState(button, oldButtonContent)
+
   // eslint-disable-next-line no-param-reassign
   jobPagesCount += 1
 
@@ -12,22 +17,22 @@ const handleButtonClick = async (
   searchURL.searchParams.set('page', jobPagesCount.toString())
   window.history.pushState({}, '', searchURL)
 
-  await fetch('/index.json', {
+  const response = await fetch('/index.json', {
     method: 'POST',
     body: JSON.stringify({ searchParams: window.location.search }),
     headers: {
       'Content-Type': 'application/json'
     }
   })
-
-  const response = await fetch('/index.json')
   const jobs = await response.json()
+
+  createNewJobCard(jobs.paginatedJobs)
 
   if (button != null) {
     button.dataset.next = jobs.isThereAnotherPage ? 'true' : 'false'
   }
 
-  createNewJobCard(jobs.paginatedJobs)
+  addOldContentBack()
 }
 
 export const addListenerToLoadButton = (

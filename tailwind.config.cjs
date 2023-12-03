@@ -83,7 +83,5 @@ module.exports = {
       }
     }
   },
-  plugins: [
-    require('@gradin/tailwindcss-scrollbar')
-  ]
+  plugins: [require('@gradin/tailwindcss-scrollbar')]
 }

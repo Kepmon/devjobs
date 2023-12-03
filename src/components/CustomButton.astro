@@ -5,14 +5,16 @@ interface Props {
   ariaLabel?: string
   moreClasses?: string
   dataNext?: string
+  dataButton?: string
 }
 
-const { ariaLabel, moreClasses, dataNext } = Astro.props
+const { ariaLabel, moreClasses, dataNext, dataButton } = Astro.props
 ---
 
 <button
   aria-label={ariaLabel || undefined}
   data-next={dataNext || undefined}
+  data-button={dataButton || undefined}
   class={twMerge('custom-button custom-button-padding', moreClasses)}
 >
   <slot />

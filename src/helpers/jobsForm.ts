@@ -1,6 +1,8 @@
+import type { JobResponse } from '../types/jobs'
 import { createNewJobCard } from './jobCards'
+import { addLoadingState } from './spinner'
 
-interface SearchValues {
+type SearchValues = {
   $any: {
     company: { $iContains: string }
     position: { $iContains: string }
@@ -84,7 +86,7 @@ const makeQueryLink = (jobsForm: HTMLFormElement) => {
   }
 
   if (contract != null || contractMobile != null) {
-    searchURL.searchParams.set('contract', 'Full Time')
+    searchURL.searchParams.set('contract', 'full time')
   }
 
   return searchURL
@@ -136,41 +138,54 @@ export const filterJobs = (urlParams: URLSearchParams) => {
   return searchValues
 }
 
-const handleSubmit = async (jobsForm: HTMLFormElement) => {
-  const isFormValid = checkFormValidity(jobsForm)
+const returnSearchButton = () => {
+  const isDialogOpen = document
+    .querySelector('[data-dialog="filter-jobs"]')
+    ?.hasAttribute('open')
+  const searchIconButton = document.querySelector(
+    '[data-button="search-icon"]'
+  ) as null | HTMLButtonElement
+  const searchTextButtons = [
+    ...document.querySelectorAll('[data-button="search-text"]')
+  ] as HTMLButtonElement[]
+  const searchTextButton = isDialogOpen
+    ? searchTextButtons[1]
+    : searchTextButtons[0]
+  const isSearchIconButtonShown =
+    searchIconButton != null
+      ? window.getComputedStyle(searchIconButton).display === 'block'
+      : false
+  return isSearchIconButtonShown && !isDialogOpen
+    ? searchIconButton
+    : searchTextButton
+}
 
+const handleFormValidation = (jobsForm: HTMLFormElement) => {
+  const isFormValid = checkFormValidity(jobsForm)
   const invalidMessage = document.querySelector('[data-error="invalid-form"]')
 
   if (!isFormValid) {
     invalidMessage?.classList.remove('scale-0')
     invalidMessage?.classList.add('scale-100')
-    return
+    return isFormValid
   }
 
   invalidMessage?.classList.remove('scale-100')
   invalidMessage?.classList.add('scale-0')
+  return isFormValid
+}
 
-  const searchURL = makeQueryLink(jobsForm)
-  window.history.pushState({}, '', searchURL)
-
-  await fetch('/index.json', {
-    method: 'POST',
-    body: JSON.stringify({ searchParams: searchURL.search }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-
+const handleDialog = () => {
   const dialog = document.querySelector(
     '[data-dialog="filter-jobs"]'
   ) as null | HTMLDialogElement
-  const response = await fetch('/index.json')
-  const jobs = await response.json()
 
   if (dialog != null && dialog.hasAttribute('open')) {
     dialog.close()
   }
+}
 
+const handleNoJobInfo = (jobs: JobResponse) => {
   if (jobs.paginatedJobs.length === 0) {
     const noJobInfo = document.querySelector(
       '[data-displayed]'
@@ -178,15 +193,44 @@ const handleSubmit = async (jobsForm: HTMLFormElement) => {
 
     noJobInfo?.setAttribute('data-displayed', 'true')
   }
+}
 
+const handleLoadButton = (isThereAnotherPage: boolean) => {
   const loadButton = document.querySelector(
-    '[data-next="true"], [data-next="false"]'
+    '[data-button="load"]'
   ) as null | HTMLButtonElement
   if (loadButton != null) {
-    loadButton.dataset.next = jobs.isThereAnotherPage ? 'true' : 'false'
+    loadButton.dataset.next = isThereAnotherPage ? 'true' : 'false'
   }
+}
 
-  createNewJobCard(jobs.paginatedJobs, true)
+const handleSubmit = async (jobsForm: HTMLFormElement) => {
+  const isFormValid = handleFormValidation(jobsForm)
+  if (!isFormValid) return
+
+  const searchButton = returnSearchButton()
+  if (searchButton != null) {
+    const oldButtonContent = searchButton?.innerHTML
+    const addOldContentBack = addLoadingState(searchButton, oldButtonContent)
+
+    const searchURL = makeQueryLink(jobsForm)
+    window.history.pushState({}, '', searchURL)
+
+    const response = await fetch('/index.json', {
+      method: 'POST',
+      body: JSON.stringify({ searchParams: searchURL.search }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const jobResponse = (await response.json()) as JobResponse
+
+    handleNoJobInfo(jobResponse)
+    handleLoadButton(jobResponse.isThereAnotherPage)
+    handleDialog()
+    createNewJobCard(jobResponse.paginatedJobs, true)
+    addOldContentBack()
+  }
 }
 
 export const addListenerToForm = (jobsForm: HTMLFormElement) => {
@@ -199,30 +243,32 @@ export const addListenerToForm = (jobsForm: HTMLFormElement) => {
 export const addListenerToDoubledInputs = () => {
   const locationInputs = [
     ...document.querySelectorAll('[name^="location"]')
-  ] as (null | HTMLInputElement)[]
+  ] as HTMLInputElement[]
   const contractInputs = [
     ...document.querySelectorAll('[name^="contract"]')
-  ] as (null | HTMLInputElement)[]
+  ] as HTMLInputElement[]
   const allDoubledInputs = [...locationInputs, ...contractInputs]
 
-  allDoubledInputs.forEach((input) => {
-    input?.addEventListener('input', () => {
-      const doubledInput = allDoubledInputs.find(
-        (secondInput) =>
-          secondInput?.name !== input.name &&
-          secondInput?.name.includes(input.name.replace('Mobile', ''))
-      )
+  if (allDoubledInputs.length > 0) {
+    allDoubledInputs.forEach((input) => {
+      input.addEventListener('input', () => {
+        const doubledInput = allDoubledInputs.find(
+          (secondInput) =>
+            secondInput.name !== input.name &&
+            secondInput.name.includes(input.name.replace('Mobile', ''))
+        )
 
-      if (doubledInput != null && input.type === 'checkbox') {
-        doubledInput.checked = input.checked
-        return
-      }
+        if (doubledInput != null && input.type === 'checkbox') {
+          doubledInput.checked = input.checked
+          return
+        }
 
-      if (doubledInput != null) {
-        doubledInput.value = input.value
-      }
+        if (doubledInput != null) {
+          doubledInput.value = input.value
+        }
+      })
     })
-  })
+  }
 }
 
 export const addListenerToWindow = () => {

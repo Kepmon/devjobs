@@ -3,17 +3,35 @@ import ErrorMagnifyingGlass from './svgs/ErrorMagnifyingGlass.astro'
 
 interface Props {
   isDisplayed: string
+  isError: boolean
 }
 
-const { isDisplayed } = Astro.props
+const { isDisplayed, isError } = Astro.props
+
+const messages = {
+  true: {
+    heading: 'Ooops, something went wrong',
+    additionalText: 'Try again later'
+  },
+  false: {
+    heading: 'No job offers found',
+    additionalText: 'Try searching by a different query or go back to the'
+  }
+}
 ---
 
 <div data-displayed={isDisplayed} class="error-container">
   <ErrorMagnifyingGlass />
-  <h2 class="text-xl font-bold">No job offers found</h2>
+  <h2 class="text-xl font-bold">
+    {messages[isError.toString() as keyof typeof messages].heading}
+  </h2>
   <p>
-    <span>Try searching by a different query or go back to the&nbsp;</span>
-    <a href="/">home page</a>
+    <span
+      >{
+        messages[isError.toString() as keyof typeof messages].additionalText
+      }</span
+    >
+    {!isError && <a href="/">&nbsp;home page</a>}
   </p>
 </div>
 
