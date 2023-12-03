@@ -25,19 +25,6 @@ This was actually my very first time working with a rendering mode other than SP
 
 ### Before that, though, I still need to make many improvements with the current version of this website. Those include:
 * full accessibility is meant to be taken care of
-* I don't like the user experience when loading more jobs - some loading state should be applied to the button and the website should scroll to the new results
-* I haven't fully achieved my "no-more-jobs-than-needed" goal when it comes to the job detail page:
-    - currently, this job is fetched everytime, regardless of the user going there through the link or by clicking the job offer on the main page
-    - in the latter case, this job was already fetched, so I think I should rather store all fetched jobs in a variable and filter those in order to find and render the one's content on the details page; but I can see at least two problems with this approach
-    - one of them being the fact that, on the main page, I don't really fetch all properties of the job object (for example, I don't need the job's description, requirements or the role description on the main page), and, since I need the remaining ones on the job details page, applying the abovementioned approach would make me to fetch all those properties, regardless of the user going to see all those details on the detail page or not
-    - the other one being the fact that I don't think I have a way of passing the `jobs` variable, stored on a client side in the `index` component (or even in the `json` endpoint) to the code running on a server side when the job details page is being rendered (I frankly don't know why, but it seems to me like I can't reach the `json` endpoint on a server side)
-    - this in turn means that I'd have to render the whole page content on a client side, using the `template` HTML tag, which I have a feeling that's not a good idea (I can't actually say why, though)
-    - moreover, I'm wondering about the filtering jobs functionality - what if some of the filtering results were already fetched? Shouldn't I fetch only the remaining ones?
-    - so, at the moment, I'm not really sure what should I do with it - I'll probably ask some more experienced developers for advice on a discord community or somewhere else on the internet, and fix this issue when I'm actually committed to one approach
-* code refactoring:
-    - currently, in all pagination-related functions, the number of items per page is hardcoded to be 12 - that's obviously wrong because if I need to change it anytime in the future, I'll have to change it in all those places separately; instead, I should have a piece of state somewhere and share it between all files that need an access to this variable
-    - error handling + try/catch blocks
-    - types - working with TypeScript for fetched data is still a bit hard to me, therefore, all types for the job-related responses from the xata database are wrong and they'are meant to be corrected ASAP
 * I strongly dislike the current way of filtering jobs:
     - before, I used `Fuse.js`, that handled this task very well but the issue was I had to pass the data to be filtered - and since the data were actually my jobs, this means I had to fetch all of them first, in order to be able to do that 
     - that's why, ultimately, I decided to use the [xata's filtering API](https://xata.io/docs/sdk/filtering) but this solution doesn't really allow me for applying any kind of fuzziness
@@ -45,12 +32,6 @@ This was actually my very first time working with a rendering mode other than SP
     - so, it seems to me like what I actually need is the [xata's search API](https://xata.io/docs/sdk/search) (in fact, you can actually combine both those APIs) but nowhere in their docs I found the information on how to pass more than one search query
     - which I abviously need, considering the fact that my form consists of 3 inputs and a user may fill in 1/2/3 of them and depending on which one is actually filled, I need to search through different columns as well as in some cases I need the results that contain all of the searching criteria and in other ones I need to get back the results that contain one search query but in any of several (defined) colums
     - and currently, it seems to me that this is impossible to do using any xata's API but it might be also that I just overlooked something, that's why, I'll probably reach out the xata's team on their discord community and ask whether is there a better way (than my current approach) of handling my case
-* finally, I also don't like the idea of passing the url query params to the json endpoint, using the POST request, only so I can use them inside the GET request:
-    - I feel like I should be able to read the query params from the link inside the GET request, without passing them first through the POST request at all
-    - in fact, I tried to do that already but I always get an empty `URLSearchParams` object
-    - I believe, the issue here is that the page I set the query params onto and the json endpoint are completely different endpoints/links
-    - nonetheless, if the above is true, that probably means my current approach is wrong, in the first place, and I have to get to know what am I doing wrong and fix it
-    - so, again, currently I'm not really sure how to approach this one, but I hope I'll be able to make it right in the future 🙈
 
 ## 💻 Technologies
 ![Astro](https://img.shields.io/badge/Astro-BC52EE?style=for-the-badge&logo=astro&logoColor=white)
