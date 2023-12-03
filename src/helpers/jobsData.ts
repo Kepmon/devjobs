@@ -13,7 +13,7 @@ const jobColumns = [
   'location'
 ] as JobCardType
 
-export const returnJobsToDisplay = async (
+const returnJobsToDisplay = async (
   size: number,
   offset: number,
   searchParams: URLSearchParams

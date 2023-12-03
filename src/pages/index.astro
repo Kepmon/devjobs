@@ -8,6 +8,7 @@ import FilterOptions from '../components/FilterOptions.astro'
 import CustomButton from '../components/CustomButton.astro'
 import NoJobInfo from '../components/NoJobInfo.astro'
 import { fetchJobs } from '../helpers/jobsData'
+import Spinner from '../components/Spinner.astro'
 
 const { searchParams } = Astro.url
 
@@ -24,6 +25,9 @@ isResponseError = isError
 const isNoJobInfoDisplayed = jobs.length === 0
 ---
 
+<template data-template="spinner">
+  <Spinner />
+</template>
 <BaseLayout title="DevJobs | Home">
   <main class="grid gap-12 xs:gap-32 [&:has([data-svg])]:gap-16">
     <div>
@@ -48,6 +52,7 @@ const isNoJobInfoDisplayed = jobs.length === 0
           <CustomButton
             moreClasses="justify-self-center mt-14"
             dataNext={isThereAnotherPage.toString()}
+            dataButton="load"
           >
             Load More
           </CustomButton>
@@ -71,7 +76,7 @@ const isNoJobInfoDisplayed = jobs.length === 0
     '[data-form="jobs"]'
   ) as HTMLFormElement
   const loadButton = document.querySelector(
-    '[data-next="true"], [data-next="false"]'
+    '[data-button="load"]'
   ) as null | HTMLButtonElement
 
   prePopulateForm()

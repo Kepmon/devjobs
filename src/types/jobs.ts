@@ -1,15 +1,24 @@
-export type JobCardType = 'logoBackground' & 'position' & 'contract' & 'location' & 'company' & 'id' & 'xata.createdAt' & 'logo.url'
+export type JobCardType = 'logoBackground' &
+  'position' &
+  'contract' &
+  'location' &
+  'company' &
+  'id' &
+  'xata.createdAt' &
+  'logo.url'
 
-export interface Job {
+export type Job = {
   company: string
   contract: string
   description: string
   id: string
   location: string
   website: string
-  logo: [{
-    url: string
-  }]
+  logo: [
+    {
+      url: string
+    }
+  ]
   logoBackground: string
   position: string
   xata: {
@@ -17,4 +26,9 @@ export interface Job {
     updatedAt: Date
     version: number
   }
+}
+
+export type JobResponse = {
+  isThereAnotherPage: boolean
+  paginatedJobs: Job[]
 }
