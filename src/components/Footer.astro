@@ -11,12 +11,12 @@ const { company, position } = Astro.props
 ---
 
 <footer>
-  <div class="job-details-wrapper flex xs:justify-between">
+  <div class="job-details__wrapper flex xs:justify-between">
     <div class="hidden xs:grid gap-3">
       <p class="text-md font-[800]">{position}</p>
       <p class="text-gray-500">{company}</p>
     </div>
-    <CustomButton moreClasses="grow xs:self-center xs:grow-0">
+    <CustomButton moreClasses="grow xs:self-center xs:grow-0 blue-outline">
       Apply Now
     </CustomButton>
   </div>

@@ -24,12 +24,10 @@ if (jobOffer == null) {
     position: jobOffer?.position || ''
   }}
 >
-  <article data-id={id} class="job-details-wrapper">
-    <header
-      class="relative md:flex items-center py-6 bg-white dark:bg-gray-800 rounded-md md:overflow-hidden md:py-0"
-    >
+  <article data-id={id} class="job-details__wrapper">
+    <header class="job-details__header">
       <div
-        class={twMerge('logo-wrapper')}
+        class="logo-wrapper"
         style={{ backgroundColor: `${jobOffer?.logoBackground}` }}
       >
         <img
@@ -45,15 +43,20 @@ if (jobOffer == null) {
           <p class="mb-2 text-md dark:text-white font-[700]">
             {jobOffer?.company}
           </p>
-          <a href={jobOffer?.website} target="_blank" class="text-gray-500"
-            >{jobOffer?.website.replace('https://', '')}</a
+          <a
+            href={jobOffer?.website}
+            target="_blank"
+            class={twMerge(
+              'text-gray-500 rounded-md gray-outline outline-offset-8'
+            )}>{jobOffer?.website.replace('https://', '')}</a
           >
         </div>
         <a
           href={jobOffer?.website}
           target="_blank"
-          class="custom-button custom-button--gray custom-button-padding md:self-center"
-          >Company Site</a
+          class={twMerge(
+            'custom-button custom-button--gray custom-button-padding md:self-center blue-outline dark:outline-gray-600'
+          )}>Company Site</a
         >
       </div>
     </header>
@@ -70,7 +73,7 @@ if (jobOffer == null) {
             {jobOffer?.location}
           </p>
         </div>
-        <CustomButton moreClasses="self-center whitespace-nowrap">
+        <CustomButton moreClasses="self-center whitespace-nowrap blue-outline">
           Apply Now
         </CustomButton>
       </header>
@@ -113,6 +116,11 @@ if (jobOffer == null) {
 </BaseLayout>
 
 <style>
+  .job-details__header {
+    @apply relative items-center py-6 bg-white dark:bg-gray-800 rounded-md;
+    @apply md:flex md:py-0 md:overflow-hidden;
+  }
+
   .article-main {
     @apply grid gap-10 p-6 md:p-12 mt-8 bg-white dark:bg-gray-800 dark:text-white rounded-md;
   }

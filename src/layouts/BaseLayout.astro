@@ -104,7 +104,7 @@ const { title, job, isMovedDown } = Astro.props
     @apply mx-auto w-[min(90%,70rem)];
   }
 
-  .job-details-wrapper {
+  .job-details__wrapper {
     @apply mx-auto md:w-[min(100%,50rem)];
   }
 
@@ -145,10 +145,6 @@ const { title, job, isMovedDown } = Astro.props
     @apply grow outline outline-transparent;
   }
 
-  .blue-outline {
-    @apply focus-visible:outline outline-2 outline-offset-2 outline-blue-400;
-  }
-
   .error-container {
     @apply mx-auto text-center dark:text-white;
   }
@@ -179,5 +175,17 @@ const { title, job, isMovedDown } = Astro.props
   .card-logo {
     @apply absolute max-[350px]:left-4 left-8 -translate-y-1/2;
     @apply grid place-content-center w-[50px] aspect-square rounded-2xl;
+  }
+
+  .white-outline {
+    @apply focus-visible:outline outline-2 outline-offset-[3px] outline-gray-200;
+  }
+
+  .blue-outline {
+    @apply focus-visible:outline outline-2 outline-offset-2 outline-blue-400;
+  }
+
+  .gray-outline {
+    @apply focus-visible:outline outline-2 outline-offset-2 outline-gray-500;
   }
 </style>
