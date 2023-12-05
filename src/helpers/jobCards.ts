@@ -74,6 +74,11 @@ const renderJobCard = (
     cardLogoContainer.style.backgroundColor = job.logoBackground
   }
 
+  cardLinkNode.setAttribute(
+    'aria-label',
+    `${job.position} at ${job.company}. The contract is ${job.contract} and the job is in ${job.location}. Click here to go to the job's details page.`
+  )
+
   jobsContainer.append(cardLinkNode)
 }
 
@@ -93,9 +98,13 @@ export const createNewJobCard = (jobs: Job[], clearContainer?: true) => {
     jobsContainer.replaceChildren()
   }
 
-  jobs.forEach((job) => {
+  jobs.forEach((job, index) => {
     const cardLinkNode = cardLink.cloneNode(true) as HTMLAnchorElement
 
     renderJobCard(job, jobsContainer, cardLinkNode)
+
+    if (index === 0) {
+      cardLinkNode.focus()
+    }
   })
 }
