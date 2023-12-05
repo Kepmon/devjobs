@@ -12,6 +12,8 @@ export const addLoadingState = (
     ) as DocumentFragment
     const spinner = spinnerDocumentFragment.querySelector('[data-spinner]')
 
+    button.setAttribute('disabled', '')
+
     if (spinner != null) {
       const isPreviousContentAnSvg =
         previousButtonContent.slice(0, 4) === '<svg'
@@ -27,6 +29,7 @@ export const addLoadingState = (
   return () => {
     if (button != null) {
       button.innerHTML = previousButtonContent
+      button.removeAttribute('disabled')
     }
   }
 }

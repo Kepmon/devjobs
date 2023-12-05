@@ -9,25 +9,29 @@ const { job } = Astro.props
   target="_blank"
   data-link="job-card"
   class="blue-outline"
+  aria-label={`${job.position} at ${job.company}. The contract is ${job.contract} in ${job.location}. Click here to go to the job's details page.`}
 >
   <article class="card-container">
     <div style={{ backgroundColor: `${job.logoBackground}` }} class="card-logo">
-      <img src={job.logo.at(0).url} alt="company logo" data-logo="job-card" />
+      <img src={job.logo.at(0).url} alt="" data-logo="job-card" />
     </div>
     <div class="grid content-start gap-2">
       <div class="gray-text-wrapper">
-        <p data-first-gray-p="job-card">
+        <p aria-hidden="true" data-first-gray-p="job-card">
           {returnTimeDifference(job.xata.createdAt)}
         </p>
-        <p class="dot">&#x2022;</p>
-        <p data-third-gray-p="job-card">{job.contract}</p>
+        <p aria-hidden="true" class="dot">&#x2022;</p>
+        <p aria-hidden="true" data-third-gray-p="job-card">{job.contract}</p>
       </div>
       <h2 data-heading="job-card" class="text-md font-[800] dark:text-white">
         {job.position}
       </h2>
-      <p data-company="job-card" class="text-gray-500">{job.company}</p>
+      <p aria-hidden="true" data-company="job-card" class="text-gray-500">
+        {job.company}
+      </p>
     </div>
     <p
+      aria-hidden="true"
       data-location="job-card"
       class="self-end text-blue-500 text-xs font-[700]"
     >

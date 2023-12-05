@@ -91,6 +91,10 @@ const { title, job, isMovedDown } = Astro.props
     @apply block max-w-full dark:text-white;
   }
 
+  button:disabled {
+    @apply cursor-not-allowed;
+  }
+
   input[type='search'] {
     @apply w-full truncate bg-inherit dark:text-white caret-blue-500 cursor-text;
   }

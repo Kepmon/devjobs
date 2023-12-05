@@ -161,12 +161,21 @@ const returnSearchButton = () => {
 }
 
 const handleFormValidation = (jobsForm: HTMLFormElement) => {
+  const invalidMessage = document.querySelector(
+    '[data-error="invalid-form"]'
+  ) as null | HTMLParagraphElement
   const isFormValid = checkFormValidity(jobsForm)
-  const invalidMessage = document.querySelector('[data-error="invalid-form"]')
 
-  if (!isFormValid) {
+  if (!isFormValid && invalidMessage != null) {
     invalidMessage?.classList.remove('scale-0')
     invalidMessage?.classList.add('scale-100')
+
+    invalidMessage.setAttribute('tabIndex', '0')
+    invalidMessage.focus()
+
+    setTimeout(() => {
+      invalidMessage?.removeAttribute('tabIndex')
+    }, 0)
     return isFormValid
   }
 
