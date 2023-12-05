@@ -5,11 +5,13 @@ import AdditionalFilterOptions from './AdditionalFilterOptions.astro'
 ---
 
 <form class="main-form" data-form="jobs">
+  <p class="sr-only">
+    You've just got into a job-filtering form. Fill the first text field in with
+    any job search query except for its location and the second one with the
+    desired location.
+  </p>
   <div class="input-pair focus-within">
     <SearchIcon fill="hsl(235, 68%, 61%)" classNames="hidden md:block" />
-    <label for="search" class="sr-only"
-      >Fill this input in with any job search query except for its location</label
-    >
     <input
       type="search"
       name="search"

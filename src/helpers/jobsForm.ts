@@ -174,7 +174,7 @@ const handleFormValidation = (jobsForm: HTMLFormElement) => {
     invalidMessage.focus()
 
     setTimeout(() => {
-      invalidMessage?.removeAttribute('tabIndex')
+      invalidMessage?.setAttribute('tabIndex', '-1')
     }, 0)
     return isFormValid
   }
