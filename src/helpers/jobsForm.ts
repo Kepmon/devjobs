@@ -161,6 +161,11 @@ const returnSearchButton = () => {
 }
 
 const handleFormValidation = (jobsForm: HTMLFormElement) => {
+  const previouslyFocusedElement = document.activeElement as
+    | null
+    | HTMLInputElement
+    | HTMLButtonElement
+
   const invalidMessage = document.querySelector(
     '[data-error="invalid-form"]'
   ) as null | HTMLParagraphElement
@@ -170,12 +175,21 @@ const handleFormValidation = (jobsForm: HTMLFormElement) => {
     invalidMessage?.classList.remove('scale-0')
     invalidMessage?.classList.add('scale-100')
 
-    invalidMessage.setAttribute('tabIndex', '0')
-    invalidMessage.focus()
-
+    previouslyFocusedElement.setAttribute(
+      'aria-label',
+      'You need to fill at least one input in'
+    )
     setTimeout(() => {
-      invalidMessage?.setAttribute('tabIndex', '-1')
-    }, 0)
+      if (previouslyFocusedElement.closest('button') != null) {
+        previouslyFocusedElement.setAttribute(
+          'aria-label',
+          'click here to submit the form'
+        )
+        return
+      }
+
+      previouslyFocusedElement.removeAttribute('aria-label')
+    }, 1000)
     return isFormValid
   }
 
