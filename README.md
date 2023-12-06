@@ -44,6 +44,7 @@ This was actually my very first time working with a rendering mode other than SP
 | Data          | Correct input    |
 | ------------- |:----------------:|
 | Icons | [Frontend Mentor](https://www.frontendmentor.io/challenges/devjobs-web-app-HuvC_LP4l) (if not stated otherwise)|
+| Up arrow icon | [Svgrepo](https://www.svgrepo.com/svg/407635/top-arrow)|
 | All jobs data    | [Frontend Mentor](https://www.frontendmentor.io/challenges/devjobs-web-app-HuvC_LP4l)|
 | Font | [Google Fonts](https://fonts.google.com/specimen/Kumbh+Sans) |
 | Magnifying glass image | Own drawing |

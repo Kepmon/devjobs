@@ -18,6 +18,7 @@ const { locationName, fullTimeName, moreWrapperStyles, moreLocationStyles } =
     <input
       type="search"
       name={locationName}
+      id="location"
       placeholder="Filter by location..."
     />
   </div>
@@ -38,7 +39,11 @@ const { locationName, fullTimeName, moreWrapperStyles, moreLocationStyles } =
       >
       <span>Full Time <span class="hidden lg:inline">Only</span></span>
     </label>
-    <CustomButton moreClasses="blue-outline" dataButton="search-text">
+    <CustomButton
+      ariaLabel="click here to submit the form"
+      moreClasses="blue-outline"
+      dataButton="search-text"
+    >
       Search
     </CustomButton>
   </div>

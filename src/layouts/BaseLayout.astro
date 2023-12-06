@@ -2,6 +2,7 @@
 import type { Job } from '../types/jobs'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
+import BackToTopButton from '../components/BackToTopButton.astro'
 
 interface Props {
   title: string
@@ -41,6 +42,7 @@ const { title, job, isMovedDown } = Astro.props
     </div>
 
     {job != null && <Footer company={job.company} position={job.position} />}
+    <BackToTopButton />
   </body>
 </html>
 
@@ -73,6 +75,12 @@ const { title, job, isMovedDown } = Astro.props
     }
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     @apply grid grid-rows-[auto_40px_auto_1fr] min-h-[100dvh];
     @apply text-normal bg-blue-100 dark:bg-gray-900;
@@ -81,6 +89,10 @@ const { title, job, isMovedDown } = Astro.props
 
   img {
     @apply block max-w-full dark:text-white;
+  }
+
+  button:disabled {
+    @apply cursor-not-allowed;
   }
 
   input[type='search'] {
@@ -96,7 +108,7 @@ const { title, job, isMovedDown } = Astro.props
     @apply mx-auto w-[min(90%,70rem)];
   }
 
-  .job-details-wrapper {
+  .job-details__wrapper {
     @apply mx-auto md:w-[min(100%,50rem)];
   }
 
@@ -137,10 +149,6 @@ const { title, job, isMovedDown } = Astro.props
     @apply grow outline outline-transparent;
   }
 
-  .blue-outline {
-    @apply focus-visible:outline outline-[3px] outline-blue-500;
-  }
-
   .error-container {
     @apply mx-auto text-center dark:text-white;
   }
@@ -171,5 +179,17 @@ const { title, job, isMovedDown } = Astro.props
   .card-logo {
     @apply absolute max-[350px]:left-4 left-8 -translate-y-1/2;
     @apply grid place-content-center w-[50px] aspect-square rounded-2xl;
+  }
+
+  .white-outline {
+    @apply focus-visible:outline outline-2 outline-offset-[3px] outline-gray-200;
+  }
+
+  .blue-outline {
+    @apply focus-visible:outline outline-2 outline-offset-2 outline-blue-400;
+  }
+
+  .gray-outline {
+    @apply focus-visible:outline outline-2 outline-offset-2 outline-gray-500;
   }
 </style>

@@ -5,24 +5,30 @@ import AdditionalFilterOptions from './AdditionalFilterOptions.astro'
 ---
 
 <form class="main-form" data-form="jobs">
+  <p class="sr-only">
+    You've just got into a job-filtering form. Fill the first text field in with
+    any job search query except for its location and the second one with the
+    desired location.
+  </p>
   <div class="input-pair focus-within">
     <SearchIcon fill="hsl(235, 68%, 61%)" classNames="hidden md:block" />
     <input
       type="search"
       name="search"
+      id="search"
       placeholder="Filter by title, companies, expertise..."
     />
     <div class="flex gap-1">
       <button
         type="button"
         class="md:hidden flex p-3 ml-auto w-10 aspect-square shrink-0"
-        aria-label="click here to see more filter options"
+        aria-label="click here to see more search options"
         data-button="filter"
       >
         <img src="/img/icon-filter.svg" alt="" class="shrink-0" />
       </button>
       <CustomButton
-        ariaLabel="Click here to search"
+        ariaLabel="click here to submit the form"
         moreClasses="md:hidden p-2"
         dataButton="search-icon"
       >
