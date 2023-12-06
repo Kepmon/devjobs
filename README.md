@@ -24,7 +24,6 @@ This was actually my very first time working with a rendering mode other than SP
     - I'd also not rather make the users to send any files (CV) through this website, so I think I'd just render some form for the applicant in which they can share links for their Github/LinkedIn profiles and/or their own portfolio websites as well as provide some information about themselves; I'll probably use the WYSIWYG editor for that, as well
 
 ### Before that, though, I still need to make many improvements with the current version of this website. Those include:
-* full accessibility is meant to be taken care of
 * I strongly dislike the current way of filtering jobs:
     - before, I used `Fuse.js`, that handled this task very well but the issue was I had to pass the data to be filtered - and since the data were actually my jobs, this means I had to fetch all of them first, in order to be able to do that 
     - that's why, ultimately, I decided to use the [xata's filtering API](https://xata.io/docs/sdk/filtering) but this solution doesn't really allow me for applying any kind of fuzziness
