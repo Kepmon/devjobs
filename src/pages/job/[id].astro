@@ -41,14 +41,17 @@ if (jobOffer == null) {
       >
         <div class="text-center md:text-left">
           <p class="mb-2 text-md dark:text-white font-[700]">
-            {jobOffer?.company}
+            <span class="sr-only">the company name:</span>{jobOffer?.company}
           </p>
           <a
             href={jobOffer?.website}
             target="_blank"
             class={twMerge(
               'text-gray-500 rounded-md gray-outline outline-offset-8'
-            )}>{jobOffer?.website.replace('https://', '')}</a
+            )}
+            ><span class="sr-only">the company site:</span>{
+              jobOffer?.website.replace('https://', '')
+            }</a
           >
         </div>
         <a
@@ -56,7 +59,8 @@ if (jobOffer == null) {
           target="_blank"
           class={twMerge(
             'custom-button custom-button--gray custom-button-padding md:self-center blue-outline dark:outline-gray-600'
-          )}>Company Site</a
+          )}
+          ><span class="sr-only">click here to go to the</span> Company Site</a
         >
       </div>
     </header>
@@ -64,13 +68,19 @@ if (jobOffer == null) {
       <header class="grid xs:flex xs:justify-between gap-12">
         <div class="[&>:not(:last-child)]:mb-3">
           <div class="gray-text-wrapper">
-            <p>{returnTimeDifference(jobOffer?.xata.createdAt as Date)}</p>
-            <p class="dot">&#x2022;</p>
-            <p>{jobOffer?.contract}</p>
+            <p>
+              <span class="sr-only">the job offer was posted</span>{
+                returnTimeDifference(jobOffer?.xata.createdAt as Date)
+              }
+            </p>
+            <p aria-hidden="true" class="dot">&#x2022;</p>
+            <p>
+              <span class="sr-only">the contract is</span>{jobOffer?.contract}
+            </p>
           </div>
           <h1 class="text-lg font-[800]">{jobOffer?.position}</h1>
           <p class="self-end text-blue-500 text-xs font-[700]">
-            {jobOffer?.location}
+            <span class="sr-only">the job is in</span>{jobOffer?.location}
           </p>
         </div>
         <CustomButton moreClasses="self-center whitespace-nowrap blue-outline">

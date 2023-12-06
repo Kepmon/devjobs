@@ -32,7 +32,11 @@ const isNoJobInfoDisplayed = jobs.length === 0
   <main class="grid gap-12 xs:gap-32 [&:has([data-svg])]:gap-16">
     <div>
       <FilterOptions />
-      <p data-error="invalid-form" class="scale-0 invalid-form outline-none">
+      <p
+        aria-hidden="true"
+        data-error="invalid-form"
+        class="scale-0 invalid-form outline-none"
+      >
         You need to fill at least one input in
       </p>
     </div>

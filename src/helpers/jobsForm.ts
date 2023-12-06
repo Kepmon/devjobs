@@ -175,21 +175,24 @@ const handleFormValidation = (jobsForm: HTMLFormElement) => {
     invalidMessage?.classList.remove('scale-0')
     invalidMessage?.classList.add('scale-100')
 
-    previouslyFocusedElement.setAttribute(
-      'aria-label',
-      'You need to fill at least one input in'
-    )
-    setTimeout(() => {
-      if (previouslyFocusedElement.closest('button') != null) {
-        previouslyFocusedElement.setAttribute(
-          'aria-label',
-          'click here to submit the form'
-        )
-        return
-      }
+    if (previouslyFocusedElement != null) {
+      previouslyFocusedElement.setAttribute(
+        'aria-label',
+        'You need to fill at least one input in'
+      )
+      setTimeout(() => {
+        if (previouslyFocusedElement.closest('button') != null) {
+          previouslyFocusedElement.setAttribute(
+            'aria-label',
+            'click here to submit the form'
+          )
+          return
+        }
 
-      previouslyFocusedElement.removeAttribute('aria-label')
-    }, 1000)
+        previouslyFocusedElement.removeAttribute('aria-label')
+      }, 1000)
+    }
+
     return isFormValid
   }
 
